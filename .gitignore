@@ -37,3 +37,8 @@ core/.settings/org.eclipse.jdt.core.prefs
 core/.project
 core/.classpath
 .project
+.project
+core/.classpath
+core/.project
+desktop/.classpath
+desktop/.project
