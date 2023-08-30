@@ -575,8 +575,10 @@ public class GameScreen implements Screen {
 			sender.addPacket(new PlayerInputPacket(ix, iy, sprint));
 		}
 		if(logPositionDelta>1/10f) {
-			cvm.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
-			logPositionDelta = 0;
+			if(getLocalPlayer()!=null) {
+				cvm.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
+				logPositionDelta = 0;
+			}
 		}
 		
 		lastX = ix;
