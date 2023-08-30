@@ -36,12 +36,20 @@ public abstract class Item implements Cloneable {
 	
 	protected abstract void draw(Gaze game, Batch batch, float x, float y, float width, float height);
 	
+	public static void draw(Gaze game, Viewport port, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
+		draw(game, port, 0, item, batch, x, y, width, height, displayQuantity);
+	}
+	
+	public static void draw(Gaze game, Viewport port, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height) {
+		draw(game, port, hoverYOffset, item, batch, x, y, width, height, true);
+	}
+	
 	public static void draw(Gaze game, Viewport port, Item item, Batch batch, float x, float y, float width, float height) {
-		draw(game, port, item, batch, x, y, width, height, true);
+		draw(game, port, 0, item, batch, x, y, width, height, true);
 	}
 	
 	static GlyphLayout layout = new GlyphLayout();
-	public static void draw(Gaze game, Viewport port,  Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
+	public static void draw(Gaze game, Viewport port, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
 		if(item == null) {
 			return;
 		}
@@ -62,7 +70,7 @@ public abstract class Item implements Cloneable {
 		}
 		
 		if(port != null) {
-			Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+			Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY()+hoverYOffset);
 			Vector2 mouseLocalPosition = port.unproject(mouseScreenPosition);
 			if(x <= mouseLocalPosition.x && x + width >= mouseLocalPosition.x && y <= mouseLocalPosition.y && y + height >= mouseLocalPosition.y) {
 				// OVER

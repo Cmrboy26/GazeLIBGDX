@@ -1,7 +1,8 @@
 package net.cmr.gaze.crafting;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -76,7 +77,7 @@ public class RecipeSlot extends ImageButton {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		Item.draw(game, getStage().getViewport(), displayItem, batch, getX(), getY(), getWidth(), getHeight());
+		Item.draw(game, null, displayItem, batch, getX(), getY(), getWidth(), getHeight());
 	}
 	
 }

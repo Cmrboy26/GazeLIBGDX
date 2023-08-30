@@ -954,6 +954,11 @@ public class GameScreen implements Screen {
 			frameBuffer = null;
 		}
 
+		if(width==0||height==0) {
+			frameBuffer = new FrameBuffer(Pixmap.Format.RGB565, 1, 1, false);
+			return;
+		}
+		
 		if (frameBuffer == null) {
 			try {
 				frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, width, height, false);

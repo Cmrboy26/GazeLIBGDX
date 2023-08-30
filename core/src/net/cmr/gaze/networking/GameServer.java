@@ -181,7 +181,7 @@ public class GameServer {
 		
 		while(serverRunning) {
 			if(deltaTime>=0) {
-				long now = System.nanoTime();
+				//long now = System.nanoTime();
 				serverRunningDelta+=deltaTime;
 				while(serverRunningDelta>1) {
 					serverRunningDelta-=1;
@@ -200,10 +200,10 @@ public class GameServer {
 				
 				processPacketData(deltaTime);
 				getManager().updateWorlds(deltaTime);
-				double time = CustomTime.timeToSeconds(System.nanoTime()-now);
-				if(time > .001) {
-					System.out.println(time);
-				}
+				//double time = CustomTime.timeToSeconds(System.nanoTime()-now);
+				//if(time > .001) {
+				//	System.out.println(time);
+				//}
 			}
 			
 			deltaTime = (System.nanoTime()-lastTime)/1000000000f;

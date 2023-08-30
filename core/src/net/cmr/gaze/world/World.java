@@ -490,11 +490,6 @@ public class World {
 			}
 		}
 		
-		NPC npc = new NPC();
-		npc.setPosition(Tile.TILE_SIZE*Chunk.CHUNK_SIZE*2.1, Tile.TILE_SIZE*Chunk.CHUNK_SIZE*2.1);
-		connection.getPlayer().setPosition(Tile.TILE_SIZE*Chunk.CHUNK_SIZE*2.1, Tile.TILE_SIZE*Chunk.CHUNK_SIZE*2.1);
-		addEntity(npc);
-		
 		if(!players.contains(connection)) {
 			players.add(connection);
 			sendWorldData(connection);

@@ -60,7 +60,7 @@ public class CategoryButton extends ImageButton {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		Item.draw(game, getStage().getViewport(), displayItem, batch, getX(), getY(), getWidth(), getHeight());
+		Item.draw(game, null, displayItem, batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 }
