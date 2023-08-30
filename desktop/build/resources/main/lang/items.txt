@@ -1,0 +1,25 @@
+WOOD
+	Wood
+	A plain piece of wood.
+STONE
+	Stone
+	A few chunks of stone.
+IRON_INGOT
+	Iron Ingot
+	A dense and useful ingot.
+IRON_ORE
+	Iron Ore
+	A chunk of stone with salvageable pieces of iron.
+WOOD_AXE
+	Wood Axe
+	An axe made of wood
+WOOD_PICKAXE
+	Wood Pickaxe
+	A pickaxe made of wood
+WOOD_SHOVEL
+	Wood Shovel
+	A shovel made of wood
+WOOD_HOE
+	Wood Hoe
+	A hoe made of wood
+

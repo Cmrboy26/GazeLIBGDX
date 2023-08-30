@@ -1,0 +1,83 @@
+
+Tiles.png
+size: 256, 128
+format: RGBA8888
+filter: MipMapNearestNearest, MipMapNearestNearest
+repeat: xy
+grass
+  rotate: false
+  xy: 138, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+grassTransition
+  rotate: false
+  xy: 68, 34
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+hitbox
+  rotate: false
+  xy: 68, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+player - Copy (2)
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+sand0
+  rotate: false
+  xy: 138, 34
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand1
+  rotate: false
+  xy: 103, 34
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand2
+  rotate: false
+  xy: 208, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+table
+  rotate: false
+  xy: 173, 34
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+tree1
+  rotate: false
+  xy: 1, 5
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 173, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+waterTransition
+  rotate: false
+  xy: 103, 69
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,321 @@
+
+UI.png
+size: 1024, 1024
+format: RGBA8888
+filter: MipMap, MipMap
+repeat: none
+blankInventory
+  rotate: false
+  xy: 644, 894
+  size: 160, 128
+  orig: 160, 128
+  offset: 0, 0
+  index: -1
+button
+  rotate: false
+  xy: 464, 360
+  size: 80, 20
+  orig: 80, 20
+  offset: 0, 0
+  index: -1
+buttonLarge
+  rotate: false
+  xy: 164, 222
+  size: 120, 20
+  orig: 120, 20
+  offset: 0, 0
+  index: -1
+buttonSelected
+  rotate: false
+  xy: 302, 328
+  size: 80, 20
+  orig: 80, 20
+  offset: 0, 0
+  index: -1
+buttonSelectedLarge
+  rotate: false
+  xy: 888, 1002
+  size: 120, 20
+  orig: 120, 20
+  offset: 0, 0
+  index: -1
+buttonSelectedSmall
+  rotate: false
+  xy: 164, 200
+  size: 48, 20
+  orig: 48, 20
+  offset: 0, 0
+  index: -1
+buttonSmall
+  rotate: false
+  xy: 888, 980
+  size: 48, 20
+  orig: 48, 20
+  offset: 0, 0
+  index: -1
+chestInventory
+  rotate: false
+  xy: 2, 122
+  size: 160, 128
+  orig: 160, 128
+  offset: 0, 0
+  index: -1
+craftingLeft
+  rotate: false
+  xy: 806, 894
+  size: 80, 128
+  orig: 80, 128
+  offset: 0, 0
+  index: -1
+craftingRight
+  rotate: false
+  xy: 644, 764
+  size: 80, 128
+  orig: 80, 128
+  offset: 0, 0
+  index: -1
+energyBars
+  rotate: false
+  xy: 726, 828
+  size: 66, 32
+  orig: 66, 32
+  offset: 0, 0
+  index: -1
+fishing-minigame
+  rotate: false
+  xy: 2, 54
+  size: 96, 32
+  orig: 96, 32
+  offset: 0, 0
+  index: -1
+healthbarNine
+  rotate: false
+  xy: 286, 234
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+healthbarNineBackground
+  rotate: false
+  xy: 1010, 1014
+  size: 5, 8
+  orig: 5, 8
+  offset: 0, 0
+  index: -1
+hotbar
+  rotate: false
+  xy: 2, 88
+  size: 160, 32
+  orig: 160, 32
+  offset: 0, 0
+  index: -1
+inventory
+  rotate: false
+  xy: 2, 252
+  size: 160, 128
+  orig: 160, 128
+  offset: 0, 0
+  index: -1
+itemSlotBackground
+  rotate: false
+  xy: 726, 794
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+itemSlotBackgroundChecked
+  rotate: false
+  xy: 644, 696
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+itemSlotBackgroundCheckedFilled
+  rotate: false
+  xy: 100, 54
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+itemSlotBackgroundFilled
+  rotate: false
+  xy: 302, 294
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+levelBackground
+  rotate: false
+  xy: 644, 730
+  size: 72, 32
+  orig: 72, 32
+  offset: 0, 0
+  index: -1
+levelIcons
+  rotate: false
+  xy: 718, 737
+  size: 4, 25
+  orig: 4, 25
+  offset: 0, 0
+  index: -1
+lighting
+  rotate: false
+  xy: 2, 382
+  size: 640, 640
+  orig: 640, 640
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 2, 20
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+minusButton
+  rotate: false
+  xy: 546, 360
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+minusButtonSelected
+  rotate: false
+  xy: 164, 178
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+particle
+  rotate: false
+  xy: 464, 354
+  size: 4, 4
+  orig: 4, 4
+  offset: 0, 0
+  index: -1
+pauseMenu
+  rotate: false
+  xy: 164, 244
+  size: 136, 136
+  orig: 136, 136
+  offset: 0, 0
+  index: -1
+plusButton
+  rotate: false
+  xy: 384, 328
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+plusButtonSelected
+  rotate: false
+  xy: 794, 840
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+sliderKnob
+  rotate: false
+  xy: 2, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+smallNumber0
+  rotate: false
+  xy: 302, 288
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber1
+  rotate: false
+  xy: 938, 996
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber2
+  rotate: false
+  xy: 726, 788
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber3
+  rotate: false
+  xy: 644, 690
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber4
+  rotate: false
+  xy: 214, 216
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber5
+  rotate: false
+  xy: 336, 322
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber6
+  rotate: false
+  xy: 134, 82
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber7
+  rotate: false
+  xy: 760, 822
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber8
+  rotate: false
+  xy: 678, 724
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+smallNumber9
+  rotate: false
+  xy: 888, 974
+  size: 3, 4
+  orig: 3, 4
+  offset: 0, 0
+  index: -1
+solid
+  rotate: false
+  xy: 36, 51
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+translucent
+  rotate: false
+  xy: 20, 2
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+worldWidget
+  rotate: false
+  xy: 726, 862
+  size: 160, 30
+  orig: 160, 30
+  offset: 0, 0
+  index: -1
+worldWidgetSelected
+  rotate: false
+  xy: 302, 350
+  size: 160, 30
+  orig: 160, 30
+  offset: 0, 0
+  index: -1

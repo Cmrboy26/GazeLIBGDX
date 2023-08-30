@@ -1,0 +1,342 @@
+
+Tiles.png
+size: 2048, 128
+format: RGBA8888
+filter: MipMapNearestNearest, MipMapNearestNearest
+repeat: xy
+anvil
+  rotate: false
+  xy: 106, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+campfire
+  rotate: false
+  xy: 1911, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+chest
+  rotate: false
+  xy: 316, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+chute
+  rotate: false
+  xy: 141, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dirt
+  rotate: false
+  xy: 1168, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dirtTransition
+  rotate: false
+  xy: 246, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+farmlandDry
+  rotate: false
+  xy: 1133, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+farmlandMoist
+  rotate: false
+  xy: 1981, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+furnace
+  rotate: false
+  xy: 1, 5
+  size: 32, 48
+  orig: 32, 48
+  offset: 0, 0
+  index: -1
+grass
+  rotate: false
+  xy: 1946, 91
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+grassTransition
+  rotate: false
+  xy: 1876, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+hitbox
+  rotate: false
+  xy: 1028, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+ironOreWall1
+  rotate: false
+  xy: 1666, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+ironOreWall2
+  rotate: false
+  xy: 1526, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+ironOreWall3
+  rotate: false
+  xy: 1806, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+lava
+  rotate: false
+  xy: 1, 91
+  size: 1056, 32
+  orig: 1056, 32
+  offset: 0, 0
+  index: -1
+lavaTransition
+  rotate: false
+  xy: 281, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+moistDirt
+  rotate: false
+  xy: 36, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+player - Copy (2)
+  rotate: false
+  xy: 1, 1
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+playertest
+  rotate: false
+  xy: 456, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand0
+  rotate: false
+  xy: 1203, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand1
+  rotate: false
+  xy: 1098, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sand2
+  rotate: false
+  xy: 421, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+sandTransition
+  rotate: false
+  xy: 351, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stoneTile
+  rotate: false
+  xy: 1946, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+stoneWall1
+  rotate: false
+  xy: 1596, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+stoneWall2
+  rotate: false
+  xy: 1491, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+stoneWall3
+  rotate: false
+  xy: 1736, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+table
+  rotate: false
+  xy: 386, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+tallGrass
+  rotate: false
+  xy: 211, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+torch
+  rotate: false
+  xy: 1060, 91
+  size: 192, 32
+  orig: 192, 32
+  offset: 0, 0
+  index: -1
+tree1
+  rotate: false
+  xy: 1389, 27
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+tree2
+  rotate: false
+  xy: 1322, 27
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+tree3
+  rotate: false
+  xy: 1255, 27
+  size: 64, 96
+  orig: 64, 96
+  offset: 0, 0
+  index: -1
+wallFlowers
+  rotate: false
+  xy: 1631, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+water
+  rotate: false
+  xy: 1, 56
+  size: 1024, 32
+  orig: 1024, 32
+  offset: 0, 0
+  index: -1
+waterOld
+  rotate: false
+  xy: 1876, 91
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+waterTransition
+  rotate: false
+  xy: 1911, 91
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wheat1
+  rotate: false
+  xy: 176, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wheat2
+  rotate: false
+  xy: 71, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wheat3
+  rotate: false
+  xy: 491, 21
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wheat4
+  rotate: false
+  xy: 1981, 91
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+wheat5
+  rotate: false
+  xy: 1063, 56
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+woodDoor1
+  rotate: false
+  xy: 1701, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+woodDoor2
+  rotate: false
+  xy: 1456, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+woodDoor3
+  rotate: false
+  xy: 1771, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+woodDoor4
+  rotate: false
+  xy: 1561, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
+woodWall
+  rotate: false
+  xy: 1841, 27
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,6 @@
+TODO:
+
+X Collisions 
+X Slowing movement (for water)
+- Lighting
+- Chat
