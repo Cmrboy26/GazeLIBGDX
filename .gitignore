@@ -28,3 +28,12 @@ replay_pid*
 .gradle/
 .project
 .classpath
+gradle/wrapper/gradle-wrapper.properties
+desktop/.settings/org.eclipse.jdt.core.prefs
+desktop/.project
+desktop/.classpath
+core/build/tmp/compileJava/previous-compilation-data.bin
+core/.settings/org.eclipse.jdt.core.prefs
+core/.project
+core/.classpath
+.project
