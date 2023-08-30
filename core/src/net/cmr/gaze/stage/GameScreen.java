@@ -1164,11 +1164,11 @@ public class GameScreen implements Screen {
 							final double threshold = Tile.TILE_SIZE/2f;
 							
 							if(oldPosition!=null) {
-								System.out.println(cvm.size()+","+oldPosition);
+								//System.out.println(cvm.size()+","+oldPosition);
 								
 								if(Math.hypot(oldPosition.getX()-incomingData.getX(), oldPosition.getY()-incomingData.getY()) > threshold) {
 									entity.setPosition(incomingData.getX(), incomingData.getY());
-									System.out.println("SET THE POSITION");
+									//System.out.println("SET THE POSITION");
 								}
 							}
 							

@@ -10,6 +10,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.Logger;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.GameServer.ServerType;
 import net.cmr.gaze.networking.Packet;
@@ -62,6 +63,7 @@ public class ConnectingScreen implements Screen {
 		this.sender = new PacketSender();
 		
 		try {
+			Logger.log("INFO", "Attempting connection with IP: "+ip+", PORT: "+port+"...");
 			socket = new Socket(ip, port);
 			dataOut = new DataOutputStream(socket.getOutputStream());
 			dataIn = new DataInputStream(socket.getInputStream());
