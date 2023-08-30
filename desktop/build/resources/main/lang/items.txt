@@ -12,14 +12,76 @@ IRON_ORE
 	A chunk of stone with salvageable pieces of iron.
 WOOD_AXE
 	Wood Axe
-	An axe made of wood
+	An axe made of wood.
 WOOD_PICKAXE
 	Wood Pickaxe
-	A pickaxe made of wood
+	A pickaxe made of wood.
 WOOD_SHOVEL
 	Wood Shovel
-	A shovel made of wood
+	A shovel made of wood.
 WOOD_HOE
 	Wood Hoe
-	A hoe made of wood
-
+	A hoe made of wood.
+WOOD_WATERING_CAN
+	Wood Watering Can
+	A simple, yet effective, watering can.
+STONE_PICKAXE
+	Stone Pickaxe
+	A pickaxe made of stone.
+STONE_AXE
+	Stone Axe
+	An axe made of stone.
+STONE_SHOVEL
+	Stone Shovel
+	A shovel made of stone.
+STONE_HOE
+	Stone Hoe
+	A hoe made of stone.
+TABLE
+	Table
+	Can be used to craft many items.
+CHUTE
+	Chute
+	Can be used to enter and leave the underground.
+FURNACE
+	Furnace
+	Can be used to smelt raw ores.
+CAMPFIRE
+	Campfire
+	Can be used to cook food.
+CHEST
+	Chest
+	Can be used to store items.
+TORCH
+	Torch
+	Can be used to light up the world.
+WHEAT_SEEDS
+	Wheat Seeds
+	Can be planted.
+WHEAT
+	Wheat
+	It's just wheat.
+WOOD_WALL
+	Wood Wall
+	Build a house!
+WOOD_FLOOR
+	Wood Floor
+	Floor your house!
+WOOD_DOOR
+	Wood Door
+	Enter your house!
+STONE_PATH_FLOOR
+	Stone Path Floor
+	Decorate the outside!
+STONE_BRICK_WALL
+	Stone Brick Wall
+	Build a house!
+STONE_BRICK_FLOOR
+	Stone Brick Floor
+	Floor your house!
+IRON_PICKAXE
+	Iron Pickaxe
+	A strong pickaxe capable of mining hard materials.
+IRON_AXE
+	Iron Axe
+	A strong axe capable of harvesting wood efficiently.

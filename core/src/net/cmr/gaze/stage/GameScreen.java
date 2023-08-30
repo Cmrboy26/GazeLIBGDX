@@ -96,6 +96,7 @@ import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.stage.widgets.Notification;
 import net.cmr.gaze.stage.widgets.PauseMenu;
 import net.cmr.gaze.stage.widgets.PlayerInventoryWidget;
+import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
 import net.cmr.gaze.util.Pair;
@@ -166,6 +167,9 @@ public class GameScreen implements Screen {
 	int rotation = 0;
 	
 	WorldGeneratorType currentWorldType;
+	
+	//HashMap<Long, Vector2Double> previousPlayerPositions = new HashMap<>();
+	ClosestValueMap<Long, Vector2Double> cvm = new ClosestValueMap<Long, Vector2Double>();
 	
 	public GameScreen(final Gaze game, String username, Socket socket, DataInputStream dataIn, DataOutputStream dataOut, GameServer server, boolean singlePlayer) {
 		this.game = game;
@@ -415,6 +419,7 @@ public class GameScreen implements Screen {
 	final float pingTime = 0.1f;
 	
 	float updateDelta;
+	float logPositionDelta;
 	float rightClickDelta = 0;
 	float leftClickDelta = 0;
 	
@@ -450,8 +455,8 @@ public class GameScreen implements Screen {
 		}
 		
 		worldTime+=delta;
-		
 		stepDelta+=Math.min(delta, .25f);
+		logPositionDelta+=delta;
 		
 		float speed = 1;
 		float ix = 0, iy = 0;
@@ -566,7 +571,12 @@ public class GameScreen implements Screen {
 		}
 		
 		if(lastX !=ix || lastY != iy || lastSprint != sprint) {
+			//this.previousPlayerPositions.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
 			sender.addPacket(new PlayerInputPacket(ix, iy, sprint));
+		}
+		if(logPositionDelta>1/10f) {
+			cvm.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
+			logPositionDelta = 0;
 		}
 		
 		lastX = ix;
@@ -1146,13 +1156,43 @@ public class GameScreen implements Screen {
 						} else /*if(!serverSinglePlayer) */{
 							entity.setVelocity(incomingVelocity.getX(), incomingVelocity.getY());
 							
-							if(entity.getVelocityX()==incomingVelocity.getX() && entity.getVelocityY()==incomingVelocity.getY()) {
-								if((Math.abs(entity.getX()-incomingData.getX()) > (Tile.TILE_SIZE)*(latency/500d) || Math.abs(entity.getY()-incomingData.getY()) > (Tile.TILE_SIZE)*(latency/500d))) {
-									//System.out.println(Math.abs(entity.getX()-incomingData.getX())+">"+(Tile.TILE_SIZE)*(latency/500d));
-									//System.out.println(entity.getX()+"-"+incomingData.getX());
+							long millisClosestLast = System.currentTimeMillis()-(latency/2l);
+							
+							int index = cvm.getClosestIndexOf(millisClosestLast);
+							Vector2Double oldPosition = cvm.get(millisClosestLast);
+							
+							final double threshold = Tile.TILE_SIZE/2f;
+							
+							if(oldPosition!=null) {
+								System.out.println(cvm.size()+","+oldPosition);
+								
+								if(Math.hypot(oldPosition.getX()-incomingData.getX(), oldPosition.getY()-incomingData.getY()) > threshold) {
 									entity.setPosition(incomingData.getX(), incomingData.getY());
+									System.out.println("SET THE POSITION");
 								}
 							}
+							
+							for(int i = 0; i < index; i++) {
+								cvm.getInternalList().remove(0);
+							}
+							
+							/*if(entity.getVelocityX()==incomingVelocity.getX() && entity.getVelocityY()==incomingVelocity.getY()) {
+								if((Math.abs(entity.getX()-incomingData.getX()) > (Tile.TILE_SIZE)*(latency/500d) || Math.abs(entity.getY()-incomingData.getY()) > (Tile.TILE_SIZE)*(latency/500d))) {
+									//entity.setPosition(incomingData.getX(), incomingData.getY());
+									
+									long millisClosestLast = System.currentTimeMillis()-(latency/2l);
+									
+									int index = cvm.getClosestIndexOf(millisClosestLast);
+									Vector2Double oldPosition = cvm.get(millisClosestLast);
+									if(oldPosition!=null) {
+										System.out.println(cvm.size()+","+oldPosition);
+									}
+									
+									for(int i = 0; i < index; i++) {
+										cvm.getInternalList().remove(0);
+									}
+								}
+							}*/
 						}
 						
 					} else {
