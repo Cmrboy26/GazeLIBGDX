@@ -62,7 +62,7 @@ public class HintMenu extends WidgetGroup {
 						+ "You can select any recipe, and a new menu will appear.\r\n"
 						+ "The items below the large item in this menu are the ingredients. \r\n"
 						+ "Once you have enough ingredients, you can craft the item!\r\n"
-						+ "New recipes will be unlocked whenyour character levels up!\r\n"
+						+ "New recipes will be unlocked when your character levels up!\r\n"
 						+ "Try breaking a few trees until you level up!\r\n"
 						+ "(You can view progress in the right top of your screen)";
 			}

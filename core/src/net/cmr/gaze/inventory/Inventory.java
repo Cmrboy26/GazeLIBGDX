@@ -2,6 +2,7 @@ package net.cmr.gaze.inventory;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.badlogic.gdx.Input;
@@ -13,9 +14,11 @@ import net.cmr.gaze.util.ArrayUtil;
 public class Inventory {
 
 	Item[] items;
+	ArrayList<InventoryListener> listeners;
 	
 	public Inventory(int size) {
 		items = new Item[size];
+		listeners = new ArrayList<>();
 	}
 	
 	public void writeInventory(DataBuffer buffer) throws IOException {
@@ -44,7 +47,6 @@ public class Inventory {
 	public void set(Item[] newItems) {
 		items = newItems;
 	}
-	
 	
 	public Item remove(Item remove) {
 		for(int i = 0; i < items.length; i++) {
@@ -194,6 +196,12 @@ public class Inventory {
 		return returnValue;
 	}
 	
+	public void addListener(InventoryListener listener) {
+		if(!listeners.contains(listener)) {
+			listeners.add(listener);
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return ArrayUtil.toArrayString(items);
@@ -202,5 +210,7 @@ public class Inventory {
 	public int getSize() {
 		return items.length;
 	}
+	
+	
 	
 }
