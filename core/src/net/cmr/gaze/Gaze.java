@@ -97,7 +97,7 @@ public class Gaze extends Game {
  		singleton = this;
 	}
 	
-	public NinePatch healthbar, healthbarBackground, helpBox;
+	public NinePatch healthbar, healthbarBackground, helpBox, questBoxNine;
 	
 	@Override
 	public void create () {
@@ -154,6 +154,7 @@ public class Gaze extends Game {
 		
 		helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
 		helpBox.scale(2, 2);
+		questBoxNine = new NinePatch(sprites.get("questBoxNine"), 1, 1, 1, 1);
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();

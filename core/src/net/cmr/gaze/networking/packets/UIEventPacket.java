@@ -29,6 +29,7 @@ public class UIEventPacket extends Packet {
 	/**
 	 * 1: Crafting UI
 	 * 2: Inventory UI
+	 * 3: Quest UI
 	 * @return Container ID of the changed state UI.
 	 */
 	public short getContainerID() {

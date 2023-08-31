@@ -96,6 +96,7 @@ import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.stage.widgets.Notification;
 import net.cmr.gaze.stage.widgets.PauseMenu;
 import net.cmr.gaze.stage.widgets.PlayerInventoryWidget;
+import net.cmr.gaze.stage.widgets.QuestBook;
 import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
@@ -155,6 +156,7 @@ public class GameScreen implements Screen {
 	
 	PauseMenu pauseMenu;
 	SkillDisplay skillDisplay;
+	QuestBook quests;
 	
 	ConcurrentHashMap<UUID, Entity> entities;
 	
@@ -262,6 +264,7 @@ public class GameScreen implements Screen {
 		inventory = new PlayerInventoryWidget(game, this);
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
+		quests = new QuestBook(game);
 		
 		craftingLeft = new Image(game.getSprite("craftingLeft"));
 		craftingLeft.setBounds(0, (360-256)/2, 80*2, 128*2);
@@ -311,9 +314,9 @@ public class GameScreen implements Screen {
 		recipeDisplay.setVisible(false);
 		categoryScrollPane.setVisible(false);
 		craftDisplay.setVisible(false);
-		
-		pauseMenu = new PauseMenu(game, this);
 		skillDisplay = new SkillDisplay(game, this);
+		skillDisplay.setVisible(true);
+		pauseMenu = new PauseMenu(game, this);
 		
 		centerStage.addActor(chestInventory);
 		centerStage.addActor(inventory);
@@ -321,6 +324,7 @@ public class GameScreen implements Screen {
 		centerStage.addActor(recipeDisplay);
 		centerStage.addActor(categoryScrollPane);
 		centerStage.addActor(craftDisplay);
+		centerStage.addActor(quests);
 		centerStage.addActor(pauseMenu);
 		rightTopStage.addActor(skillDisplay);
 		
@@ -371,10 +375,11 @@ public class GameScreen implements Screen {
 				}
 				if(character == Input.Keys.E) {
 					if(chestInventory.isVisible()) {
-						chestInventory.setVisible(false);
+						closeCentralMenu();
 					} else {
-						inventory.setVisible(!inventory.isVisible());
-						
+						boolean visible = inventory.isVisible();
+						closeCentralMenu();
+						inventory.setVisible(!visible);
 						openHelpMenu(HintMenuType.INVENTORY);
 						sender.addPacket(new UIEventPacket(inventory.isVisible(), 2));
 					}
@@ -383,6 +388,12 @@ public class GameScreen implements Screen {
 					setCraftingStation(CraftingStation.NONE);
 					setCraftingVisibility(!craftingMenuVisible);
 					sender.addPacket(new UIEventPacket(craftingMenuVisible, 1));
+				}
+				if(character == Input.Keys.F) {
+					boolean visible = quests.isVisible();
+					closeCentralMenu();
+					quests.setVisible(!visible);
+					sender.addPacket(new UIEventPacket(craftingMenuVisible, 3));
 				}
 				if(character == Input.Keys.ESCAPE) {
 					pauseMenu.setVisible(!pauseMenu.isVisible());
@@ -1247,7 +1258,7 @@ public class GameScreen implements Screen {
 				setCraftingStation(cspack.getStation());
 				setCraftingVisibility(true);
 			}
-			inventory.setVisible(false);
+			closeCentralMenu();
 			chestInventory.setVisible(false);
 			chestInventory.setChestInventory(0, 0);
 		} else if(packet instanceof SkillsPacket) {
@@ -1347,7 +1358,6 @@ public class GameScreen implements Screen {
 	}
 	
 	public boolean overMenus(Vector2 mouseLocalPosition) {
-		
 		boolean end = false;
 		
 		end = end || inventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
@@ -1355,6 +1365,7 @@ public class GameScreen implements Screen {
 		end = end || hotbarTable.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || pauseMenu.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || chestInventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+		end = end || quests.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		
 		return end;
 	}
@@ -1455,6 +1466,12 @@ public class GameScreen implements Screen {
 	
 	public void openHelpMenu(HintMenuType type) {
 		openHelpMenu(type, true);
+	}
+	
+	public void closeCentralMenu() {
+		inventory.setVisible(false);
+		chestInventory.setVisible(false);
+		quests.setVisible(false);
 	}
     
     public void addLevelUpNotification() {
