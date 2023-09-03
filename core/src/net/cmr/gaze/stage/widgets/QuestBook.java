@@ -42,13 +42,13 @@ public class QuestBook extends WidgetGroup {
 		this.game = game;
 		this.setPosition(320/2f, (360-256)/2);
 		this.map = new HashMap<>();
-		map.put(Quests.STARTING_OFF, new Boolean[][] {
+		/*map.put(Quests.STARTING_OFF, new Boolean[][] {
 			{true, false, true},
 			{false, true, false},
 		});
 		map.put(Quests.FARMING, new Boolean[][] {
 			{true, true, true}
-		});
+		});*/
 		
 		Image image = new Image(game.getSprite("questBook"));
 		image.setBounds(0, (0)/2, 320, 256);
@@ -217,21 +217,33 @@ public class QuestBook extends WidgetGroup {
 	
 	public enum Quests {
 		
-		STARTING_OFF("Starting Off", new String[][] {
+		STARTING_OFF(0, "Starting Off", new String[][] {
 			{"Collecting Resources", "collect resource desc", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
 			{"Mining", "get some ores man", "Get to Level One Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
 		}),
-		FARMING("Farming", new String[][] {
+		FARMING(1, "Farming", new String[][] {
 			{"Basic Farm", "hey make a farm", "Craft a Wood Shovel", "Craft a Wood Hoe", "Craft a Wood Watering Can"},
 		});
 		
+		final int id;
 		String questCategoryName;
 		String[][] data;
 		
-		Quests(String name, String[][] data) {
+		Quests(int id, String name, String[][] data) {
+			this.id = id;
 			this.questCategoryName = name;
 			this.data = data;
+			
+			if(QuestData.questsMap==null) {
+				QuestData.questsMap = new HashMap<>();
+			}
+			QuestData.questsMap.put(id, this);
 		}
+		
+		public static Quests getQuestFromID(int id) {
+			return QuestData.questsMap.get(id);
+		}
+		
 		public String getCategoryName() {
 			return questCategoryName;
 		}

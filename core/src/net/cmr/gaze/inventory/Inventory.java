@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.DataBuffer;
 
+import net.cmr.gaze.inventory.InventoryListener.InventoryListenerEvent;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.util.ArrayUtil;
 
@@ -38,14 +39,17 @@ public class Inventory {
 	public Item[] getAll() {
 		return items;
 	}
+	
 	public void put(int slot, Item item) {
 		this.items[slot] = item;
+		addEvent(InventoryListenerEvent.ITEM_SET);
 	}
 	public Item get(int slot) {
 		return this.items[slot];
 	}
 	public void set(Item[] newItems) {
 		items = newItems;
+		addEvent(InventoryListenerEvent.INVENTORY_OVERWRITTEN);
 	}
 	
 	public Item remove(Item remove) {
@@ -56,6 +60,7 @@ public class Inventory {
 			if(items[i] != null) {
 				remove = items[i].removeItem(remove);
 				items[i] = Item.checkItem(items[i]);
+				addEvent(InventoryListenerEvent.ITEM_REMOVED);
 			}
 		}
 		return remove;
@@ -68,6 +73,7 @@ public class Inventory {
 		if(items[i] != null) {
 			remove = items[i].removeItem(remove);
 			items[i] = Item.checkItem(items[i]);
+			addEvent(InventoryListenerEvent.ITEM_REMOVED);
 		}
 		return remove;
 	}
@@ -88,6 +94,7 @@ public class Inventory {
 			// will place in any available slot
 			add = placeItem(add, i);
 		}
+		addEvent(InventoryListenerEvent.ITEM_ADDED);
 		return Item.checkItem(add);
 	}
 	
@@ -199,6 +206,12 @@ public class Inventory {
 	public void addListener(InventoryListener listener) {
 		if(!listeners.contains(listener)) {
 			listeners.add(listener);
+		}
+	}
+
+	private void addEvent(InventoryListenerEvent itemSet) {
+		for(int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).onInventoryAction(itemSet);
 		}
 	}
 	

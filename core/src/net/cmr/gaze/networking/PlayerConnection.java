@@ -14,6 +14,7 @@ import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.crafting.Recipe;
 import net.cmr.gaze.inventory.Inventory;
+import net.cmr.gaze.inventory.InventoryListener;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.GameServer.ServerType;
@@ -38,7 +39,7 @@ import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.tile.ChestTile;
 
 public class PlayerConnection {
-
+	
 	boolean initialized = false, connected = true, disconnect = false;
 	String disconnectMessage = "";
 	
@@ -51,6 +52,13 @@ public class PlayerConnection {
 	public GameServer server;
 	Player player;
 	UUID playerUUID;
+
+	public static InventoryListener defaultListener = new InventoryListener() {
+		@Override
+		public void onInventoryAction(InventoryListenerEvent event) {
+			
+		}
+	};
 	
 	float latency;
 	
@@ -119,6 +127,7 @@ public class PlayerConnection {
 			if(packet.getVersion()==Gaze.version) {
 				initialized = true;
 				this.player = server.loadPlayer(this);
+				this.player.getInventory().addListener(defaultListener);
 				this.player.setPlayerType(packet.getPlayerType());
 				return;
 			}
@@ -177,14 +186,14 @@ public class PlayerConnection {
 		if(packet instanceof AuthenticationPacket) {
 			initialize((AuthenticationPacket) packet);
 		}
-		if(packet instanceof PingPacket) {
+		else if(packet instanceof PingPacket) {
 			if(!((PingPacket)packet).isServerPing()) {
 				sender.sendPacketInstant(dataOutput, packet);
 			} else {
 				latency = (System.currentTimeMillis()-((PingPacket)packet).getTime())/2f;
 			}
 		}
-		if(packet instanceof PlayerInputPacket) {
+		else if(packet instanceof PlayerInputPacket) {
 			PlayerInputPacket inputPacket = (PlayerInputPacket) packet;
 			movementX = CustomMath.minMax(-1f, inputPacket.getX(), 1f);
 			movementY = CustomMath.minMax(-1f, inputPacket.getY(), 1f);
@@ -197,18 +206,18 @@ public class PlayerConnection {
 			sprinting = inputPacket.getSprinting();
 			setPlayerMovement();
 		}
-		if(packet instanceof DisconnectPacket) {
+		else if(packet instanceof DisconnectPacket) {
 			disconnect(((DisconnectPacket)packet).getMessage());
 		}
-		if(packet instanceof PlayerInteractPacket) {
+		else if(packet instanceof PlayerInteractPacket) {
 			PlayerInteractPacket interact = (PlayerInteractPacket) packet;
 			interactPackets.add(interact);
 		}
-		if(packet instanceof PositionPacket) {
+		else if(packet instanceof PositionPacket) {
 			PositionPacket pos = (PositionPacket) packet;
 			lastPacket = pos;
 		}
-		if(packet instanceof HotbarUpdatePacket) {
+		else if(packet instanceof HotbarUpdatePacket) {
 			HotbarUpdatePacket name = (HotbarUpdatePacket) packet;
 			if(name.getSlot() < 0 || name.getSlot() >= 7) {
 				disconnect("Invalid hotbar slot "+name.getSlot());
@@ -221,7 +230,7 @@ public class PlayerConnection {
 				}
 			}
 		}
-		if(packet instanceof InventoryClickPacket) {
+		else if(packet instanceof InventoryClickPacket) {
 			InventoryClickPacket click = (InventoryClickPacket) packet;
 
 			Inventory selectedInventory, clickedInventory = null;
@@ -265,7 +274,7 @@ public class PlayerConnection {
 			}
 			
 		}
-		if(packet instanceof CraftPacket) {
+		else if(packet instanceof CraftPacket) {
 			CraftPacket craft = (CraftPacket) packet;
 			Recipe recipe = Crafting.getRecipe(craft.getCategory(), craft.getRecipe());
 			if(recipe != null) {
@@ -275,6 +284,7 @@ public class PlayerConnection {
 				
 				Item[] results = recipe.craft(getPlayer().getInventory(), craft.getTimes(), getCraftingStation(), getPlayer().getSkills());
 				inventoryChanged(false);
+				onCraftingEvent(recipe);
 				if(results != null) {
 					for(int i = 0; i < results.length; i++) {
 						if(results[i] == null) {
@@ -285,7 +295,7 @@ public class PlayerConnection {
 				}
 			}
 		}
-		if(packet instanceof UIEventPacket) {
+		else if(packet instanceof UIEventPacket) {
 			UIEventPacket ui = (UIEventPacket) packet;
 			if(ui.getOpenState()==false && ui.getContainerID()==1) {
 				this.targetTile = null;
@@ -303,6 +313,10 @@ public class PlayerConnection {
 			}
 		}
 		return CraftingStation.NONE;
+	}
+	
+	public void onCraftingEvent(Recipe recipe) {
+		
 	}
 
 	public void inventoryChanged(boolean sendUpdateToSelf) {
@@ -344,8 +358,6 @@ public class PlayerConnection {
 				lastDifference = 0;
 			}*/
 		//}
-		
-		
 		
 		lastDifference = difference;
 	}
