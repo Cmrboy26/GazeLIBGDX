@@ -176,9 +176,12 @@ public class Player extends Entity implements LightSource {
 		return "player"+(moving?"Walk":"Idle")+lastDirection+CustomMath.minMax(0, playerType, AVAILABLE_PLAYER_TYPES);
 		
 	}
-
+	
+	final int VERSION = 0;
+	
 	@Override
 	protected Entity readEntityData(DataInputStream input, boolean fromFile) throws IOException {
+		int readVersion = input.readInt();
 		boolean obfuscate = input.readBoolean();
 		username = input.readUTF();
 		if(!obfuscate) {
@@ -193,6 +196,7 @@ public class Player extends Entity implements LightSource {
 	@Override
 	public void writeEntity(DataBuffer buffer, boolean obfuscatePosition, boolean toFile) throws IOException {
 		super.writeEntity(buffer, obfuscatePosition, toFile);
+		buffer.writeInt(VERSION);
 		buffer.writeBoolean(obfuscatePosition);
 		buffer.writeUTF(username);
 		if(!obfuscatePosition) {

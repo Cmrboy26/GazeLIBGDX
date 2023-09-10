@@ -41,7 +41,7 @@ import net.cmr.gaze.world.World;
 
 public abstract class Entity {
 	
-	public static final double DELTA_TIME = 1/60d;
+	public static final double DELTA_TIME = 1/20d;
 	
 	double x, y, lastX, lastY, velocityX, velocityY;
 	UUID uuid;
@@ -300,7 +300,10 @@ public abstract class Entity {
 		return entityBox;
 	} 
 	
+	final int VERSION = 0;
+	
 	public void writeEntity(DataBuffer buffer, boolean obfuscatePosition, boolean toFile) throws IOException {
+		buffer.writeInt(VERSION);
 		buffer.writeInt(UuidUtils.asBytes(uuid).length);
 		buffer.write(UuidUtils.asBytes(uuid));
 		if(obfuscatePosition) {
@@ -314,6 +317,7 @@ public abstract class Entity {
 	}
 	
 	public static Entity readEntity(DataInputStream input, boolean fromFile) throws IOException {
+		int version = input.readInt();
 		byte[] uuidBytes = new byte[input.readInt()];
 		input.read(uuidBytes);
 		UUID id = UuidUtils.asUuid(uuidBytes);
