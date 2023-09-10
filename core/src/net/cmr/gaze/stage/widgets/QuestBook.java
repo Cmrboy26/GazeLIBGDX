@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.networking.packets.QuestDataPacket;
 
 public class QuestBook extends WidgetGroup {
 
@@ -36,7 +37,7 @@ public class QuestBook extends WidgetGroup {
 	int index;
 	ButtonGroup<QuestButton> group;
 	
-	HashMap<Quests, Boolean[][]> map;
+	HashMap<Quest, Boolean[][]> map;
 	
 	public QuestBook(Gaze game) {
 		this.game = game;
@@ -145,7 +146,7 @@ public class QuestBook extends WidgetGroup {
 		addActor(rightButton);
 	}
 	
-	public void setCompletedQuests(HashMap<Quests, Boolean[][]> map) {
+	public void setCompletedQuests(HashMap<Quest, Boolean[][]> map) {
 		this.map = map;
 	}
 	
@@ -162,8 +163,8 @@ public class QuestBook extends WidgetGroup {
 		style.checkedFontColor = Color.YELLOW;
 		style.fontColor = Color.WHITE;
 
-		appendButton(table, group, Quests.STARTING_OFF, style);
-		appendButton(table, group, Quests.FARMING, style);
+		appendButton(table, group, Quest.STARTING_OFF, style);
+		appendButton(table, group, Quest.FARMING, style);
 		setVisibleData();
 		
 		scrollPane.setActor(table);
@@ -183,7 +184,17 @@ public class QuestBook extends WidgetGroup {
 		goldCheck.setVisible(getQuestCompleted(checked.quest, index, 2));
 	}
 	
-	public boolean getQuestCompleted(Quests quest, int index, int tier) {
+	public void setQuestData(QuestData qdata) {
+		this.map = qdata.getData();
+		setVisibleData();
+	}
+	
+	public void updateQuestData(QuestDataPacket packet) {
+		this.map.get(packet.getQuest())[packet.getQuestNumber()][packet.getQuestTier()] = packet.getValue();
+		setVisibleData();
+	}
+	
+	public boolean getQuestCompleted(Quest quest, int index, int tier) {
 		Boolean[][] array = map.getOrDefault(quest, null);
 		if(array == null) {
 			return false;
@@ -191,7 +202,7 @@ public class QuestBook extends WidgetGroup {
 		return array[index][tier];
 	}
 	
-	private void appendButton(Table table, ButtonGroup<QuestButton> group, Quests quest, TextButtonStyle style) {
+	private void appendButton(Table table, ButtonGroup<QuestButton> group, Quest quest, TextButtonStyle style) {
 		QuestButton button = new QuestButton(quest, style);
 		button.align(Align.center);
 		button.addListener(new ChangeListener() {
@@ -208,14 +219,14 @@ public class QuestBook extends WidgetGroup {
 	}
 	
 	class QuestButton extends TextButton {
-		Quests quest;
-		public QuestButton(Quests quest, TextButtonStyle style) {
+		Quest quest;
+		public QuestButton(Quest quest, TextButtonStyle style) {
 			super(quest.getCategoryName(), style);
 			this.quest = quest;
 		}
 	}
 	
-	public enum Quests {
+	public enum Quest {
 		
 		STARTING_OFF(0, "Starting Off", new String[][] {
 			{"Collecting Resources", "collect resource desc", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
@@ -225,11 +236,11 @@ public class QuestBook extends WidgetGroup {
 			{"Basic Farm", "hey make a farm", "Craft a Wood Shovel", "Craft a Wood Hoe", "Craft a Wood Watering Can"},
 		});
 		
-		final int id;
+		public final int id;
 		String questCategoryName;
 		String[][] data;
 		
-		Quests(int id, String name, String[][] data) {
+		Quest(int id, String name, String[][] data) {
 			this.id = id;
 			this.questCategoryName = name;
 			this.data = data;
@@ -240,27 +251,39 @@ public class QuestBook extends WidgetGroup {
 			QuestData.questsMap.put(id, this);
 		}
 		
-		public static Quests getQuestFromID(int id) {
+		public static Quest getQuestFromID(int id) {
 			return QuestData.questsMap.get(id);
 		}
 		
 		public String getCategoryName() {
 			return questCategoryName;
 		}
-		public String getTitle(int index) {
-			return data[index][0];
+		public String getTitle(int questNumber) {
+			return data[questNumber][0];
 		}
-		public String getDescription(int index) {
-			return data[index][1];
+		public String getDescription(int questNumber) {
+			return data[questNumber][1];
 		}
-		public String getBronzePreReq(int index) {
-			return data[index][2];
+		public String getPreReq(int tier, int questNumber) {
+			if(tier == 0) {
+				return getBronzePreReq(questNumber);
+			}
+			if(tier == 1) {
+				return getSilverPreReq(questNumber);
+			}
+			if(tier == 2) {
+				return getGoldPreReq(questNumber);
+			}
+			return "";
 		}
-		public String getSilverPreReq(int index) {
-			return data[index][3];
+		public String getBronzePreReq(int questNumber) {
+			return data[questNumber][2];
 		}
-		public String getGoldPreReq(int index) {
-			return data[index][4];
+		public String getSilverPreReq(int questNumber) {
+			return data[questNumber][3];
+		}
+		public String getGoldPreReq(int questNumber) {
+			return data[questNumber][4];
 		}
 		public int getSize() {
 			return data.length;

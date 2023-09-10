@@ -86,6 +86,7 @@ import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
 import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
+import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.SpawnEntity;
 import net.cmr.gaze.networking.packets.TileUpdatePacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
@@ -1131,7 +1132,8 @@ public class GameScreen implements Screen {
 			if(entity instanceof Player) {
 				Player player = (Player) entity;
 				//System.out.println("RECEIVED PLAYER, OBF: "+player.getX()+","+player.getY());
-				if(player.getUsername().equals(username)) {
+				if(player.equals(getLocalPlayer())) {
+					quests.setQuestData(player.getQuestData());
 					for(InventorySlot slot : hotbarButtonGroup.getButtons()) {
 						if(slot.getSlot()==player.getHotbarSlot()) {
 							slot.setChecked(true);
@@ -1298,6 +1300,17 @@ public class GameScreen implements Screen {
 			chestInventory.setChestInventory(cip.getX(), cip.getY());
 			setCraftingStation(CraftingStation.NONE);
 			setCraftingVisibility(false);
+		} else if(packet instanceof QuestDataPacket) {
+			QuestDataPacket qdata = (QuestDataPacket) packet;
+			quests.updateQuestData(qdata);
+			if(qdata.getValue()) {
+				addNotification(
+						new String[] {"Quest COMPLETED!",
+								""+qdata.getQuest().getPreReq(qdata.getQuestTier(), qdata.getQuestNumber())}, 
+						new String[] {"upArrow"}, 
+						new boolean[] {true},
+						3f, 6f, "intro");
+			}
 		}
 	}
 	

@@ -18,6 +18,8 @@ import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.stage.GameScreen;
+import net.cmr.gaze.stage.widgets.QuestBook.Quest;
+import net.cmr.gaze.stage.widgets.QuestData;
 import net.cmr.gaze.util.ArrayUtil;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.HousingDoor;
@@ -37,6 +39,7 @@ public class Player extends Entity implements LightSource {
 	boolean sprinting;
 	public long lastBreakInteraction;
 	Skills skills;
+	QuestData questData;
 	
 	final float iFrameDefault = .5f;
 	float invincibilityFrames = 0;
@@ -177,7 +180,7 @@ public class Player extends Entity implements LightSource {
 		
 	}
 	
-	final int VERSION = 0;
+	final int VERSION = 1;
 	
 	@Override
 	protected Entity readEntityData(DataInputStream input, boolean fromFile) throws IOException {
@@ -190,6 +193,9 @@ public class Player extends Entity implements LightSource {
 		skills = Skills.readSkills(input);
 		selectedHotbarSlot = input.readInt();
 		playerType = input.readInt();
+		if(readVersion >= 1) {
+			questData = QuestData.read(input);
+		}
 		return this;
 	}
 	
@@ -205,6 +211,7 @@ public class Player extends Entity implements LightSource {
 		skills.writeSkills(buffer);
 		buffer.writeInt(selectedHotbarSlot);
 		buffer.writeInt(playerType);
+		QuestData.write(questData, buffer);
 	}
 
 	public void setHotbarSlot(int slot) {
@@ -280,6 +287,7 @@ public class Player extends Entity implements LightSource {
 	public Skills getSkills() {
 		return skills;
 	}
+	
 	public void overrideSkills(Skills skills2) {
 		this.skills = skills2;
 	}
@@ -290,6 +298,10 @@ public class Player extends Entity implements LightSource {
 		world.getServer().sendAllPacketIf(packet, ConnectionPredicate.PLAYER_IN_BOUNDS, getChunk(), world);
 	}
 
+	public QuestData getQuestData() {
+		return questData;
+	}
+	
 	@Override
 	public float getIntensity() {
 		

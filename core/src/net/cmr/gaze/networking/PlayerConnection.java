@@ -16,6 +16,7 @@ import net.cmr.gaze.crafting.Recipe;
 import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.InventoryListener;
 import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.GameServer.ServerType;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
@@ -30,7 +31,9 @@ import net.cmr.gaze.networking.packets.PingPacket;
 import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
+import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
+import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
@@ -377,13 +380,54 @@ public class PlayerConnection {
 			this.targetTile = tile;
 		}
 	}
-	
+
 	public void setOpenContainer(ChestTile tile, int x, int y) {
 		if(tile instanceof ChestTile) {
 			getSender().addPacket(new ChestInventoryPacket(x, y));
 			this.targetX = x;
 			this.targetY = y;
 			this.targetTile = tile;
+		}
+	}
+
+	public void completeQuest(Quest quest, int questNumber, int tier) {
+		getPlayer().getQuestData().getData().get(quest)[questNumber][tier] = true;
+		getSender().addPacket(new QuestDataPacket(quest, questNumber, tier, true));
+	}
+	
+	public enum QuestCheckType {
+		PICKUP,
+		CRAFT,
+		PLACEMENT,
+		LEVELUP
+	}
+	
+	public void questCheck(QuestCheckType type, Object object) {
+		switch(type) {
+		case CRAFT:
+			Item craftItem = (Item) object;
+			if(craftItem==null) {
+				return;
+			}
+			if(craftItem.getType() == ItemType.CHUTE) {
+				
+			}
+			break;
+		case PICKUP:
+			Item pickupItem = (Item) object;
+			if(pickupItem==null) {
+				return;
+			}
+			if(pickupItem.getType() == ItemType.WOOD) {
+				completeQuest(Quest.STARTING_OFF, targetY, targetX);
+			}
+			break;
+		case LEVELUP:
+			break;
+		case PLACEMENT:
+			break;
+		default:
+			break;
 		}
 	}
 	

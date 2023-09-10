@@ -41,7 +41,7 @@ import net.cmr.gaze.world.World;
 
 public abstract class Entity {
 	
-	public static final double DELTA_TIME = 1/20d;
+	public static final double DELTA_TIME = 1/60d;
 	
 	double x, y, lastX, lastY, velocityX, velocityY;
 	UUID uuid;

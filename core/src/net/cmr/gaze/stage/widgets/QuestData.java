@@ -7,25 +7,41 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
-import net.cmr.gaze.stage.widgets.QuestBook.Quests;
+import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 
 public class QuestData {
 	
-	HashMap<Quests, Boolean[][]> data;
-	public static HashMap<Integer, Quests> questsMap = null;
+	private HashMap<Quest, Boolean[][]> data;
+	public static HashMap<Integer, Quest> questsMap = null;
 	
 	public QuestData() {
 		data = new HashMap<>();
+		for(Quest quest : Quest.values()) {
+			Boolean[][] value = new Boolean[quest.getSize()][3];
+			for(int x = 0; x < value.length; x++) {
+				for(int y = 0; y < 3; y++) {
+					value[x][y] = false;
+				}
+			}
+			if(quest==Quest.STARTING_OFF) {
+				value[0][1] = true;
+			}
+			data.put(quest, value);
+		}
 	}
 	
-	public void write(DataBuffer buffer) throws IOException {
+	public static void write(QuestData qdata, DataBuffer buffer) throws IOException {
+		if(qdata==null) {
+			buffer.writeInt(-1);
+			return;
+		}
 		int totalBooleans = 0;
-		for(Quests quest : Quests.values()) {
+		for(Quest quest : Quest.values()) {
 			totalBooleans+=(quest.getSize()*3);
 		}
 		buffer.writeInt(totalBooleans);
-		for(Quests quest : Quests.values()) {
-			Boolean[][] tempData = data.get(quest);
+		for(Quest quest : Quest.values()) {
+			Boolean[][] tempData = qdata.data.get(quest);
 			for(int i = 0; i < quest.getSize(); i++) {
 				buffer.writeInt(quest.id);
 				buffer.writeBoolean(tempData[i][0]);
@@ -39,14 +55,18 @@ public class QuestData {
 		QuestData qd = new QuestData();
 		int totalBooleans = input.readInt();
 		
-		HashMap<Quests, ArrayList<Boolean>> tempQuestMap = new HashMap<>();
+		if(totalBooleans==-1) {
+			return qd;
+		}
 		
-		for(Quests quest : Quests.values()) {
+		HashMap<Quest, ArrayList<Boolean>> tempQuestMap = new HashMap<>();
+		
+		for(Quest quest : Quest.values()) {
 			tempQuestMap.put(quest, new ArrayList<>());
 		}
 		
 		while(totalBooleans > 0) {
-			Quests quest = Quests.getQuestFromID(input.readInt());
+			Quest quest = Quest.getQuestFromID(input.readInt());
 			boolean bronze = input.readBoolean();
 			boolean silver = input.readBoolean();
 			boolean gold = input.readBoolean();
@@ -56,9 +76,9 @@ public class QuestData {
 			totalBooleans-=3;
 		}
 		
-		HashMap<Quests, Boolean[][]> data = new HashMap<>();
+		HashMap<Quest, Boolean[][]> data = new HashMap<>();
 		
-		for(Quests quest : Quests.values()) {
+		for(Quest quest : Quest.values()) {
 			int v = 0;
 			ArrayList<Boolean> temp = tempQuestMap.get(quest);
 			Boolean[][] list = new Boolean[quest.getSize()][3];
@@ -76,8 +96,27 @@ public class QuestData {
 		return qd;
 	}
 	
-	public void setData(HashMap<Quests, Boolean[][]> data) {
+	public void setData(HashMap<Quest, Boolean[][]> data) {
 		this.data = data;
+	}
+	
+	public HashMap<Quest, Boolean[][]> getData() {
+		return data;
+	}
+	
+	public String toString() {
+		
+		String end = "";
+		
+		for(Quest quest : Quest.values()) {
+			Boolean[][] map = data.get(quest);
+			for(int i = 0; i < quest.getSize(); i++) {
+				end+=quest.name()+" | "+quest.getTitle(i)+"\t {"+map[i][0]+", "+map[i][0]+", "+map[i][0]+"}\n";
+			}
+		}
+		
+		return end;
+		
 	}
 	
 }
