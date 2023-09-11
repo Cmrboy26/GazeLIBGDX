@@ -56,7 +56,8 @@ public class Normalize {
 	}*/
 
 	public static double invert(double d) {
-		return ((d-0.5d)*-1)+0.5d;
+		//return ((d-0.5d)*-1)+0.5d;
+		return 1-d;
 	}
 	
 	public static String truncateDouble(double input, int tensPlaces) {

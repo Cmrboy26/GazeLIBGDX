@@ -17,6 +17,7 @@ import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.InventoryListener;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.GameServer.ServerType;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
@@ -392,8 +393,8 @@ public class PlayerConnection {
 	}
 
 	public void completeQuest(Quest quest, int questNumber, QuestTier tier) {
-		getPlayer().getQuestData().getData().get(quest)[questNumber][tier] = true;
-		getSender().addPacket(new QuestDataPacket(quest, questNumber, tier, true));
+		getPlayer().getQuestData().getData().get(quest)[questNumber][tier.getTier()] = true;
+		getSender().addPacket(new QuestDataPacket(quest, questNumber, tier.getTier(), true));
 	}
 	
 	public enum QuestCheckType {

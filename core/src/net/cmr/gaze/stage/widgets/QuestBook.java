@@ -235,6 +235,9 @@ public class QuestBook extends WidgetGroup {
 		QuestTier(int tier) {
 			this.tier = tier;
 		}
+		public int getTier() {
+			return tier;
+		}
 	}
 
 	public enum Quest {

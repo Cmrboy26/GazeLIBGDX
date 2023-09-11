@@ -64,14 +64,12 @@ public class DroppedItem extends Entity {
 				Player player = connection.getPlayer();
 				if(Vector2.dst((float) player.getX(), (float) player.getY(), (float) getX(), (float) getY()) <= player.getPickupRadius()) {
 					Item temp = player.getInventory().add(item);
-					if(temp==null) {
 						connection.inventoryChanged();
 						connection.getSender().addPacket(new AudioPacket("pickup", 1f));
+					if(temp==null) {
 						deleteEntity();
 						return;
 					} else if(temp.getSize() != item.getSize()) {
-						connection.inventoryChanged();
-						connection.getSender().addPacket(new AudioPacket("pickup", 1f));
 						item = temp;
 					}
 				}

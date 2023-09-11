@@ -1,5 +1,12 @@
 package net.cmr.gaze.world;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
+import com.badlogic.gdx.utils.DataBuffer;
+
+import net.cmr.gaze.Gaze;
+
 public class AudioData {
 
     private String audio;
@@ -40,7 +47,7 @@ public class AudioData {
         buffer.writeFloat(getPanY());
     }
     public static AudioData read(DataInputStream inputStream, int bufferSize) throws IOException {
-        AudioData data = new Audio(inputStream.readUTF(), inputStream.readFloat(), inputStream.readFloat(), inputStream.readFloat(), inputStream.readFloat());
+        AudioData data = new AudioData(inputStream.readUTF(), inputStream.readFloat(), inputStream.readFloat(), inputStream.readFloat(), inputStream.readFloat());
         return data;
     }
 
