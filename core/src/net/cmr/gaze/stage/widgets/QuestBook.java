@@ -226,6 +226,17 @@ public class QuestBook extends WidgetGroup {
 		}
 	}
 	
+	public enum QuestTier {
+		BRONZE(0),
+		SILVER(1),
+		GOLD(2);
+
+		final int tier;
+		QuestTier(int tier) {
+			this.tier = tier;
+		}
+	}
+
 	public enum Quest {
 		
 		STARTING_OFF(0, "Starting Off", new String[][] {
@@ -265,6 +276,19 @@ public class QuestBook extends WidgetGroup {
 			return data[questNumber][1];
 		}
 		public String getPreReq(int tier, int questNumber) {
+			if(tier == 0) {
+				return getBronzePreReq(questNumber);
+			}
+			if(tier == 1) {
+				return getSilverPreReq(questNumber);
+			}
+			if(tier == 2) {
+				return getGoldPreReq(questNumber);
+			}
+			return "";
+		}
+		public String getPreReq(QuestTier qtier, int questNumber) {
+			int tier = qtier.tier;
 			if(tier == 0) {
 				return getBronzePreReq(questNumber);
 			}

@@ -34,6 +34,7 @@ import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
+import net.cmr.gaze.stage.widgets.QuestBook.QuestTier;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
@@ -390,7 +391,7 @@ public class PlayerConnection {
 		}
 	}
 
-	public void completeQuest(Quest quest, int questNumber, int tier) {
+	public void completeQuest(Quest quest, int questNumber, QuestTier tier) {
 		getPlayer().getQuestData().getData().get(quest)[questNumber][tier] = true;
 		getSender().addPacket(new QuestDataPacket(quest, questNumber, tier, true));
 	}
@@ -409,8 +410,17 @@ public class PlayerConnection {
 			if(craftItem==null) {
 				return;
 			}
-			if(craftItem.getType() == ItemType.CHUTE) {
-				
+			if(craftItem.getType() == ItemType.WOOD_AXE) {
+				completeQuest(Quest.STARTING_OFF, 0, QuestTier.SILVER);
+			}
+			else if(craftItem.getType() == ItemType.CHUTE) {
+				completeQuest(Quest.STARTING_OFF, 0, QuestTier.GOLD);
+			}
+			else if(craftItem.getType() == ItemType.FURNACE) {
+				completeQuest(Quest.STARTING_OFF, 1, QuestTier.SILVER);
+			}
+			else if(craftItem.getType() == ItemType.IRON_INGOT) {
+				completeQuest(Quest.STARTING_OFF, 1, QuestTier.GOLD);
 			}
 			break;
 		case PICKUP:
@@ -418,11 +428,15 @@ public class PlayerConnection {
 			if(pickupItem==null) {
 				return;
 			}
-			if(pickupItem.getType() == ItemType.WOOD) {
-				completeQuest(Quest.STARTING_OFF, targetY, targetX);
+			else if(pickupItem.getType() == ItemType.WOOD) {
+				completeQuest(Quest.STARTING_OFF, 0, QuestTier.BRONZE);
 			}
 			break;
 		case LEVELUP:
+			Skill skill = (Skill) object;
+			if(skill == Skill.MINING) {
+				completeQuest(Quest.STARTING_OFF, 1, QuestTier.BRONZE);
+			}
 			break;
 		case PLACEMENT:
 			break;

@@ -33,19 +33,26 @@ import net.cmr.gaze.world.World;
 
 public class Player extends Entity implements LightSource {
 
+	
+	
+	//Player Health/Damage Data
+	final float iFrameDefault = .5f;
+	float invincibilityFrames = 0;
+	int playerHealth = 100;
+	int maxPlayerHealth = 100;
+
+	// Player Game Data
 	String username;
 	Inventory inventory;
 	int selectedHotbarSlot;
 	boolean sprinting;
-	public long lastBreakInteraction;
 	Skills skills;
 	QuestData questData;
-	
-	final float iFrameDefault = .5f;
-	float invincibilityFrames = 0;
-	int playerType = 0;
-	
+	public long lastBreakInteraction;
+
+	// Player Visual Data
 	public static int AVAILABLE_PLAYER_TYPES = 0;
+	int playerType = 0;
 	
 	// TODO: add functionality
 	double spawnPointX, spawnPointY;
