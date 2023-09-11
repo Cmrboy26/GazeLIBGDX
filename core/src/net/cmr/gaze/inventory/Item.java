@@ -166,7 +166,10 @@ public abstract class Item implements Cloneable {
 		return item;
 	}
 	
-	
+	public String getCraftSound() {
+		return "craftSuccess";
+	}
+
 	public static String getName(Item item) {
 		if(item==null) {
 			return null;

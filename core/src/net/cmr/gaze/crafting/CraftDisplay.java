@@ -55,7 +55,7 @@ public class CraftDisplay extends WidgetGroup {
 				screen.sender.addPacket(new CraftPacket(recipe.getCategory(), recipe.getName(), times));
 				
 				if(result != null) {
-					game.playSoundCooldown("craftSuccess", 1f, .5f);
+					game.playSoundCooldown(recipeDisplay.getSelectedRecipe().displayItem.getCraftSound(), 1f, .5f);
 				} else {
 					game.playSoundCooldown("craftFail", 1f, .5f);
 				}
