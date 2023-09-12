@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.networking.packets.AudioPacket;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
@@ -66,6 +67,7 @@ public class DroppedItem extends Entity {
 					Item temp = player.getInventory().add(item);
 						connection.inventoryChanged();
 						connection.getSender().addPacket(new AudioPacket("pickup", 1f));
+					connection.questCheck(QuestCheckType.PICKUP, temp);
 					if(temp==null) {
 						deleteEntity();
 						return;

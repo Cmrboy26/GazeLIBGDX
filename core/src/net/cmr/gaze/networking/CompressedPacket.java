@@ -10,6 +10,7 @@ import java.util.zip.InflaterOutputStream;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
+@PacketID(id = -1)
 public abstract class CompressedPacket extends Packet {
 
 	public CompressedPacket() {

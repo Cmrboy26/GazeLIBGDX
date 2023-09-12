@@ -82,9 +82,16 @@ public class Recipe {
 	public String getName() {
 		return recipeName;
 	}
-
 	public String getCategory() {
 		return categoryName;
 	}
-	
+	public ItemType[] getResults() {
+		return results;
+	}
+	public ItemType[] getIngredients() {
+		return ingredients;
+	}
+
+
+
 }

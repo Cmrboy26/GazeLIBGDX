@@ -13,6 +13,7 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Placeable;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
+import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.networking.packets.AudioPacket;
@@ -185,6 +186,7 @@ public class World {
 								if(!doNotPlace) {
 									boolean placed = addTile(tile, x, y, true);
 									if(placed) {
+										connection.questCheck(QuestCheckType.PLACEMENT, tile);
 										tile.onPlace(this, x, y, player);
 										player.getInventory().remove(Items.getItem(held.getType(), 1), player.getHotbarSlot());
 										playSound(placeable.getPlaceAudio(), 1f, x, y);

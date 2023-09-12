@@ -188,6 +188,7 @@ public class PlayerConnection {
 	}
 	
 	public void processIncomingPacket(Packet packet) {
+		Packet.readID(AuthenticationPacket.class);
 		if(packet instanceof AuthenticationPacket) {
 			initialize((AuthenticationPacket) packet);
 		}
@@ -286,8 +287,15 @@ public class PlayerConnection {
 				
 				// TODO: BUG - when crafting something while your inventory is full with items on the ground,
 				// the client is desynced from the server because the dropped items get picked up while the packet is in transit
+				// and the client doesn't know about it
+				// how would i fix this? maybe send a packet to the client to tell it to update the inventory
+
+				
 				
 				Item[] results = recipe.craft(getPlayer().getInventory(), craft.getTimes(), getCraftingStation(), getPlayer().getSkills());
+				if(craft.getTimes()>0 && results != null) {
+					questCheck(QuestCheckType.CRAFT, recipe);
+				}
 				inventoryChanged(false);
 				onCraftingEvent(recipe);
 				if(results != null) {
@@ -407,21 +415,28 @@ public class PlayerConnection {
 	public void questCheck(QuestCheckType type, Object object) {
 		switch(type) {
 		case CRAFT:
-			Item craftItem = (Item) object;
-			if(craftItem==null) {
-				return;
-			}
-			if(craftItem.getType() == ItemType.WOOD_AXE) {
-				completeQuest(Quest.STARTING_OFF, 0, QuestTier.SILVER);
-			}
-			else if(craftItem.getType() == ItemType.CHUTE) {
-				completeQuest(Quest.STARTING_OFF, 0, QuestTier.GOLD);
-			}
-			else if(craftItem.getType() == ItemType.FURNACE) {
-				completeQuest(Quest.STARTING_OFF, 1, QuestTier.SILVER);
-			}
-			else if(craftItem.getType() == ItemType.IRON_INGOT) {
-				completeQuest(Quest.STARTING_OFF, 1, QuestTier.GOLD);
+			Recipe recipe = (Recipe) object;
+			for(ItemType craftItem : recipe.getResults()) {
+				if(craftItem==null) {
+					return;
+				}
+				// NOTE: remember to add "return" to the end of each if statement
+				if(craftItem == ItemType.WOOD_AXE) {
+					completeQuest(Quest.STARTING_OFF, 0, QuestTier.SILVER);
+					return;
+				}
+				else if(craftItem == ItemType.CHUTE) {
+					completeQuest(Quest.STARTING_OFF, 0, QuestTier.GOLD);
+					return;
+				}
+				else if(craftItem == ItemType.FURNACE) {
+					completeQuest(Quest.STARTING_OFF, 1, QuestTier.SILVER);
+					return;
+				}
+				else if(craftItem == ItemType.IRON_INGOT) {
+					completeQuest(Quest.STARTING_OFF, 1, QuestTier.GOLD);
+					return;
+				}
 			}
 			break;
 		case PICKUP:
