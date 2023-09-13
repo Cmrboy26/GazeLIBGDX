@@ -209,12 +209,8 @@ public class World {
 								}
 							}
 						}
-					}
-					
-					
+					}	
 				}
-			
-				
 			}
 		}
 		
@@ -237,9 +233,6 @@ public class World {
 		}
 		newChunkConnections.clear();
 		*/
-		
-		
-		
 		
 		while(updateTime>=Entity.DELTA_TIME) {
 			updateTime-=Entity.DELTA_TIME;

@@ -210,7 +210,6 @@ public class PlayerConnection {
 	}
 	
 	public void processIncomingPacket(Packet packet) {
-		Packet.readID(AuthenticationPacket.class);
 		if(packet instanceof AuthenticationPacket) {
 			initialize((AuthenticationPacket) packet);
 		}

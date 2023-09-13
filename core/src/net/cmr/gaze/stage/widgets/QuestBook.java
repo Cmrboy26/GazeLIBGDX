@@ -242,12 +242,14 @@ public class QuestBook extends WidgetGroup {
 
 	public enum Quest {
 		
-		STARTING_OFF(0, "Starting Off", new String[][] {
-			{"Collecting Resources", "collect resource desc", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
-			{"Mining", "get some ores man", "Get to Level One Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
+		STARTING_OFF(0, "Basics", new String[][] {
+			{"Collecting Resources", "Welcome to the world!\nCollect some resources and get started!", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
+			{"Mining", "get some ores man", "Reach Level One Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
 		}),
 		FARMING(1, "Farming", new String[][] {
-			{"Basic Farm", "hey make a farm", "Craft a Wood Shovel", "Craft a Wood Hoe", "Craft a Wood Watering Can"},
+			{"Preparation", "Prepare the tools to make yourself a farm!", "Craft a Wood Shovel", "Craft a Wood Hoe", "Craft a Wood Watering Can"},
+			{"Now We're Farming!", "Use your shovel to soften the ground, and use the hoe to\ntill the soil! Make sure your farm is properly watered!", "Reach Level One Farming", "Harvest 10 Wheat", "Craft a Stone Shovel"},
+			{"Self-Sustaining", "It's such a pain to constantly water your crops, so make\nmachines do it for you!", "Craft a Farming Station", "Craft a Basic Sprinkler", "Reach Level Three Farming"}
 		});
 		
 		public final int id;
