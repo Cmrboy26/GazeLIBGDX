@@ -82,6 +82,7 @@ public class Player extends Entity implements LightSource {
 		inventory = new Inventory(5*7);
 		//inventory.put(4, Items.getItem(ItemType.Stone, 6));
 		skills = new Skills();
+		this.questData = new QuestData();
 	}
 
 	public Player(String string, double x, double y) {
@@ -90,6 +91,7 @@ public class Player extends Entity implements LightSource {
 		inventory = new Inventory(5*7);
 		setPosition(x, y);
 		skills = new Skills();
+		this.questData = new QuestData();
 	}
 
 	public String getUsername() {

@@ -34,6 +34,7 @@ import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
+import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.stage.widgets.QuestBook.QuestTier;
 import net.cmr.gaze.util.CustomMath;
@@ -102,7 +103,8 @@ public class PlayerConnection {
 		builder.build(dataInput);
 		sender.sendAll(dataOutput);
 	}
-	
+
+	int[] lastLevel;
 	public void update() {
 		if(targetTile!=null) {
 			if(getPlayer().getDistanceToTile(targetX, targetY)>getPlayer().getInteractRadius()) {
@@ -111,6 +113,26 @@ public class PlayerConnection {
 				this.targetX = 0;
 				this.targetY = 0;
 			}
+		}
+		
+		if(lastLevel==null) {
+			lastLevel = new int[Skill.values().length];
+			for(int i = 0; i < lastLevel.length; i++) {
+				lastLevel[i] = -1;
+			}
+		}
+		
+		for(int i = 0; i < Skill.values().length; i++) {
+			if(lastLevel[i]==-1) {
+				continue;
+			}
+			int newLevel = player.getSkills().getLevel(Skill.values()[i]);
+			if(newLevel>lastLevel[i]) {
+				questCheck(QuestCheckType.LEVELUP, Skill.values()[i]);
+			}
+		}
+		for(int i = 0; i < Skill.values().length; i++) {
+			lastLevel[i] = player.getSkills().getLevel(Skill.values()[i]);
 		}
 	}
 	
@@ -401,6 +423,9 @@ public class PlayerConnection {
 	}
 
 	public void completeQuest(Quest quest, int questNumber, QuestTier tier) {
+		if(getPlayer().getQuestData().getData().get(quest)[questNumber][tier.getTier()]) {
+			return;
+		}
 		getPlayer().getQuestData().getData().get(quest)[questNumber][tier.getTier()] = true;
 		getSender().addPacket(new QuestDataPacket(quest, questNumber, tier.getTier(), true));
 	}

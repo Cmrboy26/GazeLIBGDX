@@ -64,10 +64,10 @@ public class DroppedItem extends Entity {
 			for(PlayerConnection connection : getWorld().getPlayers()) {
 				Player player = connection.getPlayer();
 				if(Vector2.dst((float) player.getX(), (float) player.getY(), (float) getX(), (float) getY()) <= player.getPickupRadius()) {
+					connection.questCheck(QuestCheckType.PICKUP, item);
 					Item temp = player.getInventory().add(item);
 						connection.inventoryChanged();
 						connection.getSender().addPacket(new AudioPacket("pickup", 1f));
-					connection.questCheck(QuestCheckType.PICKUP, temp);
 					if(temp==null) {
 						deleteEntity();
 						return;
