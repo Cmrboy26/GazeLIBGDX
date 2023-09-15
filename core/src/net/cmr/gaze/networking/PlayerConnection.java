@@ -34,9 +34,8 @@ import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
-import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
+import net.cmr.gaze.quests.Quests.QuestTier;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
-import net.cmr.gaze.stage.widgets.QuestBook.QuestTier;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
@@ -461,6 +460,22 @@ public class PlayerConnection {
 					completeQuest(Quest.STARTING_OFF, 1, QuestTier.GOLD);
 					return;
 				}
+				else if(craftItem == ItemType.WOOD_SHOVEL) {
+					completeQuest(Quest.FARMING, 0, QuestTier.BRONZE);
+					return;
+				}
+				else if(craftItem == ItemType.WOOD_HOE) {
+					completeQuest(Quest.FARMING, 0, QuestTier.SILVER);
+					return;	
+				}
+				else if(craftItem == ItemType.WOOD_WATERING_CAN) {
+					completeQuest(Quest.FARMING, 0, QuestTier.GOLD);
+					return;
+				}
+				else if(craftItem == ItemType.STONE_SHOVEL) {
+					completeQuest(Quest.FARMING, 1, QuestTier.GOLD);
+					return;
+				}
 			}
 			break;
 		case PICKUP:
@@ -471,11 +486,20 @@ public class PlayerConnection {
 			else if(pickupItem.getType() == ItemType.WOOD) {
 				completeQuest(Quest.STARTING_OFF, 0, QuestTier.BRONZE);
 			}
+			else if(pickupItem.getType() == ItemType.WHEAT) {
+				if(this.getPlayer().getInventory().getQuantityOfItem(ItemType.WHEAT) >= 10) {
+					completeQuest(Quest.STARTING_OFF, 1, QuestTier.SILVER);
+				}
+			}
+			
 			break;
 		case LEVELUP:
 			Skill skill = (Skill) object;
 			if(skill == Skill.MINING) {
 				completeQuest(Quest.STARTING_OFF, 1, QuestTier.BRONZE);
+			}
+			else if(skill == Skill.FORAGING) {
+				completeQuest(Quest.FARMING, 1, QuestTier.BRONZE);
 			}
 			break;
 		case PLACEMENT:

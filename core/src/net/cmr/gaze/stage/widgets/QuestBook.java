@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Align;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
+import net.cmr.gaze.quests.Quests.QuestTier;
 
 public class QuestBook extends WidgetGroup {
 
@@ -225,31 +226,17 @@ public class QuestBook extends WidgetGroup {
 			this.quest = quest;
 		}
 	}
-	
-	public enum QuestTier {
-		BRONZE(0),
-		SILVER(1),
-		GOLD(2);
-
-		final int tier;
-		QuestTier(int tier) {
-			this.tier = tier;
-		}
-		public int getTier() {
-			return tier;
-		}
-	}
 
 	public enum Quest {
 		
 		STARTING_OFF(0, "Basics", new String[][] {
 			{"Collecting Resources", "Welcome to the world!\nCollect some resources and get started!", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
-			{"Mining", "get some ores man", "Reach Level One Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
+			{"Mining", "Those wood tools won't cut it in space!", "Reach Level Two Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
 		}),
 		FARMING(1, "Farming", new String[][] {
 			{"Preparation", "Prepare the tools to make yourself a farm!", "Craft a Wood Shovel", "Craft a Wood Hoe", "Craft a Wood Watering Can"},
-			{"Now We're Farming!", "Use your shovel to soften the ground, and use the hoe to\ntill the soil! Make sure your farm is properly watered!", "Reach Level One Farming", "Harvest 10 Wheat", "Craft a Stone Shovel"},
-			{"Self-Sustaining", "It's such a pain to constantly water your crops, so make\nmachines do it for you!", "Craft a Farming Station", "Craft a Basic Sprinkler", "Reach Level Three Farming"}
+			{"Now We're Farming!", "Use your shovel to soften the ground,\n and use the hoe totill the soil!\n Make sure your farm is properly watered!", "Reach Level Two Foraging", "Harvest 10 Wheat", "Craft a Stone Shovel"},
+			{"Self-Sustaining", "It's such a pain to constantly water your\n crops, so make machines do it for you!\nNOT IMPLEMENTED", "Craft a Farming Station", "Craft a Basic Sprinkler", "Reach Level Four Foraging"}
 		});
 		
 		public final int id;

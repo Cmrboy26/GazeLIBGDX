@@ -1309,7 +1309,7 @@ public class GameScreen implements Screen {
 								""+qdata.getQuest().getPreReq(qdata.getQuestTier(), qdata.getQuestNumber())}, 
 						new String[] {"upArrow"}, 
 						new boolean[] {true},
-						3f, 6f, "intro");
+						2f, 4f, "intro");
 			}
 		}
 	}
