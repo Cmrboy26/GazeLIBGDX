@@ -2,6 +2,8 @@ package net.cmr.gaze.quests;
 
 import java.util.HashMap;
 
+import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.quests.Quests.QuestTier;
 import net.cmr.gaze.util.Identifier;
 
@@ -27,16 +29,16 @@ public class QuestCategory {
 		return this.questPages.get(id);
 	}
 	
-	class QuestPage {
+	public class QuestPage {
 		
 		Identifier id;
 		String name, description;
-		Quest[] quests;
+		QuestObject[] quests;
 		
 		public QuestPage(Identifier id, String name) {
 			this.id = id;
 			this.name = name;
-			this.quests = new Quest[3];
+			this.quests = new QuestObject[3];
 			questPages.put(id, this);
 		}
 		
@@ -52,18 +54,20 @@ public class QuestCategory {
 		public String getName() {
 			return name;
 		}
-		public Quest getQuest(QuestTier tier) {
+		public QuestObject getQuest(QuestTier tier) {
 			return quests[tier.tier];
 		}
 		
-		abstract class Quest {
+		public abstract class QuestObject {
 			
 			final QuestTier tier;
 			String description;
+			QuestCheckType[] questCheckTypes;
 			
-			public Quest(QuestTier tier, String description) {
+			public QuestObject(QuestTier tier, String description, QuestCheckType... questCheckTypes) {
 				this.tier = tier;
 				this.description = description;
+				this.questCheckTypes = questCheckTypes;
 				quests[tier.tier] = this;
 			}
 			
@@ -76,9 +80,16 @@ public class QuestCategory {
 			public QuestTier getTier() {
 				return tier;
 			}
+			public boolean isQuestCheckType(QuestCheckType type) {
+				for(QuestCheckType t : questCheckTypes) {
+					if(t == type) {
+						return true;
+					}
+				}
+				return false;
+			}
 			
-			public abstract boolean isQuestCompleted
-			
+			public abstract boolean questCheck(PlayerConnection connection, QuestCheckType type, Object... args);
 		}
 		
 	}

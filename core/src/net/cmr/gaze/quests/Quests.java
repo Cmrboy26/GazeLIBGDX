@@ -2,6 +2,9 @@ package net.cmr.gaze.quests;
 
 import java.util.HashMap;
 
+import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.quests.QuestCategory.QuestPage;
 import net.cmr.gaze.util.Identifier;
 
@@ -43,9 +46,24 @@ public class Quests {
 		
 		QuestPage collectingResources = gettingStarted.new QuestPage(COLLECTING_RESOURCES, "Collecting Resources");
 		collectingResources.setDescription("Welcome to the world!\nCollect some resources and get started!");
-		collectingResources.new Quest(QuestTier.BRONZE, "Gather Wood from Trees");
-		collectingResources.new Quest(QuestTier.SILVER, "Craft a Table\nCraft a Wood Axe");
-		collectingResources.new Quest(QuestTier.GOLD, "Craft a Chute");
+		collectingResources.new QuestObject(QuestTier.BRONZE, "Gather Wood from Trees", QuestCheckType.PICKUP) {
+			@Override
+			public boolean questCheck(PlayerConnection connection, QuestCheckType type, Object... args) {
+				return QuestUtil.pickup(type, ItemType.WOOD, args);
+			}
+		};
+		collectingResources.new QuestObject(QuestTier.SILVER, "Craft a Table") {
+			@Override
+			public boolean questCheck(PlayerConnection connection, QuestCheckType type, Object... args) {
+				return QuestUtil.craft(type, ItemType.TABLE, args);
+			}
+		};
+		collectingResources.new QuestObject(QuestTier.GOLD, "Craft a Chute") {
+			@Override
+			public boolean questCheck(PlayerConnection connection, QuestCheckType type, Object... args) {
+				return QuestUtil.craft(type, ItemType.CHUTE, args);
+			}
+		};
 	}
 	
 	
