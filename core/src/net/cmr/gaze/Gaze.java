@@ -43,6 +43,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.stage.IntroScreen;
 import net.cmr.gaze.stage.SettingScreen;
 import net.cmr.gaze.stage.SetupScreen;
 import net.cmr.gaze.stage.StartupScreen;
@@ -64,7 +65,7 @@ public class Gaze extends Game {
 		return singleton!=null; 
 	}
 	
-	public static final boolean SKIP = true;
+	public static final boolean SKIP = false;
 	public static final boolean HITBOXES = false;
 	
 	FreeTypeFontGenerator fontgenerator;
@@ -193,12 +194,13 @@ public class Gaze extends Game {
 		
 		initializeGameContent();
 		
-		Preferences login = Gdx.app.getPreferences("LoginData");
+		/*Preferences login = Gdx.app.getPreferences("LoginData");
 		if(login.getString("credentials", null) == null) {
 			this.setScreen(new SetupScreen(this));
 		} else {
 			this.setScreen(new StartupScreen(this));
-		}
+		}*/
+		this.setScreen(new IntroScreen(this));
 		
 		FileHandle handle = Gdx.files.external("/Gaze/");
 		handle.file().mkdir();

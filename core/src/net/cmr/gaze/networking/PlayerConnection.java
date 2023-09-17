@@ -378,6 +378,8 @@ public class PlayerConnection {
 		if(server.serverType==ServerType.SingleplayerPrivate) {
 			//getPlayer().setPosition(lastPacket.getX(), lastPacket.getY());
 		}
+
+		
 		
 		//if(difference != 0 && difference == lastDifference) {
 			// TODO LOTS OF POTENTIAL FOR VULNERABILITIES
@@ -435,10 +437,16 @@ public class PlayerConnection {
 		LEVELUP
 	}
 	
-	public void questCheck(QuestCheckType type, Object object) {
+	public void questCheck(QuestCheckType type, Object...object) {
+
+		//ArrayList<QuestObject> questObjects = Quests.questCheck(this, type, object);
+		//for(QuestObject questObject : questObjects) {
+			//completeQuest(questObject.quest, questObject.questNumber, questObject.getTier());
+		//}
+
 		switch(type) {
 		case CRAFT:
-			Recipe recipe = (Recipe) object;
+			Recipe recipe = (Recipe) object[0];
 			for(ItemType craftItem : recipe.getResults()) {
 				if(craftItem==null) {
 					return;
@@ -479,7 +487,7 @@ public class PlayerConnection {
 			}
 			break;
 		case PICKUP:
-			Item pickupItem = (Item) object;
+			Item pickupItem = (Item) object[0];
 			if(pickupItem==null) {
 				return;
 			}
@@ -494,7 +502,7 @@ public class PlayerConnection {
 			
 			break;
 		case LEVELUP:
-			Skill skill = (Skill) object;
+			Skill skill = (Skill) object[0];
 			if(skill == Skill.MINING) {
 				completeQuest(Quest.STARTING_OFF, 1, QuestTier.BRONZE);
 			}

@@ -28,7 +28,10 @@ public class QuestCategory {
 	public QuestPage getQuestPage(Identifier id) {
 		return this.questPages.get(id);
 	}
-	
+	public String toString() {
+		return "QuestCategory: "+id+" ("+name+")";
+	}
+
 	public class QuestPage {
 		
 		Identifier id;
@@ -56,6 +59,9 @@ public class QuestCategory {
 		}
 		public QuestObject getQuest(QuestTier tier) {
 			return quests[tier.tier];
+		}
+		public String toString() {
+			return "QuestPage: "+QuestCategory.this.id.append(id)+" ("+name+")";
 		}
 		
 		public abstract class QuestObject {
@@ -87,6 +93,10 @@ public class QuestCategory {
 					}
 				}
 				return false;
+			}
+			@Override
+			public String toString() {
+				return "QuestObject: "+QuestCategory.this.id.append(id)+" "+tier+" ("+description+")";
 			}
 			
 			public abstract boolean questCheck(PlayerConnection connection, QuestCheckType type, Object... args);

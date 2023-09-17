@@ -53,7 +53,7 @@ public class Notification extends WidgetGroup {
 			throw new NullPointerException("Text array is null for notification object.");
 		}
 		if(text!=null&&text.length==0) {
-			throw new IndexOutOfBoundsException(text.length);
+			throw new IndexOutOfBoundsException();
 		}
 		
 		setWidth(75*2);
