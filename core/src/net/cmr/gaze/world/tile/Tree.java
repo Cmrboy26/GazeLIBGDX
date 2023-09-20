@@ -100,11 +100,9 @@ public class Tree extends BaseTile implements SeeThroughTile {
 					appleDelta = 0;
 				}
 			}
-			System.out.println(appleable+","+appleDelta);
 			if(appleable && appleDelta <= 0) {
 				int i = new Random().nextInt(5);
 				if(i==0) {
-					System.out.println("DROP APPLE");
 					appleDelta = 60f+new Random().nextFloat()*240f;
 					BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
 				}
