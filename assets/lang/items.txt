@@ -85,3 +85,9 @@ IRON_PICKAXE
 IRON_AXE
 	Iron Axe
 	A strong axe capable of harvesting wood efficiently.
+ANVIL
+	Anvil
+	Make some REAL tools!
+APPLE
+	Apple
+	A crisp apple with that perfect snap.

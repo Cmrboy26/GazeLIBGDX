@@ -94,8 +94,11 @@ public class IronOreWall extends Tile implements WallTile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		BreakableUtils.spawnParticle(world, this, x, y, this);
-		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 5);
+		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 8);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
+		if(0==new Random().nextInt(3)) {
+			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
+		}
 	}
 	
 	public Rectangle getBoundingBox(int x, int y) {

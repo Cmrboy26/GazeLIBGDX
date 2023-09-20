@@ -17,6 +17,7 @@ import com.badlogic.gdx.files.FileHandle;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.Logger;
 import net.cmr.gaze.inventory.custom.AnvilItem;
+import net.cmr.gaze.inventory.custom.AppleItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
@@ -80,6 +81,7 @@ public class Items {
 		
 		WHEAT_SEEDS(WheatSeeds.class), 
 		WHEAT(WheatItem.class), 
+		APPLE(AppleItem.class),
 		
 		WOOD_WALL(WoodWallItem.class), 
 		WOOD_FLOOR(WoodFloorItem.class), 

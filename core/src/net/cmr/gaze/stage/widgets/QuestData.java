@@ -23,9 +23,6 @@ public class QuestData {
 					value[x][y] = false;
 				}
 			}
-			if(quest==Quest.STARTING_OFF) {
-				value[0][1] = true;
-			}
 			data.put(quest, value);
 		}
 	}

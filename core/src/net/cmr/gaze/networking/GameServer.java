@@ -102,7 +102,7 @@ public class GameServer {
 					}
 				}
 				
-				System.out.println("[SERVER] New connection recieved from "+incomingSocket.getRemoteSocketAddress());
+				//System.out.println("[SERVER] New connection recieved from "+incomingSocket.getRemoteSocketAddress());
 				PlayerConnection connection = new PlayerConnection(this, incomingSocket);
 				connectionInitializeQueue.add(connection);
 				connection.getSender().addPacket(new AuthenticationPacket(this.serverEncryptionKey));
@@ -216,7 +216,9 @@ public class GameServer {
 		if(connection.getSocket().isClosed()) {
 			return;
 		}
-		System.out.println("[SERVER] Disconnected connection "+connection.getSocket().getRemoteSocketAddress().toString()+" "+connection.disconnectMessage);
+		if(connection.getPlayer()!=null) {
+			System.out.println("[SERVER] Disconnected connection "+connection.getSocket().getRemoteSocketAddress().toString()+" "+connection.disconnectMessage);
+		}
 		connection.sender.sendPacketInstant(connection.dataOutput, new DisconnectPacket(connection.disconnectMessage==null?DISCONNECT_GENERIC:connection.disconnectMessage));
 		try {
 			connection.getSocket().close();

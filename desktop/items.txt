@@ -68,6 +68,9 @@ WHEAT_SEEDS
 WHEAT
 	
 	
+APPLE
+	
+	
 WOOD_WALL
 	
 	

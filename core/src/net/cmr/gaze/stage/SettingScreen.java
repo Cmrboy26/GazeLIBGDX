@@ -33,7 +33,7 @@ public class SettingScreen implements Screen {
 	Slider masterVolume, musicVolume, sfxVolume, ambientVolume, worldZoom, uiZoom, fpsSlider;
 	final Label masterLabel, musicLabel, sfxLabel, ambientLabel, worldLabel, uiLabel, fpsLabel;
 	
-	final TextButton fpsButton, hintButton, hintResetButton, fullscreenButton, playerTypeButton;
+	final TextButton fpsButton, hintButton, hintResetButton, fullscreenButton, playerTypeButton, invertScrollButton, connectionThreshold;
 	
 	final int millisSoundCooldown = 250;
 	Interpolation sliderInterpolation = Interpolation.smoother;
@@ -74,6 +74,12 @@ public class SettingScreen implements Screen {
         }
         if(prefs.getInteger("playerType", -1)==-1) {
         	prefs.putInteger("playerType", 0);
+        }
+        if(prefs.get().getOrDefault("invertScroll", null)==null) {
+        	prefs.putBoolean("invertScroll", false);
+        }
+        if(prefs.get().getOrDefault("connectionThreshold", null)==null) {
+        	prefs.putBoolean("connectionThreshold", false);
         }
         
         prefs.flush();
@@ -313,6 +319,9 @@ public class SettingScreen implements Screen {
         TextButtonStyle toggleStyle = new TextButtonStyle(game.getSkin().get("toggle", TextButtonStyle.class));
         toggleStyle.font = game.getFont(10);
         
+        TextButtonStyle toggleStyleSmaller = new TextButtonStyle(game.getSkin().get("toggle", TextButtonStyle.class));
+        toggleStyleSmaller.font = game.getFont(8);
+        
         TextButtonStyle clickStyle = new TextButtonStyle(game.getSkin().get("button", TextButtonStyle.class));
         clickStyle.font = game.getFont(10);
         
@@ -394,6 +403,46 @@ public class SettingScreen implements Screen {
 			}
 		});
         contentTable.add(fullscreenButton).width(100).height(25).spaceRight(5).spaceBottom(5);
+        
+        invertScrollButton = new TextButton("Invert Scroll", toggleStyle);
+        invertScrollButton.setWidth(100);
+        invertScrollButton.setHeight(25f);
+        invertScrollButton.setChecked(prefs.getBoolean("invertScroll"));
+        invertScrollButton.addListener(new ChangeListener() {
+			boolean lastVal = false;
+			long lastSound = 0;
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(System.currentTimeMillis()-lastSound>millisSoundCooldown) {
+					game.playSound("tick", .8f);
+					lastSound = System.currentTimeMillis();
+				}
+				lastVal = invertScrollButton.isChecked();
+				prefs.putBoolean("invertScroll", lastVal);
+			}
+		});
+        contentTable.add(invertScrollButton).width(100).height(25).spaceRight(5).spaceBottom(5);
+        
+        connectionThreshold = new TextButton("Laxed Movement\nCorrection", toggleStyleSmaller);
+        connectionThreshold.setWidth(100);
+        connectionThreshold.setHeight(25f);
+        connectionThreshold.setChecked(prefs.getBoolean("connectionThreshold"));
+        connectionThreshold.addListener(new ChangeListener() {
+			boolean lastVal = false;
+			long lastSound = 0;
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(System.currentTimeMillis()-lastSound>millisSoundCooldown) {
+					game.playSound("tick", .8f);
+					lastSound = System.currentTimeMillis();
+				}
+				lastVal = connectionThreshold.isChecked();
+				prefs.putBoolean("connectionThreshold", lastVal);
+			}
+		});
+        contentTable.add(connectionThreshold).width(100).height(25).spaceLeft(deltaTime).spaceRight(5).spaceBottom(5);
         contentTable.row();
         
         PlayerDisplayWidget pdw = new PlayerDisplayWidget(game, displayPlayer);

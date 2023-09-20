@@ -1,3 +1,3 @@
-cd C:\Users\cmrbo\OneDrive\GazeWorkspace\GazeLIBGDX
+cd \d D:\GAZE\GazeLIBGDX
 CALL gradlew desktop:dist --info
 pause

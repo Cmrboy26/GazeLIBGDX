@@ -65,7 +65,7 @@ public class Gaze extends Game {
 		return singleton!=null; 
 	}
 	
-	public static final boolean SKIP = false;
+	public static final boolean SKIP = true;
 	public static final boolean HITBOXES = false;
 	
 	FreeTypeFontGenerator fontgenerator;

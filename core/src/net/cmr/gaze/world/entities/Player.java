@@ -32,8 +32,6 @@ import net.cmr.gaze.world.World;
 // TODO: Player Inventory data should only be sent when the player is within range
 
 public class Player extends Entity implements LightSource {
-
-	
 	
 	//Player Health/Damage Data
 	final float iFrameDefault = .5f;
@@ -163,7 +161,7 @@ public class Player extends Entity implements LightSource {
 	
 	public String getAnimationString() {
 		
-		float threshold = .5f;
+		float threshold = .25f;
 		
 		boolean moving = false;
 
@@ -235,7 +233,7 @@ public class Player extends Entity implements LightSource {
 		return 1.5f*Tile.TILE_SIZE;
 	}
 	public double getInteractRadius() {
-		return 3;
+		return 4;
 	}
 	
 	public Rectangle getBoundingBox() {

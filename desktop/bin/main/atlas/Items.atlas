@@ -4,6 +4,13 @@ size: 1024, 64
 format: RGBA8888
 filter: MipMap, MipMap
 repeat: none
+apple
+  rotate: false
+  xy: 648, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 iron
   rotate: false
   xy: 36, 2
@@ -27,7 +34,7 @@ ironHoe
   index: -1
 ironIngot
   rotate: false
-  xy: 648, 2
+  xy: 682, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -62,7 +69,7 @@ stone
   index: -1
 stoneAxe
   rotate: false
-  xy: 716, 2
+  xy: 750, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -76,7 +83,7 @@ stoneBrickFloor
   index: -1
 stoneHoe
   rotate: false
-  xy: 750, 2
+  xy: 784, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -104,7 +111,7 @@ stoneShovel
   index: -1
 unusedGrassSeeds
   rotate: false
-  xy: 682, 2
+  xy: 716, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -125,7 +132,7 @@ wheatSeeds
   index: -1
 wood
   rotate: false
-  xy: 784, 2
+  xy: 818, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

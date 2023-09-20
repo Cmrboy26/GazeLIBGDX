@@ -1,6 +1,14 @@
 TODO:
 
-X Collisions 
-X Slowing movement (for water)
-- Lighting
 - Chat
+-* add scroll wheel items
+-* upgrade old tools instead of throwing out old ones
+- keybinds
+- chat
+- health system
+- reduce iron needed
+-* fix felipe stutter
+-* larger reach
+- add apples
+- add saplings
+-* level updates get send to everyone??

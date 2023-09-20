@@ -230,7 +230,7 @@ public class QuestBook extends WidgetGroup {
 	public enum Quest {
 		
 		STARTING_OFF(0, "Basics", new String[][] {
-			{"Collecting Resources", "Welcome to the world!\nCollect some resources and get started!", "Gather Wood from Trees", "Craft a Table\nCraft a Wood Axe", "Craft a Chute"},
+			{"Collecting Resources", "Welcome to the world!\nCollect some resources and get started!", "Gather Wood from Trees", "Craft a Table", "Craft a Chute"},
 			{"Mining", "Those wood tools won't cut it in space!", "Reach Level Two Mining", "Craft a Furnace", "Gather Iron Ore\nForge an Iron Bar"}
 		}),
 		FARMING(1, "Farming", new String[][] {

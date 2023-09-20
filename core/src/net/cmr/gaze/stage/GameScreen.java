@@ -363,6 +363,27 @@ public class GameScreen implements Screen {
 		multiInput.addProcessor(rightTopStage);
 		multiInput.addProcessor(new InputAdapter() {
 			@Override
+			public boolean scrolled(float amountX, float amountY) {
+				if(Math.abs(amountY) > 0) {
+					int currentSlot = hotbarButtonGroup.getChecked().slot;
+					int newSlot = currentSlot + (int) (Math.abs(amountY)/amountY*(prefs.getBoolean("invertScroll")?1:-1));
+					if(newSlot > 6) {
+						newSlot = 0;
+					}
+					if(newSlot < 0) {
+						newSlot = 6;
+					}
+					InventorySlot button = (InventorySlot) hotbarTable.getCells().get(newSlot).getActor();
+					button.setChecked(true);
+					sender.addPacket(new HotbarUpdatePacket((byte) (newSlot)));
+					if(getLocalPlayer()!=null) {
+						getLocalPlayer().setHotbarSlot(newSlot);
+					}
+					return true;
+				}
+				return false;
+			}
+			@Override
 			public boolean keyDown(int character) {
 				if(character >= Input.Keys.NUM_1 && character <= Input.Keys.NUM_7) {
 					InventorySlot button = (InventorySlot) hotbarTable.getCells().get(character-Input.Keys.NUM_1).getActor();
@@ -1176,7 +1197,7 @@ public class GameScreen implements Screen {
 							int index = cvm.getClosestIndexOf(millisClosestLast);
 							Vector2Double oldPosition = cvm.get(millisClosestLast);
 							
-							final double threshold = Tile.TILE_SIZE/2f;
+							final double threshold = Tile.TILE_SIZE/(2f*(game.settings.getBoolean("connectionThreshold")?.5f:1));
 							
 							if(oldPosition!=null) {
 								//System.out.println(cvm.size()+","+oldPosition);
@@ -1278,20 +1299,22 @@ public class GameScreen implements Screen {
 				
 				player.overrideSkills(sklz.getSkills());
 				
-				for(int i = 0; i < Skill.values().length; i++) {
-					int newLevel = player.getSkills().getLevel(Skill.values()[i]);
-					if(newLevel>array[i]) {
-						String[] text = new String[] {Skill.values()[i].name()+" LEVEL UP!\n"+array[i]+" -> "+newLevel, "New recipes unlocked!"};
-						String[] sprites = new String[] {"upArrow"};
-						boolean[] animation = new boolean[] {true};
-						addNotification(text, sprites, animation, 3f, 5f, "intro");
-						if(Skill.values()[i]==Skill.FORAGING) {
-							openHelpMenu(HintMenuType.LEVEL_UP);
+				if(player.equals(getLocalPlayer())) {
+					for(int i = 0; i < Skill.values().length; i++) {
+						int newLevel = player.getSkills().getLevel(Skill.values()[i]);
+						if(newLevel>array[i]) {
+							String[] text = new String[] {Skill.values()[i].name()+" LEVEL UP!\n"+array[i]+" -> "+newLevel, "New recipes unlocked!"};
+							String[] sprites = new String[] {"upArrow"};
+							boolean[] animation = new boolean[] {true};
+							addNotification(text, sprites, animation, 3f, 5f, "intro");
+							if(Skill.values()[i]==Skill.FORAGING) {
+								openHelpMenu(HintMenuType.LEVEL_UP);
+							}
 						}
 					}
+					skillDisplay.updateValues();
 				}
 				
-				skillDisplay.updateValues();
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;
@@ -1309,7 +1332,7 @@ public class GameScreen implements Screen {
 								""+qdata.getQuest().getPreReq(qdata.getQuestTier(), qdata.getQuestNumber())}, 
 						new String[] {"upArrow"}, 
 						new boolean[] {true},
-						2f, 4f, "intro");
+						2f, 4f, "trueSelect");
 			}
 		}
 	}

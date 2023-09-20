@@ -310,8 +310,6 @@ public class PlayerConnection {
 				// and the client doesn't know about it
 				// how would i fix this? maybe send a packet to the client to tell it to update the inventory
 
-				
-				
 				Item[] results = recipe.craft(getPlayer().getInventory(), craft.getTimes(), getCraftingStation(), getPlayer().getSkills());
 				if(craft.getTimes()>0 && results != null) {
 					questCheck(QuestCheckType.CRAFT, recipe);
@@ -443,7 +441,6 @@ public class PlayerConnection {
 		//for(QuestObject questObject : questObjects) {
 			//completeQuest(questObject.quest, questObject.questNumber, questObject.getTier());
 		//}
-
 		switch(type) {
 		case CRAFT:
 			Recipe recipe = (Recipe) object[0];
@@ -452,7 +449,7 @@ public class PlayerConnection {
 					return;
 				}
 				// NOTE: remember to add "return" to the end of each if statement
-				if(craftItem == ItemType.WOOD_AXE) {
+				if(craftItem == ItemType.TABLE) {
 					completeQuest(Quest.STARTING_OFF, 0, QuestTier.SILVER);
 					return;
 				}

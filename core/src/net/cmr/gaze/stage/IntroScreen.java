@@ -53,7 +53,7 @@ public class IntroScreen implements Screen {
         game.batch.draw(game.getSprite("cmrboy26"), 130, 130, 100, 100);
 		game.batch.end();
 
-        if(elapsedTime>=3.3) {
+        if(elapsedTime>=3.3 || Gaze.SKIP) {
             Preferences login = Gdx.app.getPreferences("LoginData");
             game.batch.setColor(Color.WHITE);
             if(login.getString("credentials", null) == null) {

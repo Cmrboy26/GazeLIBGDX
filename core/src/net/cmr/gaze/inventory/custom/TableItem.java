@@ -40,10 +40,5 @@ public class TableItem extends Placeable {
 	protected void writeItem(ItemType type, DataBuffer buffer) throws IOException {
 		
 	}
-	
-	@Override
-	public String getPlaceAudio() {
-		return "intro";
-	}
 
 }

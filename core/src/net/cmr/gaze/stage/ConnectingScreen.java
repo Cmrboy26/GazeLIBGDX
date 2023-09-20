@@ -32,6 +32,7 @@ public class ConnectingScreen implements Screen {
 	
 	PacketBuilder builder;
 	PacketSender sender;
+	boolean joining = false;
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username, GameServer server) {
 		this.game = game;
@@ -39,10 +40,6 @@ public class ConnectingScreen implements Screen {
 		this.port = port;
 		this.username = username;
 		this.server = server;
-		if(server != null) {
-			server.startServer();
-		}
-		join();
 	}
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username) {
@@ -50,7 +47,6 @@ public class ConnectingScreen implements Screen {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
-		join();
 	}
 	
 	public void join() {
@@ -95,6 +91,18 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
+		
+		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		game.batch.begin();
+		game.getFont(20).draw(game.batch, "Connecting...", 360/2f, 640/2f);
+		game.batch.end();
+		if(!joining) {
+			if(server != null) {
+				server.startServer();
+			}
+			join();
+			joining = true;
+		}
 		if(socket == null) {
 			game.setScreen(new MessageScreen(game, "Could not connect."));
 			return;
@@ -112,10 +120,6 @@ public class ConnectingScreen implements Screen {
 			sender.sendAll(dataOut);
 		}
 		
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-		game.batch.begin();
-		
-		game.batch.end();
 	}
 
 	@Override

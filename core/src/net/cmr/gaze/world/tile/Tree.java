@@ -66,6 +66,8 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	float shake;
 	final int shakePeriod = 10;
+	float appleDelta = -1;
+	boolean appleable;
 	
 	@Override
 	public void update(TileData data, Point worldCoordinates) {
@@ -75,6 +77,11 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		if(shake < 0) {
 			shake = 0;
 		}
+		if(appleable) {
+			if(appleDelta > 0) {
+				appleDelta-=Tile.DELTA_TIME;
+			}
+		}
 	}
 	
 	@Override
@@ -83,6 +90,25 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			world.playSound("grassBreak", 1f, x, y);
 			shake+=.5f;
 			shake = CustomMath.minMax(0, shake, .75f);
+			
+			if(appleDelta == -1f) {
+				Random r = new Random(getRandomizedInt(Integer.MAX_VALUE-1, x, y));
+				appleable = r.nextBoolean();
+				if(r.nextInt(3)==0) {
+					appleDelta = 60f+new Random(System.nanoTime()).nextFloat()*240f;
+				} else {
+					appleDelta = 0;
+				}
+			}
+			System.out.println(appleable+","+appleDelta);
+			if(appleable && appleDelta <= 0) {
+				int i = new Random().nextInt(5);
+				if(i==0) {
+					System.out.println("DROP APPLE");
+					appleDelta = 60f+new Random().nextFloat()*240f;
+					BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
+				}
+			}
 			world.onTileChange(x, y, getType().layer);
 			return true;
 		}
@@ -101,8 +127,6 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		
 		float shakeX = 2.1f*shake*MathUtils.sin(shakePeriod*MathUtils.PI2*shake);
 		float endShakeX = shakeX*1/16f;
-
-		;
 		
 		draw(game.batch, game.getSprite("tree"+(getRandomizedInt(1, x, y)+2)), x+random+endShakeX, y, 2, 3);
 		//game.batch.draw(game.getSprite("tree1"), x*TILE_SIZE+random+endShakeX, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*3);
@@ -122,6 +146,12 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		BreakableUtils.spawnParticle(world, this, x+.5f, y, .9f, this);
 		BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3));
+		if(appleable && appleDelta <= 0) {
+			int i = new Random().nextInt(5);
+			if(i==0) {
+				BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
+			}
+		}
 	}
 	
 	@Override
@@ -129,12 +159,16 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		Tree tree = new Tree();
 		Tile.readBreakData(input, tree);
 		tree.shake = input.readFloat();
+		tree.appleDelta = input.readFloat();
+		tree.appleable = input.readBoolean();
 		return tree;
 	}
 	
 	@Override
 	protected void writeTile(TileType tile, DataBuffer buffer) throws IOException {
 		buffer.writeFloat(shake);
+		buffer.writeFloat(appleDelta);
+		buffer.writeBoolean(appleable);
 	}
 	
 	

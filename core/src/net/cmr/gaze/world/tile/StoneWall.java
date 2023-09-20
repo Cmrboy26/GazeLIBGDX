@@ -88,7 +88,7 @@ public class StoneWall extends Tile implements WallTile {
 		BreakableUtils.spawnParticle(world, this, x, y+.8f, this);
 		BreakableUtils.spawnParticle(world, this, x, y+.4f, this);
 		BreakableUtils.spawnParticle(world, this, x, y, this);
-		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 19.5f);
+		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 2f);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE, 1));
 	}
 	
