@@ -1,5 +1,7 @@
 package net.cmr.gaze.world;
 
+import com.badlogic.gdx.graphics.g3d.particles.ParticleShader.ParticleType;
+
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.world.entities.DroppedItem;
@@ -39,11 +41,17 @@ public class BreakableUtils {
 		player.addXP(world, skill, xp);
 	}
 	
-	public static void spawnParticle(World world, Tile tile, float x, float y, float offsetY, Object source) {
-		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8, offsetY, source));
+	public static void spawnParticle(World world, ParticleEffectType type, Tile tile, float x, float y, float offsetY, Object source) {
+		world.addEntity(Particle.createParticle(x, y, type, .8f, offsetY, source));
 	}
-	public static void spawnParticle(World world, Tile tile, float x, float y, Object source) {
-		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8, 0, source));
+	public static void spawnParticle(World world, ParticleEffectType type, Tile tile, float x, float y, Object source) {
+		world.addEntity(Particle.createParticle(x, y, type, .8f, 0, source));
+	}
+	public static void spawnBreakParticle(World world, Tile tile, float x, float y, float offsetY, Object source) {
+		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, offsetY, source));
+	}
+	public static void spawnBreakParticle(World world, Tile tile, float x, float y, Object source) {
+		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, 0, source));
 	}
 	
 }

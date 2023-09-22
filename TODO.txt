@@ -12,3 +12,4 @@ TODO:
 - add apples
 - add saplings
 -* level updates get send to everyone??
+- NETWORKING DEBUG OPTIONS : traffic data (for ratelimiting)

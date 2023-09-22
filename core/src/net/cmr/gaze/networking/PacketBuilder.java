@@ -3,6 +3,7 @@ package net.cmr.gaze.networking;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.packets.AudioPacket;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
@@ -38,6 +39,7 @@ public abstract class PacketBuilder {
 	
 	public long millisTimeSinceDataRecieved;
 	boolean serverSide; // used for debug purposes
+	RateCalculator attachedCalculator;
 	
 	// packet format:
 	/* 
@@ -52,6 +54,10 @@ public abstract class PacketBuilder {
 	public PacketBuilder(boolean serverSide, int maxIterations) {
 		this.maxIterations = maxIterations;
 		this.serverSide = serverSide;
+	}
+	
+	public void attatchCalculator(RateCalculator rateCalculator) {
+		this.attachedCalculator = rateCalculator;
 	}
 	
 	public void build(DataInputStream input) throws Exception {
@@ -73,6 +79,10 @@ public abstract class PacketBuilder {
 			
 			if(!packetHeaderRecieved()) {
 				break;
+			}
+			
+			if(attachedCalculator!=null) {
+				attachedCalculator.add(nextPacketSize, System.currentTimeMillis());
 			}
 
 			//System.out.println("[DEBUG] Reading packet: [SERVER:"+serverSide+","+identifier+":"+nextPacketSize+"]");

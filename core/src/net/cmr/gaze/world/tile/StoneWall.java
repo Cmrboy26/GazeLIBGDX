@@ -37,7 +37,7 @@ public class StoneWall extends Tile implements WallTile {
 	@Override
 	protected void onHit(World world, Player player, int x, int y) {
 		super.onHit(world, player, x, y);
-		BreakableUtils.spawnParticle(world, this, x, y, this);
+		BreakableUtils.spawnBreakParticle(world, this, x, y, this);
 	}
 	
 	@Override
@@ -85,9 +85,9 @@ public class StoneWall extends Tile implements WallTile {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.spawnParticle(world, this, x, y+.8f, this);
-		BreakableUtils.spawnParticle(world, this, x, y+.4f, this);
-		BreakableUtils.spawnParticle(world, this, x, y, this);
+		BreakableUtils.spawnBreakParticle(world, this, x, y+.8f, this);
+		BreakableUtils.spawnBreakParticle(world, this, x, y+.4f, this);
+		BreakableUtils.spawnBreakParticle(world, this, x, y, this);
 		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 2f);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE, 1));
 	}

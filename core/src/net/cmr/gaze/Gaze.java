@@ -43,11 +43,11 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.IntroScreen;
 import net.cmr.gaze.stage.SettingScreen;
-import net.cmr.gaze.stage.SetupScreen;
-import net.cmr.gaze.stage.StartupScreen;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
+import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.entities.Player;
 
@@ -71,7 +71,7 @@ public class Gaze extends Game {
 	FreeTypeFontGenerator fontgenerator;
 	Skin defaultSkin;
 	
-	public static int version = 0;
+	public static int version = 1;
 	
 	public SpriteBatch batch;
 	public HashMap<Float, BitmapFont> fontmap;
@@ -403,17 +403,18 @@ public class Gaze extends Game {
 		this.viewport.apply();
 		batch.begin();
 		
-		//batch.setColor(Color.LIME);
-		//healthbar.draw(batch, 200, 100, 240, 40);
-		//batch.setColor(Color.WHITE);
+		// Debug display
 		
 		if(settings.getBoolean("displayFPS")) {
 			getFont(15).draw(batch, "FPS:"+Gdx.graphics.getFramesPerSecond(), 0, 360);
+			if(getScreen() instanceof GameScreen) {
+				GameScreen gs = (GameScreen) getScreen();
+				getFont(15).draw(batch, "Download Speed: "+Normalize.truncateDouble(gs.downloadSpeed.ratePerSecond()/1000d, 1)+" (kB/S)", 0, 360-20);
+				getFont(15).draw(batch, "Upload Speed: "+Normalize.truncateDouble(gs.uploadSpeed.ratePerSecond()/1000d, 1)+" (kB/S)", 0, 360-40);
+				
+			}
 		}
 		batch.end();
-		/*if(System.currentTimeMillis()%1000==0) {
-			System.out.println(Gdx.graphics.getFramesPerSecond());
-		}*/
 	}
 	
 	@Override

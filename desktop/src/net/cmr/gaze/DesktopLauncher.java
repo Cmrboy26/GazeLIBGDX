@@ -12,6 +12,5 @@ public class DesktopLauncher {
 		config.setTitle("Gaze");
 		config.setWindowedMode(640, 360);
 		new Lwjgl3Application(new Gaze() {}, config);
-		
 	}
 }

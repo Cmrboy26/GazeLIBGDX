@@ -22,7 +22,7 @@ public abstract class CompressedPacket extends Packet {
 	}
 
 	@Override
-	public void sendPacket(DataOutputStream output) throws IOException {
+	public int sendPacket(DataOutputStream output) throws IOException {
 		DataBuffer buffer = new DataBuffer();
 		writePacketData(buffer);
 		output.writeInt(getPacketIdentifier());
@@ -34,6 +34,7 @@ public abstract class CompressedPacket extends Packet {
 		output.flush();
 		buffer.close();
 		buffer = null;
+		return compressedArray.length;
 	}
 	
 	@Override

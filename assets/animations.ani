@@ -1,4 +1,14 @@
 {
+	"leaf_particles": {
+		"tileX": 32,
+		"tileY": 32,
+		"animations": [
+			{
+				"time": 0.05,
+				"w": 20
+			}
+		]
+	},
 	"upArrow": {
 		"tileX": 16,
 		"tileY": 16,

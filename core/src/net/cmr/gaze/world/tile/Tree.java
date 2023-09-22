@@ -28,6 +28,7 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class Tree extends BaseTile implements SeeThroughTile {
 	
@@ -68,6 +69,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	final int shakePeriod = 10;
 	float appleDelta = -1;
 	boolean appleable;
+	private static float particleDelta, particleDelta2;
 	
 	@Override
 	public void update(TileData data, Point worldCoordinates) {
@@ -82,18 +84,34 @@ public class Tree extends BaseTile implements SeeThroughTile {
 				appleDelta-=Tile.DELTA_TIME;
 			}
 		}
+		if(data.isServer()) {
+			Tree.particleDelta+=Tile.DELTA_TIME;
+			Tree.particleDelta2+=((float) (Math.PI+Math.random()));
+			if(particleDelta >= 10f && particleDelta2 > 2) {
+				particleDelta-=10f;
+				particleDelta2 = 0;
+				BreakableUtils.spawnParticle(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, this);
+			}
+		}
 	}
 	
 	@Override
 	protected boolean overrideOnInteract(PlayerConnection player, World world, int x, int y, int clickType) {
 		if(clickType == 2) {
+	
+			if(System.currentTimeMillis()-player.getPlayer().lastBreakInteraction < 100) {
+				return false;
+			}
+			player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
+			
 			world.playSound("grassBreak", 1f, x, y);
+			BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, this);
 			shake+=.5f;
 			shake = CustomMath.minMax(0, shake, .75f);
 			
 			if(appleDelta == -1f) {
 				Random r = new Random(getRandomizedInt(Integer.MAX_VALUE-1, x, y));
-				appleable = r.nextBoolean();
+				appleable = r.nextInt(5)==0;
 				if(r.nextInt(3)==0) {
 					appleDelta = 60f+new Random(System.nanoTime()).nextFloat()*240f;
 				} else {
@@ -134,20 +152,21 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	@Override
 	protected void onHit(World world, Player player, int x, int y) {
-		BreakableUtils.spawnParticle(world, this, x+.5f, y, .9f, this);
+		BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, this);
 		shake+=.5f;
 		shake = CustomMath.minMax(0, shake, .75f);
 	}
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.spawnParticle(world, this, x+.5f, y, .9f, this);
+		BreakableUtils.spawnBreakParticle(world, this, x+.5f, y, .9f, this);
+		BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, 2f, this);
 		BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3));
 		if(appleable && appleDelta <= 0) {
 			int i = new Random().nextInt(5);
 			if(i==0) {
-				BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
+				BreakableUtils.dropItem(world, x+1, y, Items.getItem(ItemType.APPLE, 1));
 			}
 		}
 	}
@@ -168,8 +187,6 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		buffer.writeFloat(appleDelta);
 		buffer.writeBoolean(appleable);
 	}
-	
-	
 	
 	@Override
 	public String getAmbientNoise(GameScreen game) {

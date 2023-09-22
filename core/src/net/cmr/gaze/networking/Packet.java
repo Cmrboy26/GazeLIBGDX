@@ -26,15 +26,17 @@ public abstract class Packet {
 		return readID(getClass());
 	}
 	
-	public void sendPacket(DataOutputStream output) throws IOException {
+	public int sendPacket(DataOutputStream output) throws IOException {
 		DataBuffer buffer = new DataBuffer();
 		writePacketData(buffer);
 		output.writeInt(getPacketIdentifier());
 		output.writeInt(buffer.size());
-		output.write(buffer.toArray());
+		byte[] result = buffer.toArray();
+		output.write(result);
 		output.flush();
 		buffer.close();
 		buffer = null;
+		return result.length;
 	}
 	
 	protected abstract void writePacketData(DataBuffer buffer) throws IOException;

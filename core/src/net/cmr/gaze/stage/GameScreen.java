@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.zip.Deflater;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -21,11 +23,13 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -59,6 +63,7 @@ import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.crafting.RecipeCategory;
 import net.cmr.gaze.crafting.RecipeDisplay;
+import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.inventory.InventorySlot;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Placeable;
@@ -168,11 +173,12 @@ public class GameScreen implements Screen {
 	double worldTime = 0;
 	boolean showUI = true;
 	int rotation = 0;
+	boolean gammaOverride = false;
 	
 	WorldGeneratorType currentWorldType;
 	
-	//HashMap<Long, Vector2Double> previousPlayerPositions = new HashMap<>();
 	ClosestValueMap<Long, Vector2Double> cvm = new ClosestValueMap<Long, Vector2Double>();
+	public RateCalculator downloadSpeed = new RateCalculator(100), uploadSpeed = new RateCalculator(100);
 	
 	public GameScreen(final Gaze game, String username, Socket socket, DataInputStream dataIn, DataOutputStream dataOut, GameServer server, boolean singlePlayer) {
 		this.game = game;
@@ -210,6 +216,8 @@ public class GameScreen implements Screen {
 			}
 		};
 		this.sender = new PacketSender();
+		this.builder.attatchCalculator(downloadSpeed);
+		this.sender.attatchCalculator(uploadSpeed);
 		
 		this.socket = socket;
 		this.dataIn = dataIn;
@@ -420,6 +428,29 @@ public class GameScreen implements Screen {
 				if(character == Input.Keys.ESCAPE) {
 					pauseMenu.setVisible(!pauseMenu.isVisible());
 					game.playSound("select", 1f);
+				}
+				if(character == Input.Keys.F12) {
+					gammaOverride = !gammaOverride;
+				}
+				if(character == Input.Keys.F3) {
+					Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
+					ByteBuffer pixels = pixmap.getPixels();
+
+					int size = Gdx.graphics.getBackBufferWidth() * Gdx.graphics.getBackBufferHeight() * 4;
+					for (int i = 3; i < size; i += 4) {
+						pixels.put(i, (byte) 255);
+					}
+					
+					String name = System.currentTimeMillis()+".png";
+					FileHandle external = Gdx.files.external("/Gaze/screenshots/"+name);
+					FileHandle folder = Gdx.files.external("/Gaze/screenshots/");
+					folder.mkdirs();
+					PixmapIO.writePNG(external, pixmap, Deflater.DEFAULT_COMPRESSION, true);
+					System.out.println("[INFO] Took screenshot and saved to "+external.file().getPath());
+					pixmap.dispose();
+				}
+				if(character == Input.Keys.F4) {
+					Gdx.graphics.setWindowedMode(1920, 720);
 				}
 				return false;
 			}
@@ -1422,6 +1453,11 @@ public class GameScreen implements Screen {
     
     public float getAmbientLight() {
     	//return 1;
+    	
+    	if(gammaOverride) {
+    		return 1;
+    	}
+    	
     	float value = 0;
     	if(currentWorldType==null) {
     		value = 0;

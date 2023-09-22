@@ -8,14 +8,14 @@ import java.util.UUID;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
-import net.cmr.gaze.networking.Packet;
+import net.cmr.gaze.networking.CompressedPacket;
 import net.cmr.gaze.networking.PacketID;
 import net.cmr.gaze.util.UuidUtils;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.entities.Entity;
 
 @PacketID(id = 12)
-public class EntityPositionsPacket extends Packet {
+public class EntityPositionsPacket extends CompressedPacket {
 
 	HashMap<UUID, Vector2Double> positions, velocities;
 	
@@ -66,8 +66,8 @@ public class EntityPositionsPacket extends Packet {
 	}
 
 	@Override
-	public void readPacketData(DataInputStream input, int packetSize) throws IOException {
-		
+	public void readDecompressedPacketData(DataInputStream input, int packetSize) throws IOException {
+
 		int entriesLength = input.readInt();
 		positions = new HashMap<>(entriesLength);
 		velocities = new HashMap<>(entriesLength);

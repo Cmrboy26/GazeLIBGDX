@@ -13,9 +13,9 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Placeable;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
-import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.networking.PlayerConnection.QuestCheckType;
 import net.cmr.gaze.networking.packets.AudioPacket;
 import net.cmr.gaze.networking.packets.ChunkDataPacket;
 import net.cmr.gaze.networking.packets.ChunkUnloadPacket;
@@ -33,7 +33,8 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.TileType.Replaceable;
 import net.cmr.gaze.world.entities.Entity;
-import net.cmr.gaze.world.entities.NPC;
+import net.cmr.gaze.world.entities.Particle;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 
 public class World {
@@ -90,6 +91,7 @@ public class World {
 	double playerTime;
 	double updateTime;
 	double updateTileTile;
+	int cooldown = 0;
 	
 	int debugIteration;
 	
@@ -246,22 +248,26 @@ public class World {
 			if(b) {
 				updateTileTile = 0;
 			}
-			for(PlayerConnection playerConnection : players) {
-				ArrayList<Entity> endEntities = new ArrayList<>();
-				ArrayList<Chunk> playerChunks = getPlayerLoadedChunks(playerConnection);
-				
-				for(PlayerConnection tempConnection : players) {
-					if(server.evaluatePredicate(playerConnection, ConnectionPredicate.PLAYER_IN_BOUNDS, tempConnection.getPlayer().getChunk(), this)) {
-						endEntities.add(tempConnection.getPlayer());
+			cooldown++;
+			if(cooldown > 3) {
+				cooldown = 0;
+				for(PlayerConnection playerConnection : players) {
+					ArrayList<Entity> endEntities = new ArrayList<>();
+					ArrayList<Chunk> playerChunks = getPlayerLoadedChunks(playerConnection);
+					
+					for(PlayerConnection tempConnection : players) {
+						if(server.evaluatePredicate(playerConnection, ConnectionPredicate.PLAYER_IN_BOUNDS, tempConnection.getPlayer().getChunk(), this)) {
+							endEntities.add(tempConnection.getPlayer());
+						}
 					}
-				}
-				
-				for(Chunk c : playerChunks) {
-					if(c!=null) {
-						endEntities.addAll(c.getEntities());
+					
+					for(Chunk c : playerChunks) {
+						if(c!=null) {
+							endEntities.addAll(c.getEntities());
+						}
 					}
+					playerConnection.getSender().addPacket(new EntityPositionsPacket(endEntities));
 				}
-				playerConnection.getSender().addPacket(new EntityPositionsPacket(endEntities));
 			}
 		}
 		
@@ -620,6 +626,11 @@ public class World {
 				}
 			}
 		}
+	}
+	
+	public void createParticle(float x, float y, ParticleEffectType type, float offsetY, Object source) {
+		Particle particle = Particle.createParticle(x, y, type, -1f, offsetY, source);
+		addEntity(particle);
 	}
 	
 	public String getWorldName() {

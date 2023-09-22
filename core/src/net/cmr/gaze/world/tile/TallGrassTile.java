@@ -65,7 +65,7 @@ public class TallGrassTile extends Tile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		//player.addXP(world, Skill.Foraging, .1);
-		BreakableUtils.spawnParticle(world, this, x, y, 0, this);
+		BreakableUtils.spawnBreakParticle(world, this, x, y, 0, this);
 		Random random = new Random();
 		if(random.nextInt(4)==0) {
 			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, 1));

@@ -325,7 +325,7 @@ public class SettingScreen implements Screen {
         TextButtonStyle clickStyle = new TextButtonStyle(game.getSkin().get("button", TextButtonStyle.class));
         clickStyle.font = game.getFont(10);
         
-        fpsButton = new TextButton("Display FPS", toggleStyle);
+        fpsButton = new TextButton("Debug/FPS", toggleStyle);
         fpsButton.setWidth(100);
         fpsButton.setHeight(25f);
         fpsButton.setChecked(prefs.getBoolean("displayFPS"));
