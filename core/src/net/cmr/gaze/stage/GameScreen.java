@@ -121,6 +121,7 @@ import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
 import net.cmr.gaze.world.entities.Entity;
+import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Player;
 
 @SuppressWarnings("deprecation")
@@ -558,9 +559,11 @@ public class GameScreen implements Screen {
 					
 				} else {
 					
+					boolean automaticClick = true;
 					leftClickDelta+=delta;
 					if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
 						leftClickDelta = Float.MAX_VALUE;
+						automaticClick = false;
 					}
 					
 					if(leftClickDelta > .1) {
@@ -590,7 +593,7 @@ public class GameScreen implements Screen {
 							}
 						}
 						
-						sender.addPacket(new PlayerInteractPacket(0, (int) output.x, (int) output.y, -1));
+						sender.addPacket(new PlayerInteractPacket(automaticClick, 0, (int) output.x, (int) output.y, -1));
 					}
 				}
 			} else {
@@ -599,12 +602,23 @@ public class GameScreen implements Screen {
 			
 			if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.V)) {
 				
-				if(!(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.V))) {
+				boolean automaticClick = true;
+				
+				/*if(!(Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.V))) {
 					if(getLocalPlayer()!=null&&(getLocalPlayer().getHeldItem()instanceof Placeable||getLocalPlayer().getHeldItem() instanceof Tool)) {
 						rightClickDelta+=delta;
 					}
 				} else {
-					rightClickDelta = Integer.MAX_VALUE;
+					//rightClickDelta = Integer.MAX_VALUE;
+					automaticClick = false;
+				}*/
+				
+				if((Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.V))) {
+					rightClickDelta = Integer.MAX_VALUE/2;
+					automaticClick = false;
+				}
+				if(getLocalPlayer()!=null&&(getLocalPlayer().getHeldItem()instanceof Placeable||getLocalPlayer().getHeldItem() instanceof Tool)) {
+					rightClickDelta+=delta;
 				}
 				
 				if(rightClickDelta > .2) {
@@ -622,7 +636,7 @@ public class GameScreen implements Screen {
 						}
 					}
 					
-					sender.addPacket(new PlayerInteractPacket(2, (int) output.x, (int) output.y, modifier));
+					sender.addPacket(new PlayerInteractPacket(automaticClick, 2, (int) output.x, (int) output.y, modifier));
 					
 					int x = (int) Math.floor(output.x/Tile.TILE_SIZE);
 					int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
@@ -726,6 +740,7 @@ public class GameScreen implements Screen {
 			
 			
 			int dimension = (int) (Chunk.CHUNK_SIZE*3*Tile.TILE_SIZE);
+			boolean renderParticles = game.settings.getBoolean("displayParticles");
 			
 			Format lightingFormat = Format.Alpha;
 			
@@ -781,8 +796,13 @@ public class GameScreen implements Screen {
 									
 									lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE);
 								}
-								
-								e.render(game, this);
+								if(e instanceof Particle) {
+									if(renderParticles) {
+										e.render(game, this);
+									}
+								} else {
+									e.render(game, this);
+								}
 								entities.remove(0);
 								continue;
 							}

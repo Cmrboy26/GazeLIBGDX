@@ -38,7 +38,6 @@ public class WoodFloorTile extends FloorTile {
 	@Override
 	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
 		draw(game.batch, game.getSprite("woodFloor"), x, y, 1, 1);
-		//game.batch.draw(game.getSprite("woodFloor"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
 		super.render(game, chunks, x, y);
 	}
 	
@@ -71,6 +70,11 @@ public class WoodFloorTile extends FloorTile {
 	public void onBreak(World world, Player player, int x, int y) {
 		super.onBreak(world, player, x, y);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_FLOOR, 1));
+	}
+
+	@Override
+	public float getSpeedMultiplier() {
+		return 1.15f;
 	}
 	
 }

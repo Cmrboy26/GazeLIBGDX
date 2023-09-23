@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -98,7 +99,7 @@ public class Gaze extends Game {
  		singleton = this;
 	}
 	
-	public NinePatch healthbar, healthbarBackground, helpBox, questBoxNine;
+	public NinePatch healthbar, healthbarBackground, helpBox, questBoxNine, buttonNine, buttonNineSmall;
 	
 	@Override
 	public void create () {
@@ -156,6 +157,12 @@ public class Gaze extends Game {
 		helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
 		helpBox.scale(2, 2);
 		questBoxNine = new NinePatch(sprites.get("questBoxNine"), 1, 1, 1, 1);
+		
+		buttonNine = new NinePatch(sprites.get("buttonNine"), 3, 3, 3, 4);
+		buttonNine.scale(2, 2);
+		
+		buttonNineSmall = new NinePatch(sprites.get("buttonNine"), 3, 3, 3, 4);
+		buttonNineSmall.scale(1.5f, 1.5f);
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();
@@ -621,9 +628,13 @@ public class Gaze extends Game {
 		
 		TextButtonStyle style = new TextButtonStyle();
 		
-		style.down = new TextureRegionDrawable(getSprite("buttonSelected"));
-		style.over = new TextureRegionDrawable(getSprite("buttonSelected"));
-		style.up = new TextureRegionDrawable(getSprite("button"));
+		//style.down = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//style.over = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//style.up = new TextureRegionDrawable(getSprite("button"));
+		style.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		style.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		style.up = new NinePatchDrawable(buttonNineSmall);
+		
 		
 		style.font = getFont(25);
 		style.fontColor = Color.WHITE;
@@ -632,9 +643,12 @@ public class Gaze extends Game {
 		
 		TextButtonStyle largeStyle = new TextButtonStyle();
 		
-		largeStyle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		largeStyle.over = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		largeStyle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
+		//largeStyle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//largeStyle.over = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//largeStyle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
+		largeStyle.down = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		largeStyle.over = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		largeStyle.up = new NinePatchDrawable(buttonNine);
 		
 		largeStyle.font = getFont(25);
 		largeStyle.fontColor = Color.WHITE;
@@ -643,9 +657,12 @@ public class Gaze extends Game {
 		
 		TextButtonStyle smallstyle = new TextButtonStyle();
 		
-		smallstyle.down = new TextureRegionDrawable(getSprite("buttonSelected"));
-		smallstyle.over = new TextureRegionDrawable(getSprite("buttonSelected"));
-		smallstyle.up = new TextureRegionDrawable(getSprite("button"));
+		//smallstyle.down = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//smallstyle.over = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//smallstyle.up = new TextureRegionDrawable(getSprite("button"));
+		smallstyle.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		smallstyle.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		smallstyle.up = new NinePatchDrawable(buttonNineSmall);
 		
 		smallstyle.font = getFont(20);
 		smallstyle.fontColor = Color.WHITE;
@@ -656,12 +673,17 @@ public class Gaze extends Game {
 		
 		TextButtonStyle toggle = new TextButtonStyle();
 		
-		toggle.down = new TextureRegionDrawable(getSprite("buttonSelected"));
-		toggle.over = new TextureRegionDrawable(getSprite("buttonSelected"));
-		toggle.checked = new TextureRegionDrawable(getSprite("buttonSelected"));
-		toggle.up = new TextureRegionDrawable(getSprite("button"));
+		//toggle.down = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//toggle.over = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//toggle.checked = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//toggle.up = new TextureRegionDrawable(getSprite("button"));
+		
+		toggle.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		toggle.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		toggle.checked = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		toggle.up = new NinePatchDrawable(buttonNineSmall);
 
-		toggle.unpressedOffsetY = 3;
+		toggle.unpressedOffsetY = 1;
 		toggle.pressedOffsetY = 0;
 		toggle.font = getFont(25);
 		toggle.fontColor = Color.WHITE;
@@ -671,10 +693,15 @@ public class Gaze extends Game {
 		
 		TextButtonStyle largeToggle = new TextButtonStyle();
 		
-		largeToggle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		largeToggle.over = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		largeToggle.checked = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		largeToggle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
+		//largeToggle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//largeToggle.over = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//largeToggle.checked = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//largeToggle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
+		
+		largeToggle.down = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		largeToggle.over = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		largeToggle.checked = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		largeToggle.up = new NinePatchDrawable(buttonNine);
 
 		largeToggle.unpressedOffsetY = 3;
 		largeToggle.pressedOffsetY = 0;
@@ -685,8 +712,10 @@ public class Gaze extends Game {
 		defaultSkin.add("toggleLarge", largeToggle);
 		
 		SliderStyle sliderStyle = new SliderStyle();
-		sliderStyle.background = new TextureRegionDrawable(getSprite("button"));
-		sliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//sliderStyle.background = new TextureRegionDrawable(getSprite("button"));
+		//sliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		sliderStyle.background = new NinePatchDrawable(buttonNineSmall);
+		sliderStyle.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
 		sliderStyle.background.setMinHeight(25);
 		sliderStyle.backgroundOver.setMinHeight(25);
 		sliderStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -694,8 +723,10 @@ public class Gaze extends Game {
 		defaultSkin.add("slider", sliderStyle);
 		
 		SliderStyle invertedSliderStyle = new SliderStyle();
-		invertedSliderStyle.background = new TextureRegionDrawable(getSprite("button"));
-		invertedSliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//invertedSliderStyle.background = new TextureRegionDrawable(getSprite("button"));
+		//invertedSliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		invertedSliderStyle.background = new NinePatchDrawable(buttonNineSmall);
+		invertedSliderStyle.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
 		invertedSliderStyle.background.setMinHeight(25);
 		invertedSliderStyle.backgroundOver.setMinHeight(25);
 		invertedSliderStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -703,32 +734,40 @@ public class Gaze extends Game {
 		defaultSkin.add("sliderInverted", invertedSliderStyle);
 		
 		SliderStyle sliderNoFill = new SliderStyle();
-		sliderNoFill.background = new TextureRegionDrawable(getSprite("button"));
-		sliderNoFill.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//sliderNoFill.background = new TextureRegionDrawable(getSprite("button"));
+		//sliderNoFill.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
+		sliderNoFill.background = new NinePatchDrawable(buttonNineSmall);
+		sliderNoFill.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
 		sliderNoFill.background.setMinHeight(25);
 		sliderNoFill.backgroundOver.setMinHeight(25);
 		sliderNoFill.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
 		defaultSkin.add("sliderNoFill", sliderNoFill);
 		
 		SliderStyle sliderLargeStyle = new SliderStyle();
-		sliderLargeStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		sliderLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
+		//sliderLargeStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//sliderLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
+		sliderLargeStyle.backgroundOver = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		sliderLargeStyle.background = new NinePatchDrawable(buttonNine);
 		sliderLargeStyle.background.setMinHeight(25);
 		sliderLargeStyle.backgroundOver.setMinHeight(25);
 		sliderLargeStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
 		defaultSkin.add("sliderLarge", sliderLargeStyle);
 		
 		TextFieldStyle textFieldStyle = new TextFieldStyle();
-		textFieldStyle.background = new TextureRegionDrawable(getSprite("button"));
-		textFieldStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelected"));
+		//textFieldStyle.background = new TextureRegionDrawable(getSprite("button"));
+		//textFieldStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelected"));
+		textFieldStyle.background = new NinePatchDrawable(buttonNineSmall);
+		textFieldStyle.focusedBackground = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
 		textFieldStyle.font = getFont(15);
 		textFieldStyle.focusedFontColor = Color.YELLOW;
 		textFieldStyle.fontColor = Color.WHITE;
 		defaultSkin.add("textField", textFieldStyle);
 		
 		TextFieldStyle textFieldLargeStyle = new TextFieldStyle();
-		textFieldLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
-		textFieldLargeStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		//textFieldLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
+		//textFieldLargeStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
+		textFieldLargeStyle.background = new NinePatchDrawable(buttonNine);
+		textFieldLargeStyle.focusedBackground = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
 		textFieldLargeStyle.font = getFont(20);
 		textFieldLargeStyle.focusedFontColor = Color.YELLOW;
 		textFieldLargeStyle.fontColor = Color.WHITE;

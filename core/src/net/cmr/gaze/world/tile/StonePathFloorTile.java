@@ -5,8 +5,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
-import com.badlogic.gdx.utils.DataBuffer;
-
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
@@ -14,6 +12,7 @@ import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.world.BreakableUtils;
 import net.cmr.gaze.world.FloorTile;
+import net.cmr.gaze.world.SpeedChangeTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
@@ -72,6 +71,11 @@ public class StonePathFloorTile extends FloorTile {
 	public void onBreak(World world, Player player, int x, int y) {
 		super.onBreak(world, player, x, y);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE_PATH_FLOOR, 1));
+	}
+
+	@Override
+	public float getSpeedMultiplier() {
+		return 1.15f;
 	}
 	
 }

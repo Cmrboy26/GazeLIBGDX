@@ -75,7 +75,7 @@ public class WheatTile extends CropTile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		if(stage == getGrowthStages()) {
-			BreakableUtils.spawnBreakParticle(world, this, x, y, .5f, this);
+			BreakableUtils.spawnBreakParticleOffset(world, this, x, y, .5f, this);
 			BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, (int) (1+Math.round(2*Math.random()))));
 			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT, (int) (1)));

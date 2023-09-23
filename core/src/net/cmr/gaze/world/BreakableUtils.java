@@ -41,17 +41,17 @@ public class BreakableUtils {
 		player.addXP(world, skill, xp);
 	}
 	
-	public static void spawnParticle(World world, ParticleEffectType type, Tile tile, float x, float y, float offsetY, Object source) {
-		world.addEntity(Particle.createParticle(x, y, type, .8f, offsetY, source));
+	public static void spawnParticleOffset(World world, ParticleEffectType type, Tile tile, float x, float y, float offsetY, Object... data) {
+		world.addEntity(Particle.createParticle(x, y, type, .8f, offsetY, data));
 	}
-	public static void spawnParticle(World world, ParticleEffectType type, Tile tile, float x, float y, Object source) {
-		world.addEntity(Particle.createParticle(x, y, type, .8f, 0, source));
+	public static void spawnParticle(World world, ParticleEffectType type, Tile tile, float x, float y, Object... data) {
+		world.addEntity(Particle.createParticle(x, y, type, .8f, 0, data));
 	}
-	public static void spawnBreakParticle(World world, Tile tile, float x, float y, float offsetY, Object source) {
-		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, offsetY, source));
+	public static void spawnBreakParticleOffset(World world, Tile tile, float x, float y, float offsetY, Object... data) {
+		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, offsetY, data));
 	}
-	public static void spawnBreakParticle(World world, Tile tile, float x, float y, Object source) {
-		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, 0, source));
+	public static void spawnBreakParticle(World world, Tile tile, float x, float y, Object... data) {
+		world.addEntity(Particle.createParticle(x, y, ParticleEffectType.BREAK, .8f, 0, data));
 	}
 	
 }

@@ -16,19 +16,19 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
 
-public class Particle extends Entity {
+public class Particle extends Entity implements ExcludePositionUpdates {
 
 	int offsetY;
 	float particleLife;
 	float particleLifeSpan;
 	ParticleEffectType type;
 	boolean effectStarted;
-	Object source;
+	Object[] data;
 	
 	LinkedList<ParticleData> particleList;
 	
 	class ParticleData {
-		float x, y, vx, vy;
+		float x, y, vx, vy, data;
 		public ParticleData(float x, float y, float vx, float vy) {
 			this.x = x;
 			this.y = y;
@@ -49,11 +49,18 @@ public class Particle extends Entity {
 			y+=deltaTime*vy;
 		}
 		
+		public void setData(float data) {
+			this.data = data;
+		}
+		public float getData() {
+			return data;
+		}
+		
 	}
 	
 	public enum ParticleEffectType {
 		BREAK(.8f),
-		LEAVES(2.25f);
+		LEAVES(5f);
 		
 		
 		public float lifeSpan;
@@ -62,14 +69,14 @@ public class Particle extends Entity {
 		}
 	}
 	
-	public static Particle createParticle(float x, float y, ParticleEffectType type, float lifeSpan, float offsetY, Object source) {
+	public static Particle createParticle(float x, float y, ParticleEffectType type, float lifeSpan, float offsetY, Object... data) {
 		Particle p = new Particle();
 		p.setPosition(x*Tile.TILE_SIZE, y*Tile.TILE_SIZE);
 		p.type = type;
 		p.particleLife = type.lifeSpan;
 		p.particleLifeSpan = type.lifeSpan;
 		p.offsetY = (int) (offsetY*Tile.TILE_SIZE);
-		p.source = source;
+		p.data = data;
 		return p;
 	}
 	
@@ -82,7 +89,7 @@ public class Particle extends Entity {
 		
 		switch(type) {
 		case BREAK:
-			Color color = Tiles.getAverageColor(((Tile)source).getType());
+			Color color = Tiles.getAverageColor(((Tile)data[0]).getType());
 			if(!effectStarted) {
 				particleList = new LinkedList<>();
 				
@@ -136,7 +143,7 @@ public class Particle extends Entity {
 				}
 				
 				Random random = new Random();
-				for(int i = 0; i < 20; i++) {
+				for(int i = 0; i < (Integer) data[0]; i++) {
 					ParticleData data = new ParticleData((random.nextFloat()-.25f), (random.nextFloat()*1.25f), (random.nextFloat())/4.5f, -.2f-(random.nextFloat()/6f));
 					particleList.add(data);
 				}
@@ -146,19 +153,24 @@ public class Particle extends Entity {
 			
 			delta = Gdx.graphics.getDeltaTime()*2;
 
-			alpha = (float) CustomMath.minMax(0f, particleLife*10f, 1f);
+			alpha = (float) CustomMath.minMax(0f, particleLife*2f, 1f);
 			float fadeInScale = CustomMath.minMax(0, getElapsedTime()*3f, 1f);
 			alpha = alpha*fadeInScale;
 			
 			game.batch.setColor(color.r, color.g, color.b, alpha);
 			for(ParticleData data : particleList) {
 				data.update(delta);
-				if(data.vy < -1.2f-(offsetY/2f/Tile.TILE_SIZE)) {
-					data.vx = 0;
-					data.vy = 0;
+				//System.out.println(data.y+","+data.vy);
+				float frameTime = getElapsedTime()+Math.abs((data.vx+data.vy)*10f);
+				if(data.y < -1+data.vy*1.55f) {
+					data.update(-delta);
+					if(data.getData()==0) {
+						data.setData(frameTime);
+					}
+					frameTime = data.getData();
 				}
 				
-				game.batch.draw(game.getAnimation("leaf_particles").getKeyFrame(getElapsedTime()+Math.abs((data.vx+data.vy)*10f)), (float) getX()+data.x*Tile.TILE_SIZE, (float) getY()+data.y*Tile.TILE_SIZE+offsetY, Tile.TILE_SIZE/scale, Tile.TILE_SIZE/scale);
+				game.batch.draw(game.getAnimation("leaf_particles").getKeyFrame(frameTime), (float) getX()+data.x*Tile.TILE_SIZE, (float) getY()+data.y*Tile.TILE_SIZE+offsetY, Tile.TILE_SIZE/scale, Tile.TILE_SIZE/scale);
 				
 			}
 			game.batch.setColor(Color.WHITE);
@@ -196,9 +208,10 @@ public class Particle extends Entity {
 		buffer.writeInt(offsetY);
 		switch(type) {
 		case BREAK:
-			Tile.writeOutgoingTile((Tile)source, buffer);
+			Tile.writeOutgoingTile((Tile)data[0], buffer);
 			break;
 		case LEAVES: {
+			buffer.writeInt((Integer)data[0]);
 			break;
 		}
 		default:
@@ -216,9 +229,12 @@ public class Particle extends Entity {
 		particle.offsetY = input.readInt();
 		switch(particle.type) {
 		case BREAK:
-			particle.source = Tile.readIncomingTile(input);
+			particle.data = new Object[1];
+			particle.data[0] = Tile.readIncomingTile(input);
 			break;
 		case LEAVES:
+			particle.data = new Object[1];
+			particle.data[0] = input.readInt();
 			break;
 		default:
 			break;

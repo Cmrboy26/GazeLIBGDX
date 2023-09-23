@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.world.entities.Player;
 
-public abstract class FloorTile extends Tile {
+public abstract class FloorTile extends Tile implements SpeedChangeTile {
 	
 	Tile underTile;
 	

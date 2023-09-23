@@ -18,6 +18,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.Logger;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.AppleItem;
+import net.cmr.gaze.inventory.custom.BreadItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
@@ -89,7 +90,8 @@ public class Items {
 		STONE_PATH_FLOOR(StonePathFloorItem.class), 
 		STONE_BRICK_WALL(StoneBrickWallItem.class), 
 		STONE_BRICK_FLOOR(StoneBrickFloorItem.class), 
-		ANVIL(AnvilItem.class);
+		ANVIL(AnvilItem.class), 
+		BREAD(BreadItem.class);
 		
 		final int maxSize;
 		final Class<? extends Item> clazz;

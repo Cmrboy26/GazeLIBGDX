@@ -160,7 +160,7 @@ public class MultiplayerSelectScreen implements Screen {
 		bottomstage.setViewport(bottomViewport);
 		topstage.setViewport(topViewport);
 		
-		host = new TextButton("Host", game.getSkin(), "smallButton");
+		host = new TextButton("Host", game.getSkin(), "buttonLarge");
 		host.setBounds(320+75+5, 10, 150, 37.5f);
 		host.align(Align.center);
 		host.addListener(new ClickListener(){
@@ -176,7 +176,7 @@ public class MultiplayerSelectScreen implements Screen {
 		});
 		
 		bottomstage.addActor(host);
-		join = new TextButton("Join", game.getSkin(), "smallButton");
+		join = new TextButton("Join", game.getSkin(), "buttonLarge");
 		join.setBounds(320-75, 10, 150, 37.5f);
 		join.align(Align.center);
 		join.addListener(new ClickListener(){
@@ -191,7 +191,7 @@ public class MultiplayerSelectScreen implements Screen {
 		
 		bottomstage.addActor(join);
 		
-		back = new TextButton("Back", game.getSkin(), "smallButton");
+		back = new TextButton("Back", game.getSkin(), "buttonLarge");
 		back.setBounds(320-150-75-5, 10, 150, 37.5f);
 		back.align(Align.center);
 		back.addListener(new ClickListener(){

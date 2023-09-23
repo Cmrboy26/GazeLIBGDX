@@ -2,6 +2,7 @@ package net.cmr.gaze.world;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
@@ -9,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.math.Rectangle;
 
+import net.cmr.gaze.inventory.InteractiveItem;
+import net.cmr.gaze.inventory.InteractiveItem.ItemInteraction;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Placeable;
@@ -33,6 +36,7 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.TileType.Replaceable;
 import net.cmr.gaze.world.entities.Entity;
+import net.cmr.gaze.world.entities.ExcludePositionUpdates;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
@@ -125,10 +129,8 @@ public class World {
 			//}
 			//int amount = 0;
 			if(connection.getInteractEvents().size()>0) {
-				for(PlayerInteractPacket interact = connection.getInteractEvents().get(0);
-						connection.getInteractEvents().size() > 0; 
-						connection.getInteractEvents().remove(0)) {
-					
+				for(int f = 0; f < connection.getInteractEvents().size(); f++) {
+					PlayerInteractPacket interact = connection.getInteractEvents().get(f);
 					/*
 					 * TODO: make an effective rate limiter 
 					amount++;
@@ -139,10 +141,27 @@ public class World {
 					int x = (int) Math.floor(interact.getWorldX()/Tile.TILE_SIZE);
 					int y = (int) Math.floor(interact.getWorldY()/Tile.TILE_SIZE);
 					
+					Item held = player.getInventory().get(player.getHotbarSlot());
+					if (held instanceof InteractiveItem) {
+						if (!interact.wasAutomaticallyRepeated()) {
+							ItemInteraction result = ((InteractiveItem) held).onInteract(connection, this, interact.getClickType(), x, y);
+							if (result != null) {
+								if (result.itemChangeAmount != 0) {
+									player.getInventory().remove(
+											Items.getItem(held.getType(), -result.itemChangeAmount),
+											player.getHotbarSlot());
+									connection.inventoryChanged(true);
+								}
+								if (result.actionOccured) {
+									break;
+								}
+							}
+						}
+					}
+					
 					if(player.getDistanceToTile(x, y) < player.getInteractRadius()) {
 						
 						if(interact.getClickType()==2) {
-							Item held = player.getInventory().get(player.getHotbarSlot());
 							if(held instanceof Placeable) {
 								Placeable placeable = (Placeable) held;
 								int rotation = CustomMath.minMax(0,interact.getModifier(),3);
@@ -213,6 +232,7 @@ public class World {
 						}
 					}	
 				}
+				connection.getInteractEvents().clear();
 			}
 		}
 		
@@ -251,6 +271,7 @@ public class World {
 			cooldown++;
 			if(cooldown > 3) {
 				cooldown = 0;
+				HashMap<Chunk, ArrayList<Entity>> tempMap = new HashMap<>();
 				for(PlayerConnection playerConnection : players) {
 					ArrayList<Entity> endEntities = new ArrayList<>();
 					ArrayList<Chunk> playerChunks = getPlayerLoadedChunks(playerConnection);
@@ -263,7 +284,19 @@ public class World {
 					
 					for(Chunk c : playerChunks) {
 						if(c!=null) {
-							endEntities.addAll(c.getEntities());
+							if(tempMap.get(c) == null) {
+								ArrayList<Entity> ent = new ArrayList<>();
+								for(Entity e : c.getEntities()) {
+									if(e instanceof ExcludePositionUpdates) {
+										continue;
+									}
+									ent.add(e);
+								}
+								endEntities.addAll(ent);
+								tempMap.put(c, ent);
+							} else {
+								endEntities.addAll(tempMap.get(c));
+							}
 						}
 					}
 					playerConnection.getSender().addPacket(new EntityPositionsPacket(endEntities));
@@ -628,8 +661,8 @@ public class World {
 		}
 	}
 	
-	public void createParticle(float x, float y, ParticleEffectType type, float offsetY, Object source) {
-		Particle particle = Particle.createParticle(x, y, type, -1f, offsetY, source);
+	public void createParticle(float x, float y, ParticleEffectType type, float offsetY, Object... data) {
+		Particle particle = Particle.createParticle(x, y, type, -1f, offsetY, data);
 		addEntity(particle);
 	}
 	

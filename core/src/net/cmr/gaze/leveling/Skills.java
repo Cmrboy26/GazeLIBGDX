@@ -97,7 +97,7 @@ public class Skills {
 		int afterLevel = Math.max(getLevel(sill),1);
 
 		if(beforeLevel!=afterLevel) {
-			System.out.println("LEVELD UP: "+afterLevel);
+			//System.out.println("LEVELD UP: "+afterLevel);
 		}
 		
 		return beforeLevel!=afterLevel;

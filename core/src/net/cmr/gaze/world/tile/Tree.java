@@ -87,10 +87,10 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		if(data.isServer()) {
 			Tree.particleDelta+=Tile.DELTA_TIME;
 			Tree.particleDelta2+=((float) (Math.PI+Math.random()));
-			if(particleDelta >= 10f && particleDelta2 > 2) {
+			if(particleDelta >= 20f && particleDelta2 > 2) {
 				particleDelta-=10f;
 				particleDelta2 = 0;
-				BreakableUtils.spawnParticle(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, this);
+				BreakableUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, 4);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 			
 			world.playSound("grassBreak", 1f, x, y);
-			BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, this);
+			BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 5);
 			shake+=.5f;
 			shake = CustomMath.minMax(0, shake, .75f);
 			
@@ -152,15 +152,15 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	@Override
 	protected void onHit(World world, Player player, int x, int y) {
-		BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, this);
+		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 10);
 		shake+=.5f;
 		shake = CustomMath.minMax(0, shake, .75f);
 	}
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.spawnBreakParticle(world, this, x+.5f, y, .9f, this);
-		BreakableUtils.spawnParticle(world, ParticleEffectType.LEAVES, this, x+.3f, y, 2f, this);
+		BreakableUtils.spawnBreakParticleOffset(world, this, x+.5f, y, .9f, this);
+		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, 2f, 15);
 		BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3));
 		if(appleable && appleDelta <= 0) {

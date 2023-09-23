@@ -69,5 +69,10 @@ public class StoneBrickFloorTile extends FloorTile {
 		super.onBreak(world, player, x, y);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE_BRICK_FLOOR, 1));
 	}
+
+	@Override
+	public float getSpeedMultiplier() {
+		return 1.15f;
+	}
 	
 }

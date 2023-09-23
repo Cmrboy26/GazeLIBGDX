@@ -12,9 +12,11 @@ import net.cmr.gaze.networking.PlayerConnection;
 @PacketID(id = 7)
 public class PlayerInteractPacket extends Packet {
 
+	boolean autorepeat;
 	int clickType, worldX, worldY, modifier;
 	
-	public PlayerInteractPacket(int clickType, int worldX, int worldY, int modifier) {
+	public PlayerInteractPacket(boolean autorepeat, int clickType, int worldX, int worldY, int modifier) {
+		this.autorepeat = autorepeat;
 		this.clickType = clickType;
 		this.worldX = worldX;
 		this.worldY = worldY;
@@ -25,6 +27,9 @@ public class PlayerInteractPacket extends Packet {
 		super(input, packetSize);
 	}
 	
+	public boolean wasAutomaticallyRepeated() {
+		return autorepeat;
+	}
 	public int getClickType() {
 		return clickType;
 	}
@@ -44,6 +49,7 @@ public class PlayerInteractPacket extends Packet {
 
 	@Override
 	protected void writePacketData(DataBuffer buffer) throws IOException {
+		buffer.writeBoolean(autorepeat);
 		buffer.writeInt(clickType);
 		buffer.writeInt(worldX);
 		buffer.writeInt(worldY);
@@ -52,6 +58,7 @@ public class PlayerInteractPacket extends Packet {
 
 	@Override
 	public void readPacketData(DataInputStream input, int packetSize) throws IOException {
+		autorepeat = input.readBoolean();
 		clickType = input.readInt();
 		worldX = input.readInt();
 		worldY = input.readInt();

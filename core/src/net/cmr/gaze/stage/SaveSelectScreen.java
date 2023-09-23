@@ -40,7 +40,7 @@ public class SaveSelectScreen implements Screen {
 		
 		Gdx.input.setInputProcessor(centerStage);
 		
-		back = new TextButton("Back", game.getSkin(), "button");
+		back = new TextButton("Back", game.getSkin(), "buttonLarge");
 		back.setPosition(20f, 30, Align.left);
 		back.setWidth(200f);
 		back.setHeight(50f);
@@ -54,7 +54,7 @@ public class SaveSelectScreen implements Screen {
 		});
 		centerStage.addActor(back);
 
-		play = new TextButton("Play", game.getSkin(), "button");
+		play = new TextButton("Play", game.getSkin(), "buttonLarge");
 		play.setPosition(20f+220f, 30, Align.left);
 		play.setWidth(200f);
 		play.setHeight(50f);

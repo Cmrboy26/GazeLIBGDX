@@ -6,7 +6,14 @@ filter: MipMap, MipMap
 repeat: none
 apple
   rotate: false
-  xy: 648, 2
+  xy: 682, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+bread
+  rotate: false
+  xy: 172, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -20,28 +27,28 @@ iron
   index: -1
 ironAxe
   rotate: false
-  xy: 376, 2
+  xy: 410, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ironHoe
   rotate: false
-  xy: 478, 2
+  xy: 512, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ironIngot
   rotate: false
-  xy: 682, 2
+  xy: 716, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ironOre
   rotate: false
-  xy: 444, 2
+  xy: 478, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -55,7 +62,7 @@ ironPickaxe
   index: -1
 ironShovel
   rotate: false
-  xy: 206, 2
+  xy: 240, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -69,35 +76,35 @@ stone
   index: -1
 stoneAxe
   rotate: false
-  xy: 750, 2
+  xy: 784, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 stoneBrickFloor
   rotate: false
-  xy: 546, 2
+  xy: 580, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 stoneHoe
   rotate: false
-  xy: 784, 2
+  xy: 818, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 stonePathFloor
   rotate: false
-  xy: 614, 2
+  xy: 648, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 stonePickaxe
   rotate: false
-  xy: 410, 2
+  xy: 444, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -111,63 +118,63 @@ stoneShovel
   index: -1
 unusedGrassSeeds
   rotate: false
-  xy: 716, 2
+  xy: 750, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 wheat
   rotate: false
-  xy: 274, 2
+  xy: 308, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 wheatSeeds
   rotate: false
-  xy: 580, 2
+  xy: 614, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 wood
   rotate: false
-  xy: 818, 2
+  xy: 852, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 woodAxe
   rotate: false
-  xy: 172, 2
+  xy: 206, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 woodFloor
   rotate: false
-  xy: 342, 2
+  xy: 376, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 woodHoe
   rotate: false
-  xy: 308, 2
+  xy: 342, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 woodPickaxe
   rotate: false
-  xy: 512, 2
+  xy: 546, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 woodShovel
   rotate: false
-  xy: 240, 2
+  xy: 274, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

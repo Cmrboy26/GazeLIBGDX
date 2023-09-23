@@ -11,20 +11,20 @@ import net.cmr.gaze.inventory.FoodItem;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items.ItemType;
 
-public class AppleItem extends FoodItem {
+public class BreadItem extends FoodItem {
 
-	public AppleItem(int size) {
-		super(ItemType.APPLE, size);
+	public BreadItem(int size) {
+		super(ItemType.BREAD, size);
 	}
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		batch.draw(game.getSprite("apple"), x, y, width, height);
+		batch.draw(game.getSprite("bread"), x, y, width, height);
 	}
 
 	@Override
 	public Item readItem(DataInputStream input, ItemType type, int size) throws IOException {
-		return new AppleItem(size);
+		return new BreadItem(size);
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class AppleItem extends FoodItem {
 
 	@Override
 	public int getFoodPoints() {
-		return 3;
+		return 5;
 	}
 
 	@Override
 	public int getSaturationPoints() {
-		return 4;
+		return 2;
 	}
 
 }

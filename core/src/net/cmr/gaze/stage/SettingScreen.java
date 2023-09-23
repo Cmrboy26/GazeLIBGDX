@@ -33,7 +33,7 @@ public class SettingScreen implements Screen {
 	Slider masterVolume, musicVolume, sfxVolume, ambientVolume, worldZoom, uiZoom, fpsSlider;
 	final Label masterLabel, musicLabel, sfxLabel, ambientLabel, worldLabel, uiLabel, fpsLabel;
 	
-	final TextButton fpsButton, hintButton, hintResetButton, fullscreenButton, playerTypeButton, invertScrollButton, connectionThreshold;
+	final TextButton fpsButton, hintButton, hintResetButton, fullscreenButton, playerTypeButton, invertScrollButton, connectionThreshold, particlesButton;
 	
 	final int millisSoundCooldown = 250;
 	Interpolation sliderInterpolation = Interpolation.smoother;
@@ -80,6 +80,9 @@ public class SettingScreen implements Screen {
         }
         if(prefs.get().getOrDefault("connectionThreshold", null)==null) {
         	prefs.putBoolean("connectionThreshold", false);
+        }
+        if(prefs.get().getOrDefault("displayParticles", null)==null) {
+        	prefs.putBoolean("displayParticles", true);
         }
         
         prefs.flush();
@@ -423,6 +426,7 @@ public class SettingScreen implements Screen {
 			}
 		});
         contentTable.add(invertScrollButton).width(100).height(25).spaceRight(5).spaceBottom(5);
+        contentTable.row();
         
         connectionThreshold = new TextButton("Laxed Movement\nCorrection", toggleStyleSmaller);
         connectionThreshold.setWidth(100);
@@ -443,7 +447,26 @@ public class SettingScreen implements Screen {
 			}
 		});
         contentTable.add(connectionThreshold).width(100).height(25).spaceLeft(deltaTime).spaceRight(5).spaceBottom(5);
-        contentTable.row();
+        
+        particlesButton = new TextButton("Display Particles", toggleStyle);
+        particlesButton.setWidth(100);
+        particlesButton.setHeight(25f);
+        particlesButton.setChecked(prefs.getBoolean("displayParticles"));
+        particlesButton.addListener(new ChangeListener() {
+			boolean lastVal = false;
+			long lastSound = 0;
+			
+			@Override
+			public void changed(ChangeEvent event, Actor actor) {
+				if(System.currentTimeMillis()-lastSound>millisSoundCooldown) {
+					game.playSound("tick", .8f);
+					lastSound = System.currentTimeMillis();
+				}
+				lastVal = particlesButton.isChecked();
+				prefs.putBoolean("displayParticles", lastVal);
+			}
+		});
+        contentTable.add(particlesButton).width(100).height(25).spaceRight(5).spaceBottom(5);
         
         PlayerDisplayWidget pdw = new PlayerDisplayWidget(game, displayPlayer);
         contentTable.add(pdw).width(70).height(70);

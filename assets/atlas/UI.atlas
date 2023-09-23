@@ -25,6 +25,13 @@ buttonLarge
   orig: 120, 20
   offset: 0, 0
   index: -1
+buttonNine
+  rotate: false
+  xy: 164, 220
+  size: 7, 8
+  orig: 7, 8
+  offset: 0, 0
+  index: -1
 buttonSelected
   rotate: false
   xy: 2, 36
@@ -69,7 +76,7 @@ chestInventory
   index: -1
 cmrboy26
   rotate: false
-  xy: 164, 221
+  xy: 968, 993
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
@@ -111,14 +118,14 @@ healthbarNine
   index: -1
 healthbarNineBackground
   rotate: false
-  xy: 423, 338
+  xy: 140, 208
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
   index: -1
 helpBoxNine
   rotate: false
-  xy: 360, 307
+  xy: 296, 241
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -223,7 +230,7 @@ notification
   index: -1
 particle
   rotate: false
-  xy: 140, 212
+  xy: 134, 52
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
@@ -258,7 +265,7 @@ questBook
   index: -1
 questBoxNine
   rotate: false
-  xy: 378, 325
+  xy: 314, 259
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -272,77 +279,77 @@ sliderKnob
   index: -1
 smallArrow
   rotate: false
-  xy: 968, 993
+  xy: 423, 339
   size: 7, 7
   orig: 7, 7
   offset: 0, 0
   index: -1
 smallNumber0
   rotate: false
-  xy: 888, 846
+  xy: 326, 272
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber1
   rotate: false
-  xy: 870, 726
+  xy: 748, 682
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber2
   rotate: false
-  xy: 326, 272
+  xy: 360, 306
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber3
   rotate: false
-  xy: 748, 682
+  xy: 888, 846
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber4
   rotate: false
-  xy: 146, 212
+  xy: 870, 726
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber5
   rotate: false
-  xy: 906, 864
+  xy: 344, 290
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber6
   rotate: false
-  xy: 726, 660
+  xy: 830, 704
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber7
   rotate: false
-  xy: 344, 290
+  xy: 378, 324
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber8
   rotate: false
-  xy: 830, 704
+  xy: 906, 864
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber9
   rotate: false
-  xy: 134, 52
+  xy: 726, 660
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
