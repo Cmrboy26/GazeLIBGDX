@@ -202,6 +202,12 @@ public class Inventory {
 		}
 		return returnValue;
 	}
+
+	public void clear() {
+		for(int i = 0; i < items.length; i++) {
+			items[i] = null;
+		}
+	}
 	
 	public void addListener(InventoryListener listener) {
 		if(!listeners.contains(listener)) {

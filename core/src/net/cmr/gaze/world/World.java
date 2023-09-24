@@ -24,6 +24,7 @@ import net.cmr.gaze.networking.packets.ChunkDataPacket;
 import net.cmr.gaze.networking.packets.ChunkUnloadPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryUpdatePacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
@@ -37,6 +38,7 @@ import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.TileType.Replaceable;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.ExcludePositionUpdates;
+import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
@@ -55,6 +57,7 @@ public class World {
 	private ArrayList<PlayerConnection> players;
 	private GameServer server;
 	private WorldGenerator generator;
+	
 	
 	
 	public World(WorldGenerator generator, GameServer server, String worldName, double seed) {
@@ -108,8 +111,62 @@ public class World {
 		playerTime+=delta;
 		worldTime+=delta;
 		
-		//int loop = (int) (playerTime/Entity.DELTA_TIME);
+		processConnectionsAndInteractions(delta, loadedChunks);
+		updateEntities(loadedChunks);
 		
+		loadedChunks.clear();
+		loadedChunks = null;
+	}
+
+	private void updateEntities(HashSet<Point> loadedChunks) {
+		while(updateTime>=Entity.DELTA_TIME) {
+			updateTime-=Entity.DELTA_TIME;
+			boolean b = updateTileTile>Tile.DELTA_TIME;
+			for(Point chunkCoordinate : chunkList.keySet()) {
+				Chunk chunk = chunkList.get(chunkCoordinate);
+				chunk.update(loadedChunks.contains(chunkCoordinate), b);
+			}
+			if(b) {
+				updateTileTile = 0;
+			}
+			cooldown++;
+			if(cooldown > 3) {
+				cooldown = 0;
+				HashMap<Chunk, ArrayList<Entity>> tempMap = new HashMap<>();
+				for(PlayerConnection playerConnection : players) {
+					ArrayList<Entity> endEntities = new ArrayList<>();
+					ArrayList<Chunk> playerChunks = getPlayerLoadedChunks(playerConnection);
+					
+					for(PlayerConnection tempConnection : players) {
+						if(server.evaluatePredicate(playerConnection, ConnectionPredicate.PLAYER_IN_BOUNDS, tempConnection.getPlayer().getChunk(), this)) {
+							endEntities.add(tempConnection.getPlayer());
+						}
+					}
+					
+					for(Chunk c : playerChunks) {
+						if(c!=null) {
+							if(tempMap.get(c) == null) {
+								ArrayList<Entity> ent = new ArrayList<>();
+								for(Entity e : c.getEntities()) {
+									if(e instanceof ExcludePositionUpdates) {
+										continue;
+									}
+									ent.add(e);
+								}
+								endEntities.addAll(ent);
+								tempMap.put(c, ent);
+							} else {
+								endEntities.addAll(tempMap.get(c));
+							}
+						}
+					}
+					playerConnection.getSender().addPacket(new EntityPositionsPacket(endEntities));
+				}
+			}
+		}
+	}
+	
+	private void processConnectionsAndInteractions(double delta, HashSet<Point> loadedChunks) {
 		for(int i = 0; i < players.size(); i++) {
 			PlayerConnection connection = players.get(i);
 			connection.update();
@@ -120,14 +177,12 @@ public class World {
 					loadedChunks.add(new Point(x+chunk.x, y+chunk.y));
 				}
 			}
-			//for(int y = 0; y < loop; y++) {
-				connection.setPlayerMovement();
-				player.update(delta, tileData);
-				sendNeededChunks(connection);
-				connection.processPositionPacket();
-				sendNeededChunks(connection);
-			//}
-			//int amount = 0;
+			
+			connection.setPlayerMovement();
+			player.update(delta, tileData);
+			connection.processPositionPacket();
+			sendNeededChunks(connection);
+			
 			if(connection.getInteractEvents().size()>0) {
 				for(int f = 0; f < connection.getInteractEvents().size(); f++) {
 					PlayerInteractPacket interact = connection.getInteractEvents().get(f);
@@ -235,77 +290,6 @@ public class World {
 				connection.getInteractEvents().clear();
 			}
 		}
-		
-		//playerTime-=Entity.DELTA_TIME*loop;
-		
-		/*for(PlayerConnection changedChunkConnection : newChunkConnections) {
-			Player player = changedChunkConnection.getPlayer();
-			Point beforeMovement = player.getLastChunk();
-			Point afterMovement = player.getChunk();
-			InventoryUpdatePacket sendToNewNearbyPlayers = new InventoryUpdatePacket(player);
-			for(PlayerConnection temp : players) {
-				if(temp.equals(changedChunkConnection)) {
-					continue;
-				}
-				boolean evaluation = server.evaluatePredicate(temp, ConnectionPredicate.PLAYER_NOW_IN_BOUNDS, afterMovement, beforeMovement);
-				if(evaluation) {
-					temp.getSender().addPacket(sendToNewNearbyPlayers);
-				}
-			}
-		}
-		newChunkConnections.clear();
-		*/
-		
-		while(updateTime>=Entity.DELTA_TIME) {
-			updateTime-=Entity.DELTA_TIME;
-			boolean b = updateTileTile>Tile.DELTA_TIME;
-			for(Point chunkCoordinate : chunkList.keySet()) {
-				Chunk chunk = chunkList.get(chunkCoordinate);
-				
-				
-				chunk.update(loadedChunks.contains(chunkCoordinate), b);
-			}
-			if(b) {
-				updateTileTile = 0;
-			}
-			cooldown++;
-			if(cooldown > 3) {
-				cooldown = 0;
-				HashMap<Chunk, ArrayList<Entity>> tempMap = new HashMap<>();
-				for(PlayerConnection playerConnection : players) {
-					ArrayList<Entity> endEntities = new ArrayList<>();
-					ArrayList<Chunk> playerChunks = getPlayerLoadedChunks(playerConnection);
-					
-					for(PlayerConnection tempConnection : players) {
-						if(server.evaluatePredicate(playerConnection, ConnectionPredicate.PLAYER_IN_BOUNDS, tempConnection.getPlayer().getChunk(), this)) {
-							endEntities.add(tempConnection.getPlayer());
-						}
-					}
-					
-					for(Chunk c : playerChunks) {
-						if(c!=null) {
-							if(tempMap.get(c) == null) {
-								ArrayList<Entity> ent = new ArrayList<>();
-								for(Entity e : c.getEntities()) {
-									if(e instanceof ExcludePositionUpdates) {
-										continue;
-									}
-									ent.add(e);
-								}
-								endEntities.addAll(ent);
-								tempMap.put(c, ent);
-							} else {
-								endEntities.addAll(tempMap.get(c));
-							}
-						}
-					}
-					playerConnection.getSender().addPacket(new EntityPositionsPacket(endEntities));
-				}
-			}
-		}
-		
-		loadedChunks.clear();
-		loadedChunks = null;
 	}
 	
 	public boolean addTile(Tile t, int x, int y, boolean countReplacables) {
@@ -660,6 +644,17 @@ public class World {
 			}
 		}
 	}
+
+	public static final HealthEntityListener HEALTH_ENTITY_LISTENER = new HealthEntityListener() {
+		
+		@Override
+		public void healthChanged(HealthEntity entity, int damageAmount) {
+			if(entity.getWorld()!=null) {
+				HealthPacket packet = new HealthPacket(entity);
+				entity.getWorld().getServer().sendAllPacketIf(packet, ConnectionPredicate.PLAYER_IN_BOUNDS, entity.getChunk(), entity.getWorld());
+			}
+		}
+	};
 	
 	public void createParticle(float x, float y, ParticleEffectType type, float offsetY, Object... data) {
 		Particle particle = Particle.createParticle(x, y, type, -1f, offsetY, data);

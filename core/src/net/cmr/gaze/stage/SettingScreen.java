@@ -95,7 +95,7 @@ public class SettingScreen implements Screen {
         stage.setViewport(game.viewport);
         
         prefs = initializePreferences();
-        this.displayPlayer = new Player(prefs.getInteger("playerType"));
+        this.displayPlayer = new Player(prefs.getInteger("playerType"), null);
         
         // 3 by X rows/collumns of settings
         Table contentTable = new Table();

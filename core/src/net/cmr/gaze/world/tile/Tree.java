@@ -87,7 +87,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		if(data.isServer()) {
 			Tree.particleDelta+=Tile.DELTA_TIME;
 			Tree.particleDelta2+=((float) (Math.PI+Math.random()));
-			if(particleDelta >= 20f && particleDelta2 > 2) {
+			if(particleDelta >= 20f+Math.random() && particleDelta2 > 2) {
 				particleDelta-=10f;
 				particleDelta2 = 0;
 				BreakableUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, 4);

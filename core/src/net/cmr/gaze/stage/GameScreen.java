@@ -83,6 +83,7 @@ import net.cmr.gaze.networking.packets.CraftingStationPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryClickPacket;
 import net.cmr.gaze.networking.packets.InventoryUpdatePacket;
@@ -121,6 +122,7 @@ import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
 import net.cmr.gaze.world.entities.Entity;
+import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Player;
 
@@ -266,7 +268,7 @@ public class GameScreen implements Screen {
 			hotbarTable.add(button).width(width).height(width).spaceRight(spacing);
 		}
 
-		hotbarTable.setBounds(320-totalWidth/2, 26.5f, totalWidth, width);
+		hotbarTable.setBounds(320-totalWidth/2, 26.5f*(8/10f), totalWidth, width);
 		
 		bottomStage.addActor(hotbarTable);
 		
@@ -340,22 +342,17 @@ public class GameScreen implements Screen {
 		
 		openHelpMenu(HintMenuType.FIRST_JOIN);
 		
-		/*String[] text = new String[] {"MINING LEVEL UP!\n2 -> 3", "New recipes unlocked!"};
-		String[] sprites = new String[] {"upArrow"};
-		boolean[] animation = new boolean[] {true};
-		addNotification(text, sprites, animation, 3f, 5f, "intro");*/
-		//addNotification(text, sprites, animation, 3f, 5f, "intro");
-		//addNotification(text, sprites, animation, 3f, 5f, "intro");
-		/*
+		
+		
 		 
-		  DESCRIPTION OF THE BARS:
+		  /*DESCRIPTION OF THE BARS:
 		  Red: health
 		  Green: hunger
 		  Yellow: stamina (or hit cooldown)
-		  Blue: break progress on current tile
+		  Blue: break progress on current tile*/
 		  
 		  
-		Image bars = new Image(new TextureRegionDrawable(game.getSprite("energyBars")));
+		/*Image bars = new Image(new TextureRegionDrawable(game.getSprite("energyBars")));
 		topStage.addActor(bars);
 		bars.setAlign(Align.top);
 		bars.setPosition(320, 360);
@@ -363,8 +360,8 @@ public class GameScreen implements Screen {
 		ProgressBarStyle style = new ProgressBarStyle(new TextureRegionDrawable(game.getSprite("itemSlotBackground")), null);
 		style.knob = new TextureRegionDrawable(game.getSprite("energyBars"));
 		ProgressBar healthBar = new ProgressBar(0, 1, (float) .01, false, style);
-		topStage.addActor(healthBar);
-		*/
+		topStage.addActor(healthBar);*/
+		
 		
 		multiInput.addProcessor(bottomStage);
 		multiInput.addProcessor(centerStage);
@@ -500,53 +497,366 @@ public class GameScreen implements Screen {
 			return;
 		}
 		
-		try {
-			builder.build(dataIn);
-			pingDelta+=delta;
-			if(pingDelta>=pingTime) {
-				sender.addPacket(new PingPacket(System.currentTimeMillis(), false));
-				pingDelta = 0;
-			}
-			
-			sender.sendAll(dataOut);
-		} catch(IOException e) {
-			if(!e.getMessage().contains("closed")) {
-				e.printStackTrace();
-				game.setScreen(new MessageScreen(game, e.getMessage()));
-			}
-		} catch(Exception e) {
-			e.printStackTrace();
-			game.setScreen(new MessageScreen(game, e.getMessage()));
-		}
+		processConnection(delta);
 		
 		worldTime+=delta;
 		stepDelta+=Math.min(delta, .25f);
 		logPositionDelta+=delta;
 		
-		float speed = 1;
-		float ix = 0, iy = 0;
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			iy += speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			iy -= speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			ix += speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			ix -= speed;
-		}
-		
-		Vector2 clamp = CustomMath.clampCircle(ix, iy, 1, .1f);
-		ix = clamp.x;
-		iy = clamp.y;
-		
-		boolean sprint = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+		processEntitiesAndPlayerMovement(delta);
 
 		Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 		Vector2 mouseLocalPosition = inventory.screenToLocalCoordinates(mouseScreenPosition);
 		
+		processMouseInputs(delta, mouseLocalPosition);
+
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+			openHelpMenu(null, false);
+		}
+		if(Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
+			showUI = !showUI;
+		}
+		
+		recipeDisplay.update();
+		
+		Point centerChunk = null;
+		if(getLocalPlayer()!=null) {
+			Vector2Double pos = new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY());
+			
+			snapCamera(pos);
+			centerChunk = Entity.getChunk(pos.getX(), pos.getY());
+			
+			// sends the position of the player on the client side to the server
+			// no current uses for this yet, but if the server wanted to sync the player better, and
+			// help reduce snaping back, this position packet would be the way to do it
+			if(CustomTime.timeToSeconds(System.nanoTime()-lastUpdate)>=Entity.DELTA_TIME) {
+				sender.addPacket(new PositionPacket(pos));
+				lastUpdate = System.nanoTime();
+			}
+			
+		}
+		
+		if(centerChunk != null) {
+
+			frameBuffer.begin();
+			
+			renderWorld(centerChunk);
+			renderPlaceableHologram();
+
+			frameBuffer.end();
+			
+			drawWorldToScreen();
+		}
+		
+		renderUI(delta, mouseLocalPosition);
+	}
+
+	private void renderUI(float delta, Vector2 mouseLocalPosition) {
+		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
+		game.batch.setProjectionMatrix(uiViewport.getCamera().combined);
+		game.batch.begin();
+		
+		uiViewport.apply();
+
+		if(showUI) {
+			centerStage.act(delta);
+			centerStage.draw();
+		}
+		
+		game.batch.setProjectionMatrix(topViewport.getCamera().combined);
+		
+		topViewport.apply();
+
+		if(showUI) {
+			topStage.act(delta);
+			topStage.draw();
+		}
+		
+		game.batch.setProjectionMatrix(rightTopViewport.getCamera().combined);
+		
+		if((activeNotification==null || activeNotification.finished()) && notificationQueue.size()>0) {
+			Notification notification = notificationQueue.poll();
+			activeNotification = notification;
+			rightTopStage.addActor(activeNotification);
+		}
+		
+		rightTopViewport.apply();
+		if(showUI) {
+			rightTopStage.act(delta);
+			rightTopStage.draw();
+		}
+		
+		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
+		bottomViewport.apply();
+		
+
+		if(showUI) {
+			int width = 320;
+			game.batch.draw(game.getSprite("hotbar"), 320-width/2f, 4, width, width/5f);
+		}
+		
+		game.batch.end();
+		game.batch.begin();
+		if(showUI) {
+			bottomStage.act();
+			bottomStage.draw();
+		}
+		game.batch.end();
+		
+		if(GameScreen.hoveredItemViewport!=null) {
+			game.batch.setProjectionMatrix(GameScreen.hoveredItemViewport.getCamera().combined);
+			game.batch.begin();
+			GameScreen.hoveredItemViewport.apply();
+			
+			BitmapFont font = game.getFont(5f);
+			
+			float x = mouseLocalPosition.x+5;
+			x = CustomMath.minMax(hoveredItemViewport.getWorldWidth()/6, x, hoveredItemViewport.getWorldWidth()-hoveredItemViewport.getWorldWidth()/6);
+			
+			Item item = hoveredItem;
+			font.draw(game.batch, Item.getName(item)+"\n"+Item.getDescription(item), x, mouseLocalPosition.y);
+			
+			game.batch.end();
+		}
+		GameScreen.hoveredItemViewport = null;
+		GameScreen.hoveredItem = null;
+		GameScreen.hoveredItemLocalViewportCoordinates = null;
+	}
+
+	private void drawWorldToScreen() {
+		shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix().idt());
+		shapeRenderer.begin(ShapeType.Filled);
+		float ambience = getAmbientLight();
+		
+		shapeRenderer.setColor(ambience, ambience, ambience, 1);
+		shapeRenderer.rect(-1, 1, 2, -2);
+		shapeRenderer.end();
+
+		
+		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		game.batch.begin();
+
+		game.batch.setProjectionMatrix(worldViewport.getCamera().combined);
+		lights.renderLights(game.batch);
+		
+		game.batch.end();
+		game.batch.setProjectionMatrix(game.batch.getProjectionMatrix().idt());
+		game.batch.setBlendFunction(GL20.GL_ZERO,  GL20.GL_SRC_COLOR);
+		game.batch.begin();
+		
+		game.batch.draw(frameBuffer.getColorBufferTexture(), -1, 1, 2, -2);
+		game.batch.setColor(Color.WHITE);
+		game.batch.end();
+	}
+
+	private void renderPlaceableHologram() {
+		if(getLocalPlayer()!=null) {
+			if(getLocalPlayer().getHeldItem() instanceof Placeable) {
+				
+				if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+					rotation++;
+					if(rotation>3) {
+						rotation = 0;
+					}
+				}
+				if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+					rotation--;
+					if(rotation<0) {
+						rotation = 3;
+					}
+				}
+				
+				Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+				Vector3 output = worldViewport.getCamera().unproject(new Vector3(mouse, 0));
+				Point targetTile = Entity.getTileCoordinates(output.x, output.y);
+				
+				//TileType type = ((Placeable)getLocalPlayer().getHeldItem()).getTileToPlace();
+				
+				/*if(Placeable.temporaryPlaceTile==null || Placeable.temporaryPlaceTile.getType()!=type) {
+					Placeable.temporaryPlaceTile = Tiles.getTile(type);
+				}*/
+				
+				double time = CustomTime.timeToSeconds(System.nanoTime());
+				float sin = MathUtils.sin((float) ((time*2)%MathUtils.PI2));
+				float random = (sin*sin)/4+(2.5f/4f);
+				
+				game.batch.setColor(1, 1, 1, random);
+				((Placeable)getLocalPlayer().getHeldItem()).getTempPlaceTile(rotation).render(game, tileData, targetTile.x, targetTile.y);
+				
+				game.batch.setColor(Color.WHITE);
+			}
+		}
+		game.batch.end();
+	}
+
+	private void renderWorld(Point centerChunk) {
+		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
+		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+		
+		worldViewport.apply();
+		game.batch.setProjectionMatrix(worldViewport.getCamera().combined);
+		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
+		game.batch.begin();
+		
+		ArrayList<Entity> entities = new ArrayList<>();
+		
+		for(UUID id : this.entities.keySet()) {
+			Entity entity = this.entities.get(id);
+			entities.add(entity);
+		}
+		
+		Comparator<Entity> compare = Comparator.comparing(Entity::getRenderLayer).thenComparing(e1 -> {
+			return (int) -(e1.getRenderYOffset()+e1.getY());
+		});
+		entities.sort(compare);
+		
+		boolean attemptSound = false;
+		if(System.currentTimeMillis()-lastSoundAttempt>1000) {
+			attemptSound = true;
+			soundChance-=10;
+			lastSoundAttempt = System.currentTimeMillis();
+		}
+		Random r = new Random();
+		
+		
+		int dimension = (int) (Chunk.CHUNK_SIZE*3*Tile.TILE_SIZE);
+		boolean renderParticles = game.settings.getBoolean("displayParticles");
+		
+		Format lightingFormat = Format.Alpha;
+		
+		Tile.tileRenderDelta += Gdx.graphics.getDeltaTime();
+		
+		int translucentX = Integer.MAX_VALUE, translucentY = Integer.MAX_VALUE;
+		if(getLocalPlayer()!=null) {
+			translucentX = getLocalPlayer().getTileX();
+			translucentY = getLocalPlayer().getTileY()-1;
+		}
+		
+		for(int z = 0; z < Chunk.LAYERS; z++) {
+			for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
+				ArrayList<Pair<Integer, Tile>> xStrip = new ArrayList<>();
+				for(int x = (centerChunk.x-1)*Chunk.CHUNK_SIZE; x <= (centerChunk.x+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; x++) {
+					Tile[][][] data = tileData.get(Chunk.getChunk(x, y));
+					if(data == null) {
+						continue;
+					}
+					if(data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z] != null) {
+						xStrip.add(new Pair<>(x, data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z]));
+					}
+				}
+				xStrip.sort(Comparator.comparing(pair -> {
+					Tile t = ((Pair<Integer, Tile>) pair).getSecond();
+					return t.getRenderYOffset();
+				}));
+				while(xStrip.size() > 0) {
+					Pair<Integer, Tile> pair = xStrip.get(0);
+					
+					if(attemptSound) {
+						if(pair.getSecond().getAmbientNoise(this)!=null) {
+							if(soundChance <= 0 || r.nextInt(soundChance)==1) {
+								soundChance = 600;
+								double distance = getLocalPlayer().getDistanceToTile(pair.getFirst(), y);
+								double pow = 1.2;
+								
+								float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
+								
+								game.playSoundCooldown(pair.getSecond().getAmbientNoise(this), 
+										volume*pair.getSecond().getAmbientNoiseVolume()*game.settings.getFloat("ambientVolume"),
+										pair.getSecond().getAmbientNoisePitch(), 7f);
+								attemptSound = false;
+							}
+						}
+					}
+					
+					while(entities.size() > 0) {
+						Entity e = entities.get(0);
+						if(z==e.getRenderLayer()&&-pair.getSecond().getRenderYOffset()+(y*Tile.TILE_SIZE)<(-e.getRenderYOffset()+e.getY())) {
+							if(e instanceof LightSource) {
+								LightSource light = (LightSource) e;
+								
+								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE);
+							}
+							if(e instanceof Particle) {
+								if(renderParticles) {
+									e.render(game, this);
+								}
+							} else {
+								e.render(game, this);
+							}
+							entities.remove(0);
+							continue;
+						}
+						break;
+					}
+					
+					if(pair.getSecond() instanceof LightSource) {
+						lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, ((LightSource)pair.getSecond()).getIntensity()*Tile.TILE_SIZE);
+					}
+					
+					boolean translucent = false;
+					if(pair.getSecond() instanceof SeeThroughTile) {
+						if(pair.getSecond() instanceof BaseTile) {
+							BaseTile tile = ((BaseTile)pair.getSecond());
+							for(int width = 0; width < tile.getWidth(); width++) {
+								for(int height = 0; height < tile.getHeight(); height++) {
+									if(z == 1 
+											&& (pair.getFirst()+width==translucentX)
+											&& (y+height == translucentY || y+height == translucentY+1)
+											&& (pair.getSecond() instanceof SeeThroughTile)) {
+										translucent = true;
+										break;
+									}
+								}
+								if(translucent) {
+									break;
+								}
+							}
+						} else {
+							if(z == 1 
+									&& (pair.getFirst()==translucentX)
+									&& (y == translucentY || y == translucentY+1)
+									&& (pair.getSecond() instanceof SeeThroughTile)) {
+								translucent = true;
+							}
+						}
+					}
+					if(translucent) {
+						game.batch.setColor(new Color(1f, 1f, 1f, .5f));
+					}
+					
+					pair.getSecond().render(game, tileData, pair.getFirst(), y);
+					
+					if(translucent) {
+						game.batch.setColor(Color.WHITE);
+					}
+					xStrip.remove(0);
+				}
+			}
+		}
+		while(entities.size() > 0) {
+			entities.get(0).render(game, this);
+			entities.remove(0);
+		}
+	}
+
+	/**
+	 * Snaps the game camera to align with the pixels on the screen
+	 * Prevents some weird camera issues
+	 * @param playerPosition position of the player
+	 */
+	private void snapCamera(Vector2Double playerPosition) {
+		worldViewport.getCamera().position.set((float) playerPosition.getX(), (float) playerPosition.getY() + Tile.TILE_SIZE / 2, 0);
+
+		Vector3 temp = new Vector3(), temp2 = new Vector3();
+		worldViewport.getCamera().getPickRay(0, 1).getEndPoint(temp, 10);
+		worldViewport.getCamera().getPickRay(1, 1).getEndPoint(temp2, 10);
+		float dist = temp.dst(temp2);
+
+		worldViewport.getCamera().position.x = roundToNearest(worldViewport.getCamera().position.x, dist);
+		worldViewport.getCamera().position.y = roundToNearest(worldViewport.getCamera().position.y, dist);
+	}
+
+	private void processMouseInputs(float delta, Vector2 mouseLocalPosition) {
 		if(!overMenus(mouseLocalPosition)) {
 			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 				
@@ -647,6 +957,29 @@ public class GameScreen implements Screen {
 				rightClickDelta = 0;
 			}
 		}
+	}
+
+	private void processEntitiesAndPlayerMovement(float delta) {
+		float speed = 1;
+		float ix = 0, iy = 0;
+		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			iy += speed;
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+			iy -= speed;
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+			ix += speed;
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+			ix -= speed;
+		}
+		
+		Vector2 clamp = CustomMath.clampCircle(ix, iy, 1, .1f);
+		ix = clamp.x;
+		iy = clamp.y;
+		
+		boolean sprint = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
 		
 		if(lastX !=ix || lastY != iy || lastSprint != sprint) {
 			//this.previousPlayerPositions.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
@@ -662,354 +995,37 @@ public class GameScreen implements Screen {
 		lastX = ix;
 		lastY = iy;
 		lastSprint = sprint;
-
-		if(Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
-			openHelpMenu(null, false);
-		}
-		if(Gdx.input.isKeyJustPressed(Input.Keys.F2)) {
-			showUI = !showUI;
-		}
 		
-		//updateDelta+=delta;
-		//while(updateDelta>=Entity.DELTA_TIME) {
-			//updateDelta-=Entity.DELTA_TIME;
-			for(UUID uuid : entities.keySet()) {
-				Entity entity = entities.get(uuid);
-				if(entity.equals(getLocalPlayer())) {
-					Player p = (Player) entity;
-					p.setSprinting(sprint);
-					entity.setVelocity(ix*p.getSpeed(), iy*p.getSpeed());
-				}
-				entity.update(delta, tileDataObject);
-				//entity.update(Entity.DELTA_TIME, tileDataObject);
+		for(UUID uuid : entities.keySet()) {
+			Entity entity = entities.get(uuid);
+			if(entity.equals(getLocalPlayer())) {
+				Player p = (Player) entity;
+				p.setSprinting(sprint);
+				entity.setVelocity(ix*p.getSpeed(), iy*p.getSpeed());
 			}
-		//}
-		
-		recipeDisplay.update();
-		
-		Point centerChunk = null;
-		if(getLocalPlayer()!=null) {
-			Vector2Double pos = new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY());
-			if(CustomTime.timeToSeconds(System.nanoTime()-lastUpdate)>=Entity.DELTA_TIME) {
-				sender.addPacket(new PositionPacket(pos));
-				lastUpdate = System.nanoTime();
+			entity.update(delta, tileDataObject);
+		}
+	}
+
+	private void processConnection(float delta) {
+		try {
+			builder.build(dataIn);
+			pingDelta+=delta;
+			if(pingDelta>=pingTime) {
+				sender.addPacket(new PingPacket(System.currentTimeMillis(), false));
+				pingDelta = 0;
 			}
 			
-			worldViewport.getCamera().position.set((float) pos.getX(), (float) pos.getY() + Tile.TILE_SIZE / 2, 0);
-
-			Vector3 temp = new Vector3(), temp2 = new Vector3();
-			worldViewport.getCamera().getPickRay(0, 1).getEndPoint(temp, 10);
-			worldViewport.getCamera().getPickRay(1, 1).getEndPoint(temp2, 10);
-			float dist = temp.dst(temp2);
-
-			worldViewport.getCamera().position.x = roundToNearest(worldViewport.getCamera().position.x, dist);
-			worldViewport.getCamera().position.y = roundToNearest(worldViewport.getCamera().position.y, dist);
-			centerChunk = Entity.getChunk(pos.getX(), pos.getY());
-		}
-		
-		if(centerChunk != null) {
-
-			frameBuffer.begin();
-			Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
-			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-			
-			worldViewport.apply();
-			game.batch.setProjectionMatrix(worldViewport.getCamera().combined);
-			game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
-			game.batch.begin();
-			
-			ArrayList<Entity> entities = new ArrayList<>();
-			
-			for(UUID id : this.entities.keySet()) {
-				Entity entity = this.entities.get(id);
-				entities.add(entity);
+			sender.sendAll(dataOut);
+		} catch(IOException e) {
+			if(!e.getMessage().contains("closed")) {
+				e.printStackTrace();
+				game.setScreen(new MessageScreen(game, e.getMessage()));
 			}
-			
-			Comparator<Entity> compare = Comparator.comparing(Entity::getRenderLayer).thenComparing(e1 -> {
-				return (int) -(e1.getRenderYOffset()+e1.getY());
-			});
-			entities.sort(compare);
-			
-			boolean attemptSound = false;
-			if(System.currentTimeMillis()-lastSoundAttempt>1000) {
-				attemptSound = true;
-				soundChance-=10;
-				lastSoundAttempt = System.currentTimeMillis();
-			}
-			Random r = new Random();
-			
-			
-			int dimension = (int) (Chunk.CHUNK_SIZE*3*Tile.TILE_SIZE);
-			boolean renderParticles = game.settings.getBoolean("displayParticles");
-			
-			Format lightingFormat = Format.Alpha;
-			
-			Tile.tileRenderDelta += Gdx.graphics.getDeltaTime();
-			
-			int translucentX = Integer.MAX_VALUE, translucentY = Integer.MAX_VALUE;
-			if(getLocalPlayer()!=null) {
-				translucentX = getLocalPlayer().getTileX();
-				translucentY = getLocalPlayer().getTileY()-1;
-			}
-			
-			for(int z = 0; z < Chunk.LAYERS; z++) {
-				for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
-					ArrayList<Pair<Integer, Tile>> xStrip = new ArrayList<>();
-					for(int x = (centerChunk.x-1)*Chunk.CHUNK_SIZE; x <= (centerChunk.x+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; x++) {
-						Tile[][][] data = tileData.get(Chunk.getChunk(x, y));
-						if(data == null) {
-							continue;
-						}
-						if(data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z] != null) {
-							xStrip.add(new Pair<>(x, data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z]));
-						}
-					}
-					xStrip.sort(Comparator.comparing(pair -> {
-						Tile t = ((Pair<Integer, Tile>) pair).getSecond();
-						return t.getRenderYOffset();
-					}));
-					while(xStrip.size() > 0) {
-						Pair<Integer, Tile> pair = xStrip.get(0);
-						
-						if(attemptSound) {
-							if(pair.getSecond().getAmbientNoise(this)!=null) {
-								if(soundChance <= 0 || r.nextInt(soundChance)==1) {
-									soundChance = 600;
-									double distance = getLocalPlayer().getDistanceToTile(pair.getFirst(), y);
-									double pow = 1.2;
-									
-									float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
-									
-									game.playSoundCooldown(pair.getSecond().getAmbientNoise(this), 
-											volume*pair.getSecond().getAmbientNoiseVolume()*game.settings.getFloat("ambientVolume"),
-											pair.getSecond().getAmbientNoisePitch(), 7f);
-									attemptSound = false;
-								}
-							}
-						}
-						
-						while(entities.size() > 0) {
-							Entity e = entities.get(0);
-							if(z==e.getRenderLayer()&&-pair.getSecond().getRenderYOffset()+(y*Tile.TILE_SIZE)<(-e.getRenderYOffset()+e.getY())) {
-								if(e instanceof LightSource) {
-									LightSource light = (LightSource) e;
-									
-									lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE);
-								}
-								if(e instanceof Particle) {
-									if(renderParticles) {
-										e.render(game, this);
-									}
-								} else {
-									e.render(game, this);
-								}
-								entities.remove(0);
-								continue;
-							}
-							break;
-						}
-						
-						if(pair.getSecond() instanceof LightSource) {
-							lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, ((LightSource)pair.getSecond()).getIntensity()*Tile.TILE_SIZE);
-						}
-						
-						boolean translucent = false;
-						if(pair.getSecond() instanceof SeeThroughTile) {
-							if(pair.getSecond() instanceof BaseTile) {
-								BaseTile tile = ((BaseTile)pair.getSecond());
-								for(int width = 0; width < tile.getWidth(); width++) {
-									for(int height = 0; height < tile.getHeight(); height++) {
-										if(z == 1 
-												&& (pair.getFirst()+width==translucentX)
-												&& (y+height == translucentY || y+height == translucentY+1)
-												&& (pair.getSecond() instanceof SeeThroughTile)) {
-											translucent = true;
-											break;
-										}
-									}
-									if(translucent) {
-										break;
-									}
-								}
-							} else {
-								if(z == 1 
-										&& (pair.getFirst()==translucentX)
-										&& (y == translucentY || y == translucentY+1)
-										&& (pair.getSecond() instanceof SeeThroughTile)) {
-									translucent = true;
-								}
-							}
-						}
-						if(translucent) {
-							game.batch.setColor(new Color(1f, 1f, 1f, .5f));
-						}
-						
-						pair.getSecond().render(game, tileData, pair.getFirst(), y);
-						
-						if(translucent) {
-							game.batch.setColor(Color.WHITE);
-						}
-						xStrip.remove(0);
-					}
-				}
-			}
-			while(entities.size() > 0) {
-				entities.get(0).render(game, this);
-				entities.remove(0);
-			}
-			
-			
-			if(getLocalPlayer()!=null) {
-				if(getLocalPlayer().getHeldItem() instanceof Placeable) {
-					
-					if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-						rotation++;
-						if(rotation>3) {
-							rotation = 0;
-						}
-					}
-					if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-						rotation--;
-						if(rotation<0) {
-							rotation = 3;
-						}
-					}
-					
-					Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-					Vector3 output = worldViewport.getCamera().unproject(new Vector3(mouse, 0));
-					Point targetTile = Entity.getTileCoordinates(output.x, output.y);
-					
-					//TileType type = ((Placeable)getLocalPlayer().getHeldItem()).getTileToPlace();
-					
-					/*if(Placeable.temporaryPlaceTile==null || Placeable.temporaryPlaceTile.getType()!=type) {
-						Placeable.temporaryPlaceTile = Tiles.getTile(type);
-					}*/
-					
-					double time = CustomTime.timeToSeconds(System.nanoTime());
-					float sin = MathUtils.sin((float) ((time*2)%MathUtils.PI2));
-					float random = (sin*sin)/4+(2.5f/4f);
-					
-					game.batch.setColor(1, 1, 1, random);
-					((Placeable)getLocalPlayer().getHeldItem()).getTempPlaceTile(rotation).render(game, tileData, targetTile.x, targetTile.y);
-					
-					game.batch.setColor(Color.WHITE);
-				}
-			}
-			
-			game.batch.end();
-			
-			frameBuffer.end();
-			
-			shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix().idt());
-			shapeRenderer.begin(ShapeType.Filled);
-			float ambience = getAmbientLight();
-			
-			shapeRenderer.setColor(ambience, ambience, ambience, 1);
-			shapeRenderer.rect(-1, 1, 2, -2);
-			shapeRenderer.end();
-
-			
-			game.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-			game.batch.begin();
-
-			game.batch.setProjectionMatrix(worldViewport.getCamera().combined);
-			lights.renderLights(game.batch);
-			
-			game.batch.end();
-			game.batch.setProjectionMatrix(game.batch.getProjectionMatrix().idt());
-			game.batch.setBlendFunction(GL20.GL_ZERO,  GL20.GL_SRC_COLOR);
-			game.batch.begin();
-			
-			game.batch.draw(frameBuffer.getColorBufferTexture(), -1, 1, 2, -2);
-			game.batch.setColor(Color.WHITE);
-			game.batch.end();
-			
+		} catch(Exception e) {
+			e.printStackTrace();
+			game.setScreen(new MessageScreen(game, e.getMessage()));
 		}
-		
-		
-		
-
-		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
-		game.batch.setProjectionMatrix(uiViewport.getCamera().combined);
-		game.batch.begin();
-		
-		uiViewport.apply();
-
-		if(showUI) {
-			centerStage.act(delta);
-			centerStage.draw();
-		}
-		
-		game.batch.setProjectionMatrix(topViewport.getCamera().combined);
-		
-		topViewport.apply();
-
-		if(showUI) {
-			topStage.act(delta);
-			topStage.draw();
-		}
-		
-		game.batch.setProjectionMatrix(rightTopViewport.getCamera().combined);
-		
-		if((activeNotification==null || activeNotification.finished()) && notificationQueue.size()>0) {
-			Notification notification = notificationQueue.poll();
-			activeNotification = notification;
-			rightTopStage.addActor(activeNotification);
-		}
-		
-		rightTopViewport.apply();
-		if(showUI) {
-			rightTopStage.act(delta);
-			rightTopStage.draw();
-		}
-		
-		/*if(socket!=null) {game.getFont(25).draw(game.batch, "Connected: "+isConnected(), 30, 360-30);}
-		if(socket!=null) {game.getFont(15).draw(game.batch, "Latency: "+latency+"ms", 30, 360-30-25);}
-		if(server != null) {game.getFont(15).draw(game.batch, "Connected: "+server.currentActivePlayers(), 30, 360-30-25-15);}
-		 
-		i = 0;
-		for(String user : playerPositions.keySet()) {
-			game.getFont(15).draw(game.batch, user+"'s data = "+playerPositions.get(user).toString(), 30, 360-30-25-15-(20*(i+1)));
-			i++;
-		}*/
-		
-		//game.getFont(15).draw(game.batch, "E:"+entities.size(), 30, 360-30);
-		
-		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
-		bottomViewport.apply();
-		
-
-		if(showUI) {
-			int width = 320;
-			game.batch.draw(game.getSprite("hotbar"), 320-width/2f, 10, width, width/5f);
-		}
-		
-		game.batch.end();
-		game.batch.begin();
-		if(showUI) {
-			bottomStage.act();
-			bottomStage.draw();
-		}
-		game.batch.end();
-		
-		if(GameScreen.hoveredItemViewport!=null) {
-			game.batch.setProjectionMatrix(GameScreen.hoveredItemViewport.getCamera().combined);
-			game.batch.begin();
-			GameScreen.hoveredItemViewport.apply();
-			
-			BitmapFont font = game.getFont(5f);
-			
-			float x = mouseLocalPosition.x+5;
-			x = CustomMath.minMax(hoveredItemViewport.getWorldWidth()/6, x, hoveredItemViewport.getWorldWidth()-hoveredItemViewport.getWorldWidth()/6);
-			
-			Item item = hoveredItem;
-			font.draw(game.batch, Item.getName(item)+"\n"+Item.getDescription(item), x, mouseLocalPosition.y);
-			
-			game.batch.end();
-		}
-		GameScreen.hoveredItemViewport = null;
-		GameScreen.hoveredItem = null;
-		GameScreen.hoveredItemLocalViewportCoordinates = null;
 	}
 
 	private void clientSideTileInteraction(int x, int y, int clickType) {
@@ -1366,6 +1382,13 @@ public class GameScreen implements Screen {
 					skillDisplay.updateValues();
 				}
 				
+			}
+		} else if(packet instanceof HealthPacket) {
+			HealthPacket healths = (HealthPacket) packet;
+			Entity entity = entities.get(healths.getEntityUUID());
+			if(entity instanceof HealthEntity) {
+				((HealthEntity)entity).setHealth(healths.getHealth());
+				System.out.println(entity+" set health to "+healths.getHealth());
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;

@@ -38,8 +38,10 @@ import net.cmr.gaze.quests.Quests.QuestTier;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
+import net.cmr.gaze.world.HealthEntityListener;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.entities.DroppedItem;
+import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.tile.ChestTile;
 

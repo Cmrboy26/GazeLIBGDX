@@ -15,6 +15,7 @@ import net.cmr.gaze.networking.packets.CraftingStationPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryClickPacket;
 import net.cmr.gaze.networking.packets.InventoryUpdatePacket;
@@ -182,6 +183,10 @@ public abstract class PacketBuilder {
 				}
 				case 23: {
 					processPacket(new QuestDataPacket(input, nextPacketSize));
+					break;
+				}
+				case 24: {
+					processPacket(new HealthPacket(input, nextPacketSize));
 					break;
 				}
 				default: {

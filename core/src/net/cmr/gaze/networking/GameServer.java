@@ -1,7 +1,6 @@
 package net.cmr.gaze.networking;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -23,7 +22,6 @@ import net.cmr.gaze.networking.packets.AuthenticationPacket;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.PingPacket;
 import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
-import net.cmr.gaze.util.CustomTime;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldManager;
 import net.cmr.gaze.world.entities.Entity;
@@ -39,7 +37,7 @@ public class GameServer {
 	public final String saveName;
 	private final int port;
 	
-	ConcurrentHashMap<String, PlayerConnection> connections;
+	public ConcurrentHashMap<String, PlayerConnection> connections;
 	ArrayList<PlayerConnection> connectionInitializeQueue;
 	
 	ConnectionPredicates connectionPredicates;
@@ -561,7 +559,7 @@ public class GameServer {
 				e.printStackTrace();
 			}
 		}
-		return new Player(connection.getUsername());
+		return new Player(connection.getUsername(), null);
 	}
 	
 	public int currentActivePlayers() {

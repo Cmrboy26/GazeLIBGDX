@@ -22,6 +22,7 @@ public abstract class FoodItem extends Item implements InteractiveItem {
 	@Override
 	public ItemInteraction onInteract(PlayerConnection connection, World world, int mouseButton, int x, int y) {
 		if(mouseButton == 2) {
+			connection.getPlayer().damage(1);
 			return new ItemInteraction(true, -1);
 		}
 		return null;

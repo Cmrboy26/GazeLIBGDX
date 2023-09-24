@@ -18,10 +18,10 @@ import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.stage.widgets.QuestData;
 import net.cmr.gaze.util.ArrayUtil;
 import net.cmr.gaze.util.CustomMath;
+import net.cmr.gaze.world.HealthEntityListener;
 import net.cmr.gaze.world.HousingDoor;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
@@ -31,13 +31,11 @@ import net.cmr.gaze.world.World;
 
 // TODO: Player Inventory data should only be sent when the player is within range
 
-public class Player extends Entity implements LightSource {
+public class Player extends HealthEntity implements LightSource {
 	
 	//Player Health/Damage Data
 	final float iFrameDefault = .5f;
 	float invincibilityFrames = 0;
-	int playerHealth = 100;
-	int maxPlayerHealth = 100;
 
 	// Player Game Data
 	String username;
@@ -59,8 +57,8 @@ public class Player extends Entity implements LightSource {
 	/**
 	 * This constructor should only be used in Entity reading and writing
 	 */
-	protected Player() {
-		super(EntityType.Player);
+	protected Player(HealthEntityListener listener) {
+		super(EntityType.Player, listener);
 		inventory = new Inventory(5*7);
 		skills = new Skills();
 	}
@@ -69,13 +67,13 @@ public class Player extends Entity implements LightSource {
 	 * This constructor should only be used in PlayerDisplayWidget rendering
 	 * @param playerType the type of the player
 	 */
-	public Player(int playerType) {
-		super(EntityType.Player);
+	public Player(int playerType, HealthEntityListener listener) {
+		super(EntityType.Player, listener);
 		this.playerType = playerType;
 	}
 	
-	public Player(String username) {
-		super(EntityType.Player);
+	public Player(String username, HealthEntityListener listener) {
+		super(EntityType.Player, listener);
 		this.username = username;
 		inventory = new Inventory(5*7);
 		//inventory.put(4, Items.getItem(ItemType.Stone, 6));
@@ -83,8 +81,8 @@ public class Player extends Entity implements LightSource {
 		this.questData = new QuestData();
 	}
 
-	public Player(String string, double x, double y) {
-		super(EntityType.Player);
+	public Player(String string, double x, double y, HealthEntityListener listener) {
+		super(EntityType.Player, listener);
 		this.username = string;
 		inventory = new Inventory(5*7);
 		setPosition(x, y);
@@ -129,6 +127,7 @@ public class Player extends Entity implements LightSource {
 				
 				if(invincibilityFrames <= 0) {
 					invincibilityFrames = iFrameDefault;
+					damage(10);
 					data.getServerData().playSound("hurt", 1, getTileX(), getTileY());
 				}
 				
@@ -190,7 +189,7 @@ public class Player extends Entity implements LightSource {
 	final int VERSION = 1;
 	
 	@Override
-	protected Entity readEntityData(DataInputStream input, boolean fromFile) throws IOException {
+	public HealthEntity readHealthEntityData(DataInputStream input, boolean fromFile) throws IOException {
 		int readVersion = input.readInt();
 		boolean obfuscate = input.readBoolean();
 		username = input.readUTF();
@@ -207,8 +206,7 @@ public class Player extends Entity implements LightSource {
 	}
 	
 	@Override
-	public void writeEntity(DataBuffer buffer, boolean obfuscatePosition, boolean toFile) throws IOException {
-		super.writeEntity(buffer, obfuscatePosition, toFile);
+	public void writeHealthEntity(DataBuffer buffer, boolean obfuscatePosition, boolean toFile) throws IOException {
 		buffer.writeInt(VERSION);
 		buffer.writeBoolean(obfuscatePosition);
 		buffer.writeUTF(username);
@@ -233,7 +231,7 @@ public class Player extends Entity implements LightSource {
 		return 1.5f*Tile.TILE_SIZE;
 	}
 	public double getInteractRadius() {
-		return 4;
+		return 3;
 	}
 	
 	public Rectangle getBoundingBox() {
@@ -320,6 +318,15 @@ public class Player extends Entity implements LightSource {
 	}
 	
 	@Override
+	public void onDeath() {
+		getInventory().clear();
+		if(getWorld()!=null) {
+			getWorld().getServer().connections.get(getUsername()).inventoryChanged(true);
+		}
+		setHealth(getMaxHealth());
+	}
+	
+	@Override
 	public float offsetY() {
 		return Tile.TILE_SIZE/2;
 	}
@@ -330,7 +337,7 @@ public class Player extends Entity implements LightSource {
 	public double getSpawnPointY() {
 		return spawnPointY;
 	}
-
+	
 	public void setPlayerType(int playerType) {
 		this.playerType = playerType;
 	}

@@ -331,7 +331,7 @@ public abstract class Entity {
 		
 		switch(type) {
 		case Player: {
-			returned = new Player().readEntityData(input, fromFile);
+			returned = new Player(null).readEntityData(input, fromFile);
 			break;
 		}
 		case DroppedItem: {

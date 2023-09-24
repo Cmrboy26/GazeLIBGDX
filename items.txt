@@ -68,6 +68,9 @@ WHEAT_SEEDS
 WHEAT
 	
 	
+APPLE
+	
+	
 WOOD_WALL
 	
 	
@@ -87,5 +90,8 @@ STONE_BRICK_FLOOR
 	
 	
 ANVIL
+	
+	
+BREAD
 	
 	
