@@ -160,7 +160,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		BreakableUtils.spawnBreakParticleOffset(world, this, x+.5f, y, .9f, this);
-		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, 2f, 15);
+		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 15);
 		BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3));
 		if(appleable && appleDelta <= 0) {

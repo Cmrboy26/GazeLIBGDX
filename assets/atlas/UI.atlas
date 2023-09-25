@@ -4,6 +4,20 @@ size: 1024, 1024
 format: RGBA8888
 filter: MipMap, MipMap
 repeat: none
+barEmptyNine
+  rotate: false
+  xy: 326, 300
+  size: 5, 6
+  orig: 5, 6
+  offset: 0, 0
+  index: -1
+barNine
+  rotate: false
+  xy: 348, 322
+  size: 5, 6
+  orig: 5, 6
+  offset: 0, 0
+  index: -1
 blankInventory
   rotate: false
   xy: 2, 218
@@ -125,7 +139,7 @@ healthbarNineBackground
   index: -1
 helpBoxNine
   rotate: false
-  xy: 662, 561
+  xy: 696, 595
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -230,7 +244,7 @@ notification
   index: -1
 particle
   rotate: false
-  xy: 326, 302
+  xy: 308, 292
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
@@ -265,7 +279,7 @@ questBook
   index: -1
 questBoxNine
   rotate: false
-  xy: 678, 577
+  xy: 198, 231
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -286,70 +300,70 @@ smallArrow
   index: -1
 smallNumber0
   rotate: false
-  xy: 744, 734
+  xy: 956, 822
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber1
   rotate: false
-  xy: 806, 766
+  xy: 264, 270
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber2
   rotate: false
-  xy: 956, 822
+  xy: 662, 560
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber3
   rotate: false
-  xy: 264, 270
+  xy: 744, 734
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber4
   rotate: false
-  xy: 348, 324
+  xy: 806, 766
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber5
   rotate: false
-  xy: 938, 804
+  xy: 644, 542
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber6
   rotate: false
-  xy: 828, 788
+  xy: 726, 716
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber7
   rotate: false
-  xy: 644, 542
+  xy: 678, 576
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber8
   rotate: false
-  xy: 726, 716
+  xy: 938, 804
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber9
   rotate: false
-  xy: 308, 292
+  xy: 828, 788
   size: 3, 4
   orig: 3, 4
   offset: 0, 0

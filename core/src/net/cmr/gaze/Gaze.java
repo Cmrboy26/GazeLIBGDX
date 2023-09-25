@@ -99,7 +99,7 @@ public class Gaze extends Game {
  		singleton = this;
 	}
 	
-	public NinePatch healthbar, healthbarBackground, helpBox, questBoxNine, buttonNine, buttonNineSmall;
+	public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, barBackground;
 	
 	@Override
 	public void create () {
@@ -149,10 +149,11 @@ public class Gaze extends Game {
 			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
 		}
 		
-		healthbar = new NinePatch(sprites.get("healthbarNine"), 2, 2, 3, 4);
-		healthbar.scale(2, 2);
-		healthbarBackground = new NinePatch(sprites.get("healthbarNineBackground"), 2, 2, 3, 4);
-		healthbarBackground.scale(2, 2);
+		//healthbar = new NinePatch(sprites.get("healthbarNine"), 2, 2, 3, 4);
+		//healthbar.scale(2, 2);
+		//healthbarBackground = new NinePatch(sprites.get("healthbarNineBackground"), 2, 2, 3, 4);
+		//ShealthbarBackground.scale(2, 2);
+		
 		
 		helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
 		helpBox.scale(2, 2);
@@ -163,6 +164,12 @@ public class Gaze extends Game {
 		
 		buttonNineSmall = new NinePatch(sprites.get("buttonNine"), 3, 3, 3, 4);
 		buttonNineSmall.scale(1.5f, 1.5f);
+		
+		bar = new NinePatch(sprites.get("barNine"), 2, 2, 2, 3);
+		bar.scale(2, 2);
+		
+		barBackground = new NinePatch(sprites.get("barEmptyNine"), 2, 2, 2, 3);
+		barBackground.scale(2, 2);
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();
