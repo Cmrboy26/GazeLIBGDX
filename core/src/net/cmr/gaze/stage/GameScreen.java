@@ -65,6 +65,7 @@ import net.cmr.gaze.crafting.RecipeCategory;
 import net.cmr.gaze.crafting.RecipeDisplay;
 import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.game.ChatManager;
+import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.inventory.InventorySlot;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Placeable;
