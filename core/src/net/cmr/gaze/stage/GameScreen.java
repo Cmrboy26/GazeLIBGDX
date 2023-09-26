@@ -1416,6 +1416,7 @@ public class GameScreen implements Screen {
 		} else if(packet instanceof ChatPacket) {
 			ChatPacket chat = (ChatPacket) packet;
 			this.chat.addMessage(chat.getMessage());
+			System.out.println(chat.getMessage());
 		}
 	}
 	
