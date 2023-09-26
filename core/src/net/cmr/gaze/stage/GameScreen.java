@@ -1416,7 +1416,6 @@ public class GameScreen implements Screen {
 		} else if(packet instanceof ChatPacket) {
 			ChatPacket chat = (ChatPacket) packet;
 			this.chat.addMessage(chat.getMessage());
-			System.out.println(chat.getMessage());
 		}
 	}
 	
@@ -1621,5 +1620,8 @@ public class GameScreen implements Screen {
 		
 		notificationQueue.add(notif);
     }
+	public void sendChatMessage(String message) {
+		sender.addPacket(new ChatPacket(new ChatMessage("", message)));
+	}
     
 }
