@@ -64,6 +64,7 @@ import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.crafting.RecipeCategory;
 import net.cmr.gaze.crafting.RecipeDisplay;
 import net.cmr.gaze.debug.RateCalculator;
+import net.cmr.gaze.game.ChatManager;
 import net.cmr.gaze.inventory.InventorySlot;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Placeable;
@@ -76,6 +77,7 @@ import net.cmr.gaze.networking.Packet;
 import net.cmr.gaze.networking.PacketBuilder;
 import net.cmr.gaze.networking.PacketSender;
 import net.cmr.gaze.networking.packets.AudioPacket;
+import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.networking.packets.ChestInventoryPacket;
 import net.cmr.gaze.networking.packets.ChunkDataPacket;
 import net.cmr.gaze.networking.packets.ChunkUnloadPacket;
@@ -183,12 +185,15 @@ public class GameScreen implements Screen {
 	ClosestValueMap<Long, Vector2Double> cvm = new ClosestValueMap<Long, Vector2Double>();
 	public RateCalculator downloadSpeed = new RateCalculator(100), uploadSpeed = new RateCalculator(100);
 	
+	ChatManager chat;
+	
 	public GameScreen(final Gaze game, String username, Socket socket, DataInputStream dataIn, DataOutputStream dataOut, GameServer server, boolean singlePlayer) {
 		this.game = game;
 		this.serverSinglePlayer = singlePlayer;
 		this.entities = new ConcurrentHashMap<>();
 		Preferences prefs = SettingScreen.initializePreferences();
 		lights = new Lights();
+		chat = new ChatManager();
 		
 		this.uiViewport = new FitViewport(640, 360);
 		this.uiViewport.getCamera().position.set(640f/2f, 360f/2f, 0);
@@ -1408,6 +1413,9 @@ public class GameScreen implements Screen {
 						new boolean[] {true},
 						2f, 4f, "trueSelect");
 			}
+		} else if(packet instanceof ChatPacket) {
+			ChatPacket chat = (ChatPacket) packet;
+			this.chat.addMessage(chat.getMessage());
 		}
 	}
 	

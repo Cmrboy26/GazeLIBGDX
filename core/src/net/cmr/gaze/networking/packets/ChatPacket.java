@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
+import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.networking.Packet;
 import net.cmr.gaze.networking.PacketID;
 
@@ -27,7 +28,7 @@ public class ChatPacket extends Packet {
 
     @Override
     protected void writePacketData(DataBuffer buffer) throws IOException {
-        message.write(buffer);
+    	ChatMessage.write(message, buffer);
     }
 
     @Override
