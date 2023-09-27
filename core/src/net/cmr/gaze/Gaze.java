@@ -99,7 +99,7 @@ public class Gaze extends Game {
  		singleton = this;
 	}
 	
-	public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, barBackground;
+	public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, bar2, barBackground, barEmpty;
 	
 	@Override
 	public void create () {
@@ -167,9 +167,15 @@ public class Gaze extends Game {
 		
 		bar = new NinePatch(sprites.get("barNine"), 2, 2, 2, 3);
 		bar.scale(2, 2);
+
+		bar = new NinePatch(sprites.get("barNine2"), 2, 2, 2, 3);
+		bar.scale(2, 2);
 		
-		barBackground = new NinePatch(sprites.get("barEmptyNine"), 2, 2, 2, 3);
-		barBackground.scale(2, 2);
+		barEmpty = new NinePatch(sprites.get("barEmptyNine"), 2, 2, 2, 3);
+		barEmpty.scale(2, 2);
+		
+		barBackground = new NinePatch(sprites.get("barBackgroundNine"), 2, 2, 2, 3);
+		barBackground.scale(2, 2);		
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();

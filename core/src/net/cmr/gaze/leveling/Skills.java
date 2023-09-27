@@ -14,7 +14,7 @@ public class Skills {
 		FORAGING(2),
 		MINING(3),
 		FISHING(4),
-		COMBAT(5);
+		FARMING(5);
 		
 		int id;
 		

@@ -100,6 +100,7 @@ import net.cmr.gaze.networking.packets.SpawnEntity;
 import net.cmr.gaze.networking.packets.TileUpdatePacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.networking.packets.WorldChangePacket;
+import net.cmr.gaze.stage.widgets.BarsWidget;
 import net.cmr.gaze.stage.widgets.ChestInventoryWidget;
 import net.cmr.gaze.stage.widgets.HintMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
@@ -133,8 +134,8 @@ import net.cmr.gaze.world.entities.Player;
 public class GameScreen implements Screen {
 
 	public final Gaze game;
-	Viewport uiViewport, topViewport, bottomViewport, worldViewport, rightTopViewport;
-	Stage bottomStage, centerStage, topStage, rightTopStage;
+	Viewport uiViewport, topViewport, bottomViewport, worldViewport, rightTopViewport, leftTopViewport;
+	Stage bottomStage, centerStage, topStage, rightTopStage, leftTopStage;
 	
 	ShapeRenderer shapeRenderer;
 	GameServer server;
@@ -169,7 +170,8 @@ public class GameScreen implements Screen {
 	PauseMenu pauseMenu;
 	SkillDisplay skillDisplay;
 	QuestBook quests;
-	
+	BarsWidget barsWidget;
+
 	ConcurrentHashMap<UUID, Entity> entities;
 	
 	FrameBuffer frameBuffer;
@@ -210,6 +212,10 @@ public class GameScreen implements Screen {
 		//((OrthographicCamera)rightTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
 		rightTopViewport.getCamera().position.set(320, 180, 0);
 		
+		leftTopViewport = new FitViewport(640, 360);
+		//((OrthographicCamera)leftTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
+		leftTopViewport.getCamera().position.set(320, 180, 0);
+
 		this.worldViewport = new ExtendViewport(64, 36);
 		this.worldViewport.getCamera().position.set(64f/2f, 36f/2f, 0);
 		((OrthographicCamera)worldViewport.getCamera()).zoom = prefs.getFloat("worldZoom");
@@ -238,7 +244,11 @@ public class GameScreen implements Screen {
 		centerStage = new Stage(uiViewport);
 		topStage = new Stage(topViewport);
 		rightTopStage = new Stage(rightTopViewport);
+		leftTopStage = new Stage(leftTopViewport);
 		
+		barsWidget = new BarsWidget(game);
+		leftTopStage.addActor(barsWidget);
+
 		int width = 30;
 		int spacing = 10;
 		
@@ -373,6 +383,7 @@ public class GameScreen implements Screen {
 		multiInput.addProcessor(centerStage);
 		multiInput.addProcessor(topStage);
 		multiInput.addProcessor(rightTopStage);
+		multiInput.addProcessor(leftTopStage);
 		multiInput.addProcessor(new InputAdapter() {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
@@ -592,7 +603,16 @@ public class GameScreen implements Screen {
 			rightTopStage.draw();
 		}
 		
+		game.batch.setProjectionMatrix(leftTopViewport.getCamera().combined);
+
+		leftTopViewport.apply();
+		if(showUI) {
+			leftTopStage.act(delta);
+			leftTopStage.draw();
+		}
+		
 		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
+
 		bottomViewport.apply();
 		
 
@@ -1064,8 +1084,12 @@ public class GameScreen implements Screen {
 		topViewport.setScreenY(Gdx.graphics.getHeight()-topViewport.getScreenHeight());
 
 		rightTopViewport.update(width, height);
-		rightTopViewport.setScreenY(Gdx.graphics.getHeight()-topViewport.getScreenHeight());
-		rightTopViewport.setScreenX(Gdx.graphics.getWidth()-topViewport.getScreenWidth());
+		rightTopViewport.setScreenY(Gdx.graphics.getHeight()-rightTopViewport.getScreenHeight());
+		rightTopViewport.setScreenX(Gdx.graphics.getWidth()-rightTopViewport.getScreenWidth());
+
+		leftTopViewport.update(width, height);
+		leftTopViewport.setScreenX(0);
+		leftTopViewport.setScreenY(Gdx.graphics.getHeight()-leftTopViewport.getScreenHeight());
 		
 		if (frameBuffer != null && (frameBuffer.getWidth() != width || frameBuffer.getHeight() != height)) {
 			frameBuffer.dispose();
@@ -1109,6 +1133,9 @@ public class GameScreen implements Screen {
 		bottomStage.dispose();
 		centerStage.dispose();
 		topStage.dispose();
+		rightTopStage.dispose();
+		leftTopStage.dispose();
+		frameBuffer.dispose();
 	}
 
 	
@@ -1393,8 +1420,12 @@ public class GameScreen implements Screen {
 			HealthPacket healths = (HealthPacket) packet;
 			Entity entity = entities.get(healths.getEntityUUID());
 			if(entity instanceof HealthEntity) {
-				((HealthEntity)entity).setHealth(healths.getHealth());
-				System.out.println(entity+" set health to "+healths.getHealth());
+				HealthEntity hent = ((HealthEntity)entity);
+				hent.setHealth(healths.getHealth());
+				if(entity.equals(getLocalPlayer())) {
+					barsWidget.setHealth(hent.getHealth(), hent.getMaxHealth());
+				}
+				//System.out.println(entity+" set health to "+healths.getHealth());
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;

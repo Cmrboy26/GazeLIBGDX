@@ -24,7 +24,7 @@ public class SkillDisplay extends WidgetGroup {
 	final int x, y;
 	final int spacing = 5*2;
 	
-	ProgressBar combat, fishing, foraging, mining, crafting;
+	ProgressBar farming, fishing, foraging, mining, crafting;
 	
 	public SkillDisplay(Gaze game, GameScreen screen) {
 		this.game = game;
@@ -47,6 +47,10 @@ public class SkillDisplay extends WidgetGroup {
 		patch.scale(scale, scale);
 		NinePatchDrawable bar = new NinePatchDrawable(patch);
 		
+		NinePatch patchEMP = new NinePatch(game.barEmpty);
+		patchEMP.scale(scale, scale);
+		NinePatchDrawable barEMP = new NinePatchDrawable(patchEMP);
+
 		NinePatch patchBCK = new NinePatch(game.barBackground);
 		patchBCK.scale(scale, scale);
 		NinePatchDrawable barBCK = new NinePatchDrawable(patchBCK);
@@ -54,20 +58,20 @@ public class SkillDisplay extends WidgetGroup {
 		ProgressBarStyle style = new ProgressBarStyle();
 		style.knob = null;
 		style.knobBefore = bar;
-		style.knobAfter = barBCK;
-		//style.background = barBCK;
+		style.knobAfter = barEMP;
+		style.background = barBCK;
 		
 		Interpolation visualInterpolation = Interpolation.pow3Out;
 		float animationDuration = 1.5f;
 		
-		combat = new ProgressBar(0, 1, .01f, false, style);
-		combat.setTouchable(Touchable.disabled);
-		combat.setColor(Color.RED);
-		combat.setBounds(x+20, y+10, 52*2, 8);
-		combat.setValue(0f);
-		combat.setAnimateInterpolation(visualInterpolation);
-		combat.setAnimateDuration(animationDuration);
-		addActor(combat);
+		farming = new ProgressBar(0, 1, .01f, false, style);
+		farming.setTouchable(Touchable.disabled);
+		farming.setColor(Color.RED);
+		farming.setBounds(x+20, y+10, 52*2, 8);
+		farming.setValue(0f);
+		farming.setAnimateInterpolation(visualInterpolation);
+		farming.setAnimateDuration(animationDuration);
+		addActor(farming);
 		
 		fishing = new ProgressBar(0, 1, .01f, false, style);
 		fishing.setTouchable(Touchable.disabled);
@@ -121,7 +125,7 @@ public class SkillDisplay extends WidgetGroup {
 		}
 	}
 	
-	int combatLevel, fishingLevel, miningLevel, foragingLevel, craftingLevel;
+	int farmingLevel, fishingLevel, miningLevel, foragingLevel, craftingLevel;
 	
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
@@ -130,8 +134,8 @@ public class SkillDisplay extends WidgetGroup {
 		
 		batch.setColor(Color.WHITE);
 		
-		if(combatLevel >= 10) batch.draw(game.getSprite("smallNumber"+((int) (combatLevel%100)/10)), x-6, y+10, 3*2, 4*2);
-		batch.draw(game.getSprite("smallNumber"+((int) (combatLevel)%10)), x+1, y+10, 3*2, 4*2);
+		if(farmingLevel >= 10) batch.draw(game.getSprite("smallNumber"+((int) (farmingLevel%100)/10)), x-6, y+10, 3*2, 4*2);
+		batch.draw(game.getSprite("smallNumber"+((int) (farmingLevel)%10)), x+1, y+10, 3*2, 4*2);
 		
 		if(fishingLevel >= 10) batch.draw(game.getSprite("smallNumber"+((int) (fishingLevel%100)/10)), x-6, y+10+spacing, 3*2, 4*2);
 		batch.draw(game.getSprite("smallNumber"+((int) (fishingLevel)%10)), x+1, y+10+spacing, 3*2, 4*2);
@@ -153,9 +157,9 @@ public class SkillDisplay extends WidgetGroup {
 			final float minThres = 0.025f;
 			//final float animDur = .1f;
 			
-			combat.setValue(Math.max(minThres, local.getSkills().getProgress(Skill.COMBAT)));
+			farming.setValue(Math.max(minThres, local.getSkills().getProgress(Skill.FARMING)));
 			//combat.setAnimateDuration(animDur);
-			combatLevel = local.getSkills().getLevel(Skill.COMBAT);
+			farmingLevel = local.getSkills().getLevel(Skill.FARMING);
 			fishing.setValue(Math.max(minThres, local.getSkills().getProgress(Skill.FISHING)));
 			//fishing.setAnimateDuration(animDur);
 			fishingLevel = local.getSkills().getLevel(Skill.FISHING);
