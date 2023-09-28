@@ -6,10 +6,12 @@ import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.FoodItem;
 import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Tool;
@@ -17,6 +19,8 @@ import net.cmr.gaze.leveling.Skills;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
+import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.networking.packets.FoodPacket;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.widgets.QuestData;
 import net.cmr.gaze.util.ArrayUtil;
@@ -36,6 +40,10 @@ public class Player extends HealthEntity implements LightSource {
 	//Player Health/Damage Data
 	final float iFrameDefault = .5f;
 	float invincibilityFrames = 0;
+
+	// FOOD
+	public static final float MAX_HUNGER = 20, MAX_SATURATION = 20;
+	float hunger = MAX_HUNGER, saturation = MAX_SATURATION;
 
 	// Player Game Data
 	String username;
@@ -124,14 +132,13 @@ public class Player extends HealthEntity implements LightSource {
 			invincibilityFrames-=deltaTime;
 			Tile nowUnder = data.getTile(getTileX(), getTileY(), 0);
 			if(nowUnder != null && nowUnder.getType()==TileType.LAVA) {
-				
 				if(invincibilityFrames <= 0) {
 					invincibilityFrames = iFrameDefault;
 					damage(10);
 					data.getServerData().playSound("hurt", 1, getTileX(), getTileY());
 				}
-				
 			}
+			hungerTick((float) deltaTime);
 		}
 		
 	}
@@ -186,7 +193,7 @@ public class Player extends HealthEntity implements LightSource {
 		
 	}
 	
-	final int VERSION = 1;
+	final int VERSION = 2;
 	
 	@Override
 	public HealthEntity readHealthEntityData(DataInputStream input, boolean fromFile) throws IOException {
@@ -201,6 +208,10 @@ public class Player extends HealthEntity implements LightSource {
 		playerType = input.readInt();
 		if(readVersion >= 1) {
 			questData = QuestData.read(input);
+		}
+		if(readVersion >= 2) {
+			hunger = input.readFloat();
+			saturation = input.readFloat();
 		}
 		return this;
 	}
@@ -217,6 +228,8 @@ public class Player extends HealthEntity implements LightSource {
 		buffer.writeInt(selectedHotbarSlot);
 		buffer.writeInt(playerType);
 		QuestData.write(questData, buffer);
+		buffer.writeFloat(hunger);
+		buffer.writeFloat(saturation);
 	}
 
 	public void setHotbarSlot(int slot) {
@@ -307,6 +320,73 @@ public class Player extends HealthEntity implements LightSource {
 		return questData;
 	}
 	
+	float tick = 1;
+	int lastTick = 0;
+	int lastHunger = 0;
+
+	public void hungerTick(float delta) {
+		if((tick-=delta) <= 0) {
+			tick = 1;
+			float decreaseAmount = (new Vector2((float) getVelocityX(), (float)getVelocityY()).len()>.8f?.1f:0f)*(sprinting?1.75f:1f);
+			System.out.println(decreaseAmount);
+			if(saturation <= 0) {
+				hunger-=decreaseAmount;
+			}
+
+			saturation-=decreaseAmount;
+
+			hunger = CustomMath.minMax(0, hunger, MAX_HUNGER);
+			saturation = CustomMath.minMax(0, saturation, MAX_SATURATION);
+			System.out.println("Hunger: "+hunger+" Saturation: "+saturation);
+			int tempHunger = (int) Math.floor(getHunger());
+			if(lastHunger!=tempHunger) {
+				lastHunger = tempHunger;
+				PlayerConnection correspondingConnection = searchForPlayer(getUsername());
+				if(correspondingConnection!=null) {
+					correspondingConnection.getSender().addPacket(new FoodPacket(hunger, saturation));
+				}
+			}
+		}
+	}
+	
+	public void eatFood(FoodItem food) {
+		hunger += food.getFoodPoints();
+		saturation += food.getSaturationPoints();
+		hunger = CustomMath.minMax(0, hunger, MAX_HUNGER);
+		saturation = CustomMath.minMax(0, saturation, MAX_SATURATION);
+		PlayerConnection correspondingConnection = searchForPlayer(getUsername());
+		if(correspondingConnection!=null) {
+			correspondingConnection.getSender().addPacket(new FoodPacket(hunger, saturation));
+		}
+		onEat(food);
+	}
+
+	private void onEat(FoodItem food) {
+		System.out.println("Eating "+food.toString());
+		System.out.println("Hunger: "+hunger);
+		System.out.println("Saturation: "+saturation);
+	}
+
+	public PlayerConnection searchForPlayer(String username) {
+		if(world==null) {
+			return null;
+		}
+		for(PlayerConnection connection : world.getServer().connections.values()) {
+			if(connection.getPlayer().getUsername().equals(username)) {
+				return connection;
+			}
+		}
+		return null;
+	}
+
+	public float getHunger() {
+		return hunger;
+	}
+
+	public float getSaturation() {
+		return saturation;
+	}
+
 	@Override
 	public float getIntensity() {
 		

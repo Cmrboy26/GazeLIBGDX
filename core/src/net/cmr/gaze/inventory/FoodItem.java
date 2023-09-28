@@ -15,18 +15,18 @@ public abstract class FoodItem extends Item implements InteractiveItem {
 		super(type, quantity);
 	}
 	
-	public abstract int getFoodPoints();
-	public abstract int getSaturationPoints();
+	public abstract float getFoodPoints();
+	public abstract float getSaturationPoints();
 	//public abstract Buff[] getBuffs();
 	
 	@Override
 	public ItemInteraction onInteract(PlayerConnection connection, World world, int mouseButton, int x, int y) {
 		if(mouseButton == 2) {
-			connection.getPlayer().damage(1);
+			//connection.getPlayer().damage(1);
+			connection.getPlayer().eatFood(this);
 			return new ItemInteraction(true, -1);
 		}
 		return null;
 	}
-	
 
 }

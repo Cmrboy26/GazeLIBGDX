@@ -6,6 +6,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
@@ -80,6 +81,13 @@ public class TorchTile extends Tile implements LightSource {
 	@Override
 	public String getBreakNoise() {
 		return "woodHit";
+	}
+	
+	public static final Color TORCH_COLOR = Color.WHITE.cpy().lerp(Color.ORANGE, .4f);
+
+	@Override
+	public Color getColor() {
+		return TORCH_COLOR;
 	}
 
 }

@@ -238,7 +238,12 @@ public class Gaze extends Game {
 		return getAverageColor(new Sprite(region));
 	}
 	
+	static HashMap<Sprite, Color> averageColorCache = new HashMap<>();
+
 	public static Color getAverageColor(Sprite sprite) {
+		if(averageColorCache.get(sprite)!=null) {
+			return averageColorCache.get(sprite);
+		}
 		if(!sprite.getTexture().getTextureData().isPrepared()) {
 			sprite.getTexture().getTextureData().prepare();
 		}
@@ -263,6 +268,8 @@ public class Gaze extends Game {
 		}
 		Color output = new Color((redSum/totalPixel)/255f, (greenSum/totalPixel)/255f, (blueSum/totalPixel)/255f, 1f);
 		//System.out.println(output);
+		// put color into the cache
+		averageColorCache.put(sprite, output);
 		return output;
 	}
 	

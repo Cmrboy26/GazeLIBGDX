@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.DataBuffer;
 
@@ -100,7 +101,11 @@ public class FurnaceTile extends Tile implements CraftingStationTile, LightSourc
 
 	@Override
 	public float getIntensity() {
-		return 4+TorchItem.getTorchPulse(this);
+		return 6+TorchItem.getTorchPulse(this);
+	}
+	@Override
+	public Color getColor() {
+		return TorchTile.TORCH_COLOR;
 	}
 
 }

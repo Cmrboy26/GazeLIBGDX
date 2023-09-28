@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
@@ -74,7 +75,14 @@ public class LavaTile extends TransitionTile implements SpeedChangeTile, LightSo
 
 	@Override
 	public float getIntensity() {
-		return 4;
+		return 6;
 	}
-
+	
+	@Override
+	public Color getColor() {
+		Color color = new Color(Gaze.getAverageColor(Gaze.get().getSprite("lava")));
+		color = color.mul(1.5f);
+		color.a = .25f;
+		return color;
+	} 
 }

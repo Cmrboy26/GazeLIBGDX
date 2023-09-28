@@ -33,12 +33,12 @@ public class AppleItem extends FoodItem {
 	}
 
 	@Override
-	public int getFoodPoints() {
+	public float getFoodPoints() {
 		return 3;
 	}
 
 	@Override
-	public int getSaturationPoints() {
+	public float getSaturationPoints() {
 		return 4;
 	}
 

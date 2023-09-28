@@ -33,12 +33,12 @@ public class BreadItem extends FoodItem {
 	}
 
 	@Override
-	public int getFoodPoints() {
+	public float getFoodPoints() {
 		return 5;
 	}
 
 	@Override
-	public int getSaturationPoints() {
+	public float getSaturationPoints() {
 		return 2;
 	}
 

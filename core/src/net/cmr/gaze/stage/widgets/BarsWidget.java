@@ -52,7 +52,7 @@ public class BarsWidget extends WidgetGroup {
 		//style.background = barBCK;
 
         Interpolation visualInterpolation = Interpolation.pow3Out;
-		float animationDuration = 0f;
+		float animationDuration = 0.5f;
 		
         
         Image healthBarBackground = new Image(barBCK);

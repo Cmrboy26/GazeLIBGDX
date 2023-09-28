@@ -86,6 +86,7 @@ import net.cmr.gaze.networking.packets.CraftingStationPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.FoodPacket;
 import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryClickPacket;
@@ -799,8 +800,7 @@ public class GameScreen implements Screen {
 						if(z==e.getRenderLayer()&&-pair.getSecond().getRenderYOffset()+(y*Tile.TILE_SIZE)<(-e.getRenderYOffset()+e.getY())) {
 							if(e instanceof LightSource) {
 								LightSource light = (LightSource) e;
-								
-								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE);
+								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE, light.getColor());
 							}
 							if(e instanceof Particle) {
 								if(renderParticles) {
@@ -816,7 +816,8 @@ public class GameScreen implements Screen {
 					}
 					
 					if(pair.getSecond() instanceof LightSource) {
-						lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, ((LightSource)pair.getSecond()).getIntensity()*Tile.TILE_SIZE);
+						LightSource lightz = (LightSource) pair.getSecond();
+						lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, lightz.getIntensity()*Tile.TILE_SIZE, lightz.getColor());
 					}
 					
 					boolean translucent = false;
@@ -1255,6 +1256,8 @@ public class GameScreen implements Screen {
 				//System.out.println("RECEIVED PLAYER, OBF: "+player.getX()+","+player.getY());
 				if(player.equals(getLocalPlayer())) {
 					quests.setQuestData(player.getQuestData());
+					barsWidget.setHealth(((HealthEntity)player).getHealth(), ((HealthEntity)player).getMaxHealth());
+					barsWidget.setFood(player.getHunger()/Player.MAX_HUNGER);
 					for(InventorySlot slot : hotbarButtonGroup.getButtons()) {
 						if(slot.getSlot()==player.getHotbarSlot()) {
 							slot.setChecked(true);
@@ -1426,6 +1429,12 @@ public class GameScreen implements Screen {
 					barsWidget.setHealth(hent.getHealth(), hent.getMaxHealth());
 				}
 				//System.out.println(entity+" set health to "+healths.getHealth());
+			}
+		} else if(packet instanceof FoodPacket) {
+			FoodPacket foods = (FoodPacket) packet;
+			if(getLocalPlayer()!=null) {
+				barsWidget.setFood(foods.getHunger()/Player.MAX_HUNGER);
+				System.out.println("RECIEVED: "+foods.getHunger());
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;
