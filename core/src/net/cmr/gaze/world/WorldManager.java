@@ -24,15 +24,17 @@ public class WorldManager {
 	private HashMap<String, World> worldMap;
 	private final GameServer server;
 	public long universalSeed;
+	public static final String DEFAULT_WORLD_NAME = "default";
+
 	
 	public WorldManager(GameServer server) {
 		this.worldMap = new HashMap<>();
 		this.server = server;
 		loadAllWorlds();
 		
-		if(getWorld("default")==null) {
-			createWorld("default", WorldGenerator.getGenerator(WorldGeneratorType.DEFAULT_OVERWORLD));
-			saveWorld("default");
+		if(getWorld(DEFAULT_WORLD_NAME)==null) {
+			createWorld(DEFAULT_WORLD_NAME, WorldGenerator.getGenerator(WorldGeneratorType.DEFAULT_OVERWORLD));
+			saveWorld(DEFAULT_WORLD_NAME);
 		}
 	}
 	
@@ -251,6 +253,6 @@ public class WorldManager {
 	}
 
 	public World getDefaultWorld() {
-		return getWorld("default");
+		return getWorld(DEFAULT_WORLD_NAME);
 	}
 }

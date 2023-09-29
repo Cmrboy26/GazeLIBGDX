@@ -13,6 +13,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.crafting.Recipe;
+import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.InventoryListener;
 import net.cmr.gaze.inventory.Item;
@@ -21,6 +22,7 @@ import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.GameServer.ServerType;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
+import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.networking.packets.ChestInventoryPacket;
 import net.cmr.gaze.networking.packets.CraftPacket;
 import net.cmr.gaze.networking.packets.CraftingStationPacket;
@@ -29,6 +31,7 @@ import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryClickPacket;
 import net.cmr.gaze.networking.packets.InventoryUpdatePacket;
 import net.cmr.gaze.networking.packets.PingPacket;
+import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
 import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
@@ -38,10 +41,8 @@ import net.cmr.gaze.quests.Quests.QuestTier;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
-import net.cmr.gaze.world.HealthEntityListener;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.entities.DroppedItem;
-import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.tile.ChestTile;
 
@@ -173,6 +174,9 @@ public class PlayerConnection {
 			server.savePlayer(this);
 			player.getWorld().removePlayer(this);
 		}
+		if(getUsername()!=null) {
+			server.sendAllPacketExcludeSelfIf(this, new PlayerConnectionStatusPacket(getUsername(), ConnectionStatus.DISCONNECTED), ConnectionPredicate.SEND_ALL);
+		}
 		try {
 			this.dataInput.close();
 			this.dataOutput.close();
@@ -192,9 +196,11 @@ public class PlayerConnection {
 	public String getUsername() {
 		if(isInitialized()) {
 			return username;
-		} else {
-			throw new NullPointerException("Connection not initialized, couldn't get name.");
 		}
+		return null;
+		/* else {
+			throw new NullPointerException("Connection not initialized, couldn't get name.");
+		}*/
 	}
 	
 	public Socket getSocket() {
@@ -335,6 +341,12 @@ public class PlayerConnection {
 				this.targetX = 0;
 				this.targetY = 0;
 			}
+		}
+		else if(packet instanceof ChatPacket) {
+			ChatPacket chat = (ChatPacket) packet;
+			chat = new ChatPacket(new ChatMessage(getUsername(), chat.getMessage().getMessage()));
+			server.sendAllPacketIf(chat, ConnectionPredicate.SEND_ALL, player.getChunk(), player.getWorld());
+			System.out.println("[CHAT] "+chat.getMessage().toString());
 		}
 	}
 	

@@ -12,7 +12,7 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.networking.packets.AudioPacket;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
@@ -42,8 +42,9 @@ public class ChuteTile extends Tile {
 	}
 	
 	@Override
-	public int getRenderYOffset() {
-		return (int) -Tile.TILE_SIZE/2;
+	public float getRenderYOffset() {
+		return .5f;
+		//return (int) -Tile.TILE_SIZE/2;
 	}
 	
 	@Override
@@ -62,7 +63,7 @@ public class ChuteTile extends Tile {
 	protected boolean overrideOnInteract(PlayerConnection player, World world, int x, int y, int clickType) {
 		if(clickType == 2) {
 			
-			World target = player.server.getManager().getUndergroundWorld(world);
+			World target = player.server.getWorldManager().getUndergroundWorld(world);
 			
 			Tile at = target.getTile(x, y, 1);
 			Tile under = target.getTile(x, y, 0);
@@ -99,7 +100,7 @@ public class ChuteTile extends Tile {
 
 	@Override
 	public void onPlace(World world, int x, int y, Player player) {
-		World target = world.getServer().getManager().getUndergroundWorld(world);
+		World target = world.getServer().getWorldManager().getUndergroundWorld(world);
 		target.removeTile(x, y, 1);
 	}
 	
@@ -114,12 +115,12 @@ public class ChuteTile extends Tile {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		World target = world.getServer().getManager().getUndergroundWorld(world);
+		World target = world.getServer().getWorldManager().getUndergroundWorld(world);
 		Tile at = target.getTile(x, y, 1);
 		if(at!=null&&at.getType()==TileType.CHUTE) {
 			target.removeTile(x, y, 1);
 		}
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.CHUTE, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.CHUTE, 1));
 	}
 	
 }

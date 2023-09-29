@@ -14,7 +14,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.leveling.Skills.Skill;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.HousingWall;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -76,7 +76,7 @@ public class WoodWallTile extends Tile implements HousingWall {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_WALL, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_WALL, 1));
 	}
 	
 	public Rectangle getBoundingBox(int x, int y) {

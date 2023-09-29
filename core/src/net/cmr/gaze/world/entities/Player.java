@@ -1,5 +1,6 @@
 package net.cmr.gaze.world.entities;
 
+import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import net.cmr.gaze.leveling.Skills;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
+import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.networking.packets.FoodPacket;
 import net.cmr.gaze.stage.GameScreen;
@@ -31,36 +33,39 @@ import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.WorldManager;
+import net.cmr.gaze.world.pathfind.AStar;
 
 // TODO: Player Inventory data should only be sent when the player is within range
 
 public class Player extends HealthEntity implements LightSource {
 	
 	//Player Health/Damage Data
-	final float iFrameDefault = .5f;
-	float invincibilityFrames = 0;
+	private final float iFrameDefault = .5f;
+	private float invincibilityFrames = 0;
 
 	// FOOD
-	public static final float MAX_HUNGER = 20, MAX_SATURATION = 20;
-	float hunger = MAX_HUNGER, saturation = MAX_SATURATION;
+	public static final float MAX_HUNGER = 20, MAX_SATURATION = 20, MIN_SPRINT_HUNGER = 5;
+	private float hunger = MAX_HUNGER, saturation = MAX_SATURATION;
 
 	// Player Game Data
-	String username;
-	Inventory inventory;
-	int selectedHotbarSlot;
-	boolean sprinting;
-	Skills skills;
-	QuestData questData;
+	private String username;
+	private Inventory inventory;
+	private int selectedHotbarSlot;
+	private boolean sprinting;
+	private Skills skills;
+	private QuestData questData;
 	public long lastBreakInteraction;
 
 	// Player Visual Data
 	public static int AVAILABLE_PLAYER_TYPES = 0;
-	int playerType = 0;
+	private int playerType = 0;
 	
 	// TODO: add functionality
-	double spawnPointX, spawnPointY;
-	String spawnPointWorld;
+	private double spawnPointX=Integer.MIN_VALUE, spawnPointY=Integer.MIN_VALUE;
+	private String spawnPointWorld=WorldManager.DEFAULT_WORLD_NAME;
 	
 	/**
 	 * This constructor should only be used in Entity reading and writing
@@ -109,7 +114,16 @@ public class Player extends HealthEntity implements LightSource {
 	// update method to stop the player if they're supposed to be stopped
 	@Override
 	public void update(double deltaTime, TileData data) {
+		if(isDead()) {
+			return;
+		}
+
+		//Vector2 movement = AStar.findMovementVector(this, data, 2, new Point(2, 3));
+		//setVelocity(movement.x, movement.y);
+
 		super.update(deltaTime, data);
+
+
 
 		if(data.isClient()) {
 			Tile lastUnder = data.getTile(getLastTileX(), getLastTileY(), 0);
@@ -134,8 +148,7 @@ public class Player extends HealthEntity implements LightSource {
 			if(nowUnder != null && nowUnder.getType()==TileType.LAVA) {
 				if(invincibilityFrames <= 0) {
 					invincibilityFrames = iFrameDefault;
-					damage(10);
-					data.getServerData().playSound("hurt", 1, getTileX(), getTileY());
+					damage(15);
 				}
 			}
 			hungerTick((float) deltaTime);
@@ -206,13 +219,12 @@ public class Player extends HealthEntity implements LightSource {
 		skills = Skills.readSkills(input);
 		selectedHotbarSlot = input.readInt();
 		playerType = input.readInt();
-		if(readVersion >= 1) {
-			questData = QuestData.read(input);
-		}
-		if(readVersion >= 2) {
-			hunger = input.readFloat();
-			saturation = input.readFloat();
-		}
+		questData = QuestData.read(input);
+		hunger = input.readFloat();
+		saturation = input.readFloat();
+		spawnPointWorld = input.readUTF();
+		spawnPointX = input.readDouble();
+		spawnPointY = input.readDouble();
 		return this;
 	}
 	
@@ -230,6 +242,9 @@ public class Player extends HealthEntity implements LightSource {
 		QuestData.write(questData, buffer);
 		buffer.writeFloat(hunger);
 		buffer.writeFloat(saturation);
+		buffer.writeUTF(spawnPointWorld);
+		buffer.writeDouble(spawnPointX);
+		buffer.writeDouble(spawnPointY);
 	}
 
 	public void setHotbarSlot(int slot) {
@@ -262,7 +277,7 @@ public class Player extends HealthEntity implements LightSource {
 	} 
 	
 	public double getSpeed() {
-		return 2*(sprinting?1.5d:1);
+		return 2*((sprinting&&getHunger()>=MIN_SPRINT_HUNGER)?1.5d:1);
 	}
 	public void setSprinting(boolean sprinting) {
 		this.sprinting = sprinting;
@@ -326,22 +341,30 @@ public class Player extends HealthEntity implements LightSource {
 
 	public void hungerTick(float delta) {
 		if((tick-=delta) <= 0) {
-			tick = 1;
-			float decreaseAmount = (new Vector2((float) getVelocityX(), (float)getVelocityY()).len()>.8f?.1f:0f)*(sprinting?1.75f:1f);
-			System.out.println(decreaseAmount);
+			tick = 1f;
+			float decreaseAmount = (new Vector2((float) getVelocityX(), (float)getVelocityY()).len()>.8f?.1f:0f)*(sprinting?1.65f:1f);
 			if(saturation <= 0) {
 				hunger-=decreaseAmount;
+			} else {
+				if(getHealth() < getMaxHealth()) {
+					// decrease more health when healing
+					saturation-=.15f;
+				}
+				heal(2);
+			}
+			if(hunger <= 0) {
+				damage(2);
 			}
 
 			saturation-=decreaseAmount;
 
 			hunger = CustomMath.minMax(0, hunger, MAX_HUNGER);
 			saturation = CustomMath.minMax(0, saturation, MAX_SATURATION);
-			System.out.println("Hunger: "+hunger+" Saturation: "+saturation);
+			//System.out.println("Hunger: "+hunger+" Saturation: "+saturation);
 			int tempHunger = (int) Math.floor(getHunger());
 			if(lastHunger!=tempHunger) {
 				lastHunger = tempHunger;
-				PlayerConnection correspondingConnection = searchForPlayer(getUsername());
+				PlayerConnection correspondingConnection = searchForPlayer(this);
 				if(correspondingConnection!=null) {
 					correspondingConnection.getSender().addPacket(new FoodPacket(hunger, saturation));
 				}
@@ -354,7 +377,7 @@ public class Player extends HealthEntity implements LightSource {
 		saturation += food.getSaturationPoints();
 		hunger = CustomMath.minMax(0, hunger, MAX_HUNGER);
 		saturation = CustomMath.minMax(0, saturation, MAX_SATURATION);
-		PlayerConnection correspondingConnection = searchForPlayer(getUsername());
+		PlayerConnection correspondingConnection = searchForPlayer(this);
 		if(correspondingConnection!=null) {
 			correspondingConnection.getSender().addPacket(new FoodPacket(hunger, saturation));
 		}
@@ -362,17 +385,16 @@ public class Player extends HealthEntity implements LightSource {
 	}
 
 	private void onEat(FoodItem food) {
-		System.out.println("Eating "+food.toString());
-		System.out.println("Hunger: "+hunger);
-		System.out.println("Saturation: "+saturation);
+		//setHealth(0);
+		getWorld().addEntity(new NPC(getX(), getY()));
 	}
 
-	public PlayerConnection searchForPlayer(String username) {
-		if(world==null) {
+	public static PlayerConnection searchForPlayer(Player player) {
+		if(player.getWorld()==null) {
 			return null;
 		}
-		for(PlayerConnection connection : world.getServer().connections.values()) {
-			if(connection.getPlayer().getUsername().equals(username)) {
+		for(PlayerConnection connection : player.getWorld().getServer().connections.values()) {
+			if(connection.getPlayer().getUsername().equals(player.getUsername())) {
 				return connection;
 			}
 		}
@@ -381,6 +403,18 @@ public class Player extends HealthEntity implements LightSource {
 
 	public float getHunger() {
 		return hunger;
+	}
+
+	public void setHunger(float hunger) {
+		this.hunger = CustomMath.minMax(0, hunger, MAX_HUNGER);
+		PlayerConnection correspondingConnection = searchForPlayer(this);
+		if(correspondingConnection!=null) {
+			correspondingConnection.getSender().addPacket(new FoodPacket(hunger, saturation));
+		}
+	}
+
+	public void setSaturation(float saturation) {
+		this.saturation = CustomMath.minMax(0, saturation, MAX_SATURATION);
 	}
 
 	public float getSaturation() {
@@ -399,13 +433,54 @@ public class Player extends HealthEntity implements LightSource {
 	
 	@Override
 	public void onDeath() {
-		getInventory().clear();
-		if(getWorld()!=null) {
-			getWorld().getServer().connections.get(getUsername()).inventoryChanged(true);
-		}
-		setHealth(getMaxHealth());
+		respawn();
 	}
 	
+	public boolean isDead() {
+		return getHealth() <= 0;
+	}
+
+	public void respawn() {
+		dropInventory();
+		if(getWorld()!=null) {
+			GameServer server = getWorld().getServer();
+			World respawnWorld = server.getWorldManager().getWorld(getRespawnWorld());
+			respawnWorld.respawnPlayer(this);
+		}
+		setHealth(getMaxHealth());
+		setSaturation(MAX_SATURATION);
+		setHunger(MAX_HUNGER);
+	}
+
+	public String getRespawnWorld() {
+		if(spawnPointWorld == null || spawnPointWorld.isEmpty()) {
+			spawnPointWorld = WorldManager.DEFAULT_WORLD_NAME;
+		}
+		return spawnPointWorld;
+	}
+
+	public void setRespawnWorld(String respawnWorld) {
+		this.spawnPointWorld = respawnWorld;
+	}
+
+	public void setSpawnPoint(float x, float y) {
+		this.spawnPointX = x;
+		this.spawnPointY = y;
+	}
+
+	public void dropInventory() {
+		if(getWorld()!=null) {
+			for(int i = 0; i < inventory.getSize(); i++) {
+				Item item = inventory.get(i);
+				if(item != null) {
+					TileUtils.dropItem(getWorld(), getTileX(), getTileY(), item);
+				}
+			}
+			getWorld().getServer().connections.get(getUsername()).inventoryChanged(true);
+		}
+		getInventory().clear();
+	}
+
 	@Override
 	public float offsetY() {
 		return Tile.TILE_SIZE/2;

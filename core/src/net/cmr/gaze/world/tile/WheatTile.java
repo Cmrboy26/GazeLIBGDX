@@ -11,7 +11,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.leveling.Skills.Skill;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -65,20 +65,24 @@ public class WheatTile extends CropTile {
 	}
 	
 	@Override
-	public int getRenderYOffset() {
+	public float getRenderYOffset() {
 		if(stage <= 3) {
+			return 1f;
+		}
+		return .25f;
+		/*if(stage <= 3) {
 			return (int) -Tile.TILE_SIZE;
 		}
-		return (int) (-Tile.TILE_SIZE/4f);
+		return (int) (-Tile.TILE_SIZE/4f);*/
 	}
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		if(stage == getGrowthStages()) {
-			BreakableUtils.spawnBreakParticleOffset(world, this, x, y, .5f, this);
-			BreakableUtils.addPlayerXP(player, world, Skill.FARMING, 1.5f);
-			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, (int) (1+Math.round(2*Math.random()))));
-			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT, (int) (1)));
+			TileUtils.spawnBreakParticleOffset(world, this, x, y, .5f, this);
+			TileUtils.addPlayerXP(player, world, Skill.FARMING, 1.5f);
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, (int) (1+Math.round(2*Math.random()))));
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT, (int) (1)));
 		}
 	}
 

@@ -42,7 +42,7 @@ public class DefaultOverworldGenerator extends WorldGenerator {
 				double grassSpace = SimplexNoise.noise(1.5, 1/25d, 4, .5d, 2d, x/1.5, y/1.5, seed*1.5d, seed/5);
 				if (grassSpace < .5) {
 					if (noise < -.1d) {
-						generateTile(chunk, Tiles.getTile(TileType.TREE), x, y);
+						generateTile(chunk, Tiles.getTile(TileType.TREE_SAPLING), x, y);
 					}
 				} else {
 					if (noise < .25) {

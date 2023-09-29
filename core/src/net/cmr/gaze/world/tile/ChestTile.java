@@ -14,7 +14,7 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.PlayerConnection;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
@@ -67,9 +67,9 @@ public class ChestTile extends Tile {
 			if(item == null) {
 				continue;
 			}
-			BreakableUtils.dropItem(world, x, y, item);
+			TileUtils.dropItem(world, x, y, item);
 		}
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.CHEST, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.CHEST, 1));
 	}
 	
 	

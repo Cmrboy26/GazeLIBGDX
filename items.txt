@@ -65,10 +65,16 @@ TORCH
 WHEAT_SEEDS
 	
 	
+GRASS_SEEDS
+	
+	
 WHEAT
 	
 	
 APPLE
+	
+	
+ACORN
 	
 	
 WOOD_WALL

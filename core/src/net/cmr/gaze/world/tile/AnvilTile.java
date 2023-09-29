@@ -13,7 +13,7 @@ import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.PlayerConnection;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -65,7 +65,7 @@ public class AnvilTile extends Tile implements CraftingStationTile {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.ANVIL, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.ANVIL, 1));
 	}
 	
 	@Override

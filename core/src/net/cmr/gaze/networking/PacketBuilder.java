@@ -7,6 +7,7 @@ import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.leveling.SkillsPacket;
 import net.cmr.gaze.networking.packets.AudioPacket;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
+import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.networking.packets.ChestInventoryPacket;
 import net.cmr.gaze.networking.packets.ChunkDataPacket;
 import net.cmr.gaze.networking.packets.ChunkUnloadPacket;
@@ -192,6 +193,10 @@ public abstract class PacketBuilder {
 				}
 				case 25: {
 					processPacket(new FoodPacket(input, nextPacketSize));
+					break;
+				}
+				case 26: {
+					processPacket(new ChatPacket(input, nextPacketSize));
 					break;
 				}
 				default: {

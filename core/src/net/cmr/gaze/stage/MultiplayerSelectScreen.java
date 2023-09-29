@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -281,10 +282,9 @@ public class MultiplayerSelectScreen implements Screen {
 		usernameTextField.addListener(new InputListener() {
 			@Override
 			public boolean keyTyped(InputEvent event, char character) {
-				if(usernameTextField.getTextFieldFilter().acceptChar(usernameTextField, character)) {
-					Gdx.app.getPreferences("LoginData").putString("username", usernameTextField.getText());
-					Gdx.app.getPreferences("LoginData").flush();
-				}
+				Preferences prefs = Gdx.app.getPreferences("LoginData");
+				prefs.putString("username", usernameTextField.getText());
+				prefs.flush();
 				return super.keyTyped(event, character);
 			}
 		});

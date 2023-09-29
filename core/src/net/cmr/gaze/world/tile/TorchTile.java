@@ -13,7 +13,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.custom.TorchItem;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -48,8 +48,9 @@ public class TorchTile extends Tile implements LightSource {
 		super.render(game, chunks, x, y);
 	}
 	@Override
-	public int getRenderYOffset() {
-		return (int) Tile.TILE_SIZE/-10;
+	public float getRenderYOffset() {
+		return .1f;
+		//return (int) Tile.TILE_SIZE/-10;
 	}
 	
 	@Override
@@ -71,7 +72,7 @@ public class TorchTile extends Tile implements LightSource {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.TORCH, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.TORCH, 1));
 	}
 	
 	@Override

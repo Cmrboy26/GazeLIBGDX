@@ -21,6 +21,7 @@ import net.cmr.gaze.world.tile.TableTile;
 import net.cmr.gaze.world.tile.TallGrassTile;
 import net.cmr.gaze.world.tile.TorchTile;
 import net.cmr.gaze.world.tile.Tree;
+import net.cmr.gaze.world.tile.TreeSapling;
 import net.cmr.gaze.world.tile.WaterTile;
 import net.cmr.gaze.world.tile.WheatTile;
 import net.cmr.gaze.world.tile.WoodDoorTile;
@@ -57,7 +58,8 @@ public enum TileType {
 	STONE_PATH_FLOOR(StonePathFloorTile.class, 0, TickType.NONE, 3),
 	STONE_BRICK_WALL(StoneBrickWallTile.class, 1, TickType.NONE, 3), 
 	STONE_BRICK_FLOOR(StoneBrickFloorTile.class, 0, TickType.NONE, 3), 
-	ANVIL(AnvilTile.class, 1, TickType.NONE, 3);
+	ANVIL(AnvilTile.class, 1, TickType.NONE, 3), 
+	TREE_SAPLING(TreeSapling.class, 1, TickType.NEARBY, 4, Replaceable.GENERATION);
 	
 	public enum TickType {
 		CONSTANT,

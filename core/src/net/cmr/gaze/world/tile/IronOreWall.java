@@ -16,7 +16,7 @@ import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.WallTile;
@@ -31,7 +31,7 @@ public class IronOreWall extends Tile implements WallTile {
 
 	@Override
 	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
-		draw(game.batch, game.getSprite("ironOreWall"+BreakableUtils.getBreakSpriteInt(this, 3)), x, y-1, 1, 3);
+		draw(game.batch, game.getSprite("ironOreWall"+TileUtils.getBreakSpriteInt(this, 3)), x, y-1, 1, 3);
 		//draw(game.batch, game.getSprite("campfire"), x, y, 1, 1);
 		//game.batch.draw(, x*TILE_SIZE, y*TILE_SIZE-Tile.TILE_SIZE, TILE_SIZE, TILE_SIZE*3);
 		super.render(game, chunks, x, y);
@@ -40,7 +40,7 @@ public class IronOreWall extends Tile implements WallTile {
 	@Override
 	protected void onHit(World world, Player player, int x, int y) {
 		super.onHit(world, player, x, y);
-		BreakableUtils.spawnBreakParticle(world, this, x, y, this);
+		TileUtils.spawnBreakParticle(world, this, x, y, this);
 	}
 	
 	@Override
@@ -93,11 +93,11 @@ public class IronOreWall extends Tile implements WallTile {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.spawnBreakParticle(world, this, x, y, this);
-		BreakableUtils.addPlayerXP(player, world, Skill.MINING, 8);
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
+		TileUtils.spawnBreakParticle(world, this, x, y, this);
+		TileUtils.addPlayerXP(player, world, Skill.MINING, 8);
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
 		if(0==new Random().nextInt(3)) {
-			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
 		}
 	}
 	

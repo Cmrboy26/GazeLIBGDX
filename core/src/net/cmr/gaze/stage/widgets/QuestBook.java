@@ -44,6 +44,7 @@ public class QuestBook extends WidgetGroup {
 		this.game = game;
 		this.setPosition(320/2f, (360-256)/2);
 		this.map = new HashMap<>();
+		setVisible(false);
 		/*map.put(Quests.STARTING_OFF, new Boolean[][] {
 			{true, false, true},
 			{false, true, false},

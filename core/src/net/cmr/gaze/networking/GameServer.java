@@ -1,5 +1,6 @@
 package net.cmr.gaze.networking;
 
+import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
+import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.PingPacket;
 import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
@@ -54,7 +56,7 @@ public class GameServer {
 	public long serverRunningTime;
 	public float serverRunningDelta;
 	
-	private WorldManager manager;
+	private WorldManager worldManager;
 	long universalSeed;
 	
 	String serverEncryptionKey = "awej;lwjerklj543lkjLJjlkjslkjejroi3jr0925JDSFJKSDFl;kewa";
@@ -197,7 +199,7 @@ public class GameServer {
 				}
 				
 				processPacketData(deltaTime);
-				getManager().updateWorlds(deltaTime);
+				getWorldManager().updateWorlds(deltaTime);
 				//double time = CustomTime.timeToSeconds(System.nanoTime()-now);
 				//if(time > .001) {
 				//	System.out.println(time);
@@ -291,7 +293,7 @@ public class GameServer {
 				sendAllPacketIf(new PlayerConnectionStatusPacket(connection.username, ConnectionStatus.CONNECTED), ConnectionPredicate.SEND_ALL);
 				System.out.println("[SERVER] Connection from "+connection.getSocket().getRemoteSocketAddress()+" successfully logged in as user "+connection.getUsername()+ " : "+connection.playerUUID.toString());
 				
-				getManager().getWorld(connection.loadedWorld).addPlayer(connection);
+				getWorldManager().getWorld(connection.loadedWorld).addPlayer(connection);
 			}
 		}
 		while(removeList.size()>0) {
@@ -441,13 +443,13 @@ public class GameServer {
 			FileHandle handle = Gdx.files.external("/Gaze/saves/"+saveName+"/");
 			handle.mkdirs();
 		}
-		getManager().saveAllWorlds();
+		getWorldManager().saveAllWorlds();
 		saveSaveData();
 	}
 	
 	public void loadAll() {
 		loadSaveData();
-		setManager(new WorldManager(this));
+		setWorldManager(new WorldManager(this));
 	}
 	
 	public void saveSaveData() {
@@ -583,12 +585,12 @@ public class GameServer {
 		return file;
 	}
 
-	public WorldManager getManager() {
-		return manager;
+	public WorldManager getWorldManager() {
+		return worldManager;
 	}
 
-	public void setManager(WorldManager manager) {
-		this.manager = manager;
+	public void setWorldManager(WorldManager manager) {
+		this.worldManager = manager;
 	}
 
 	public int getPort() {

@@ -12,7 +12,7 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.FloorTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -69,7 +69,7 @@ public class WoodFloorTile extends FloorTile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		super.onBreak(world, player, x, y);
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_FLOOR, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_FLOOR, 1));
 	}
 
 	@Override

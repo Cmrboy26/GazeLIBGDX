@@ -16,6 +16,7 @@ import com.badlogic.gdx.files.FileHandle;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.Logger;
+import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.AppleItem;
 import net.cmr.gaze.inventory.custom.BreadItem;
@@ -23,6 +24,7 @@ import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
 import net.cmr.gaze.inventory.custom.FurnaceItem;
+import net.cmr.gaze.inventory.custom.GrassSeeds;
 import net.cmr.gaze.inventory.custom.IronAxe;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOreItem;
@@ -80,9 +82,11 @@ public class Items {
 		
 		TORCH(TorchItem.class), 
 		
-		WHEAT_SEEDS(WheatSeeds.class), 
+		WHEAT_SEEDS(WheatSeeds.class),
+		GRASS_SEEDS(GrassSeeds.class), 
 		WHEAT(WheatItem.class), 
 		APPLE(AppleItem.class),
+		ACORN(AcornItem.class),
 		
 		WOOD_WALL(WoodWallItem.class), 
 		WOOD_FLOOR(WoodFloorItem.class), 

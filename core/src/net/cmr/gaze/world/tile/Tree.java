@@ -21,7 +21,7 @@ import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.BaseTile;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
@@ -90,7 +90,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			if(particleDelta >= 20f+Math.random() && particleDelta2 > 2) {
 				particleDelta-=10f;
 				particleDelta2 = 0;
-				BreakableUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, 4);
+				TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.LEAVES, this, worldCoordinates.x+.3f, worldCoordinates.y, .9f, 4);
 			}
 		}
 	}
@@ -105,7 +105,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 			
 			world.playSound("grassBreak", 1f, x, y);
-			BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 5);
+			TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 5);
 			shake+=.5f;
 			shake = CustomMath.minMax(0, shake, .75f);
 			
@@ -122,7 +122,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 				int i = new Random().nextInt(5);
 				if(i==0) {
 					appleDelta = 60f+new Random().nextFloat()*240f;
-					BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
+					TileUtils.dropItem(world, x, y, Items.getItem(ItemType.APPLE, 1));
 				}
 			}
 			world.onTileChange(x, y, getType().layer);
@@ -152,21 +152,24 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	@Override
 	protected void onHit(World world, Player player, int x, int y) {
-		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 10);
+		TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 10);
 		shake+=.5f;
 		shake = CustomMath.minMax(0, shake, .75f);
 	}
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.spawnBreakParticleOffset(world, this, x+.5f, y, .9f, this);
-		BreakableUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 15);
-		BreakableUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3));
+		TileUtils.spawnBreakParticleOffset(world, this, x+.5f, y, .9f, this);
+		TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 15);
+		TileUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3+new Random().nextInt(3)));
+		//if(new Random().nextInt(2)==0) {
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.ACORN, 1));
+		//}
 		if(appleable && appleDelta <= 0) {
 			int i = new Random().nextInt(5);
 			if(i==0) {
-				BreakableUtils.dropItem(world, x+1, y, Items.getItem(ItemType.APPLE, 1));
+				TileUtils.dropItem(world, x+1, y, Items.getItem(ItemType.APPLE, 1));
 			}
 		}
 	}

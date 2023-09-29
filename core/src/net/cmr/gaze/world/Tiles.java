@@ -22,7 +22,8 @@ public class Tiles {
 			initialize();
 		}
 		Tile result = map.getOrDefault(type, null);
-		return result.clone();
+		Tile clone = result.clone();
+		return clone;
 	}
 	
 	public static Tile getTile(TileType type, DataInputStream input) throws IOException{

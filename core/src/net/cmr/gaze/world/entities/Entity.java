@@ -181,6 +181,14 @@ public abstract class Entity {
 	public int getTileY() {
 		return snapPositionToTile(y);
 	}
+
+	public int getPathTileX() {
+		return snapPositionToTile(x);
+	}
+	public int getPathTileY() {
+		return snapPositionToTile(y);
+	}
+
 	public int getLastTileX() {
 		return snapPositionToTile(lastX);
 	}

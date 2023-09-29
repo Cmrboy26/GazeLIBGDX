@@ -102,6 +102,7 @@ import net.cmr.gaze.networking.packets.TileUpdatePacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.networking.packets.WorldChangePacket;
 import net.cmr.gaze.stage.widgets.BarsWidget;
+import net.cmr.gaze.stage.widgets.ChatWidget;
 import net.cmr.gaze.stage.widgets.ChestInventoryWidget;
 import net.cmr.gaze.stage.widgets.HintMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
@@ -135,8 +136,8 @@ import net.cmr.gaze.world.entities.Player;
 public class GameScreen implements Screen {
 
 	public final Gaze game;
-	Viewport uiViewport, topViewport, bottomViewport, worldViewport, rightTopViewport, leftTopViewport;
-	Stage bottomStage, centerStage, topStage, rightTopStage, leftTopStage;
+	Viewport uiViewport, topViewport, bottomViewport, worldViewport, rightTopViewport, leftTopViewport, leftBottomViewport;
+	Stage bottomStage, centerStage, topStage, rightTopStage, leftTopStage, leftBottomStage;
 	
 	ShapeRenderer shapeRenderer;
 	GameServer server;
@@ -172,6 +173,7 @@ public class GameScreen implements Screen {
 	SkillDisplay skillDisplay;
 	QuestBook quests;
 	BarsWidget barsWidget;
+	ChatWidget chatWidget;
 
 	ConcurrentHashMap<UUID, Entity> entities;
 	
@@ -217,6 +219,10 @@ public class GameScreen implements Screen {
 		//((OrthographicCamera)leftTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
 		leftTopViewport.getCamera().position.set(320, 180, 0);
 
+		leftBottomViewport = new FitViewport(640, 360);
+		//((OrthographicCamera)leftTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
+		leftBottomViewport.getCamera().position.set(320, 180, 0);
+
 		this.worldViewport = new ExtendViewport(64, 36);
 		this.worldViewport.getCamera().position.set(64f/2f, 36f/2f, 0);
 		((OrthographicCamera)worldViewport.getCamera()).zoom = prefs.getFloat("worldZoom");
@@ -246,6 +252,7 @@ public class GameScreen implements Screen {
 		topStage = new Stage(topViewport);
 		rightTopStage = new Stage(rightTopViewport);
 		leftTopStage = new Stage(leftTopViewport);
+		leftBottomStage = new Stage(leftBottomViewport);
 		
 		barsWidget = new BarsWidget(game);
 		leftTopStage.addActor(barsWidget);
@@ -289,12 +296,12 @@ public class GameScreen implements Screen {
 		
 		bottomStage.addActor(hotbarTable);
 		
-		//inventory = new PlayerInventoryWidget(game, this);
 		inventory = new PlayerInventoryWidget(game, this);
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
 		quests = new QuestBook(game);
-		
+		chatWidget = new ChatWidget(game, this, chat);
+
 		craftingLeft = new Image(game.getSprite("craftingLeft"));
 		craftingLeft.setBounds(0, (360-256)/2, 80*2, 128*2);
 		crafting.addActor(craftingLeft);
@@ -332,7 +339,6 @@ public class GameScreen implements Screen {
 		
 		ScrollPaneStyle scrollStyle = new ScrollPaneStyle();
 		recipeDisplay = new RecipeDisplay(game, this, new Table(), scrollStyle, categoryButtonGroup);
-		
 
 		craftDisplay = new CraftDisplay(game, this, recipeDisplay);
 		
@@ -356,6 +362,7 @@ public class GameScreen implements Screen {
 		centerStage.addActor(quests);
 		centerStage.addActor(pauseMenu);
 		rightTopStage.addActor(skillDisplay);
+		leftBottomStage.addActor(chatWidget);
 		
 		openHelpMenu(HintMenuType.FIRST_JOIN);
 		
@@ -385,6 +392,7 @@ public class GameScreen implements Screen {
 		multiInput.addProcessor(topStage);
 		multiInput.addProcessor(rightTopStage);
 		multiInput.addProcessor(leftTopStage);
+		multiInput.addProcessor(leftBottomStage);
 		multiInput.addProcessor(new InputAdapter() {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
@@ -629,6 +637,15 @@ public class GameScreen implements Screen {
 			bottomStage.draw();
 		}
 		game.batch.end();
+
+		game.batch.setProjectionMatrix(leftBottomViewport.getCamera().combined);
+		game.batch.begin();
+		leftBottomViewport.apply();
+		if(showUI) {
+			leftBottomStage.act();
+			leftBottomStage.draw();
+		}
+		game.batch.end();
 		
 		if(GameScreen.hoveredItemViewport!=null) {
 			game.batch.setProjectionMatrix(GameScreen.hoveredItemViewport.getCamera().combined);
@@ -697,12 +714,6 @@ public class GameScreen implements Screen {
 				Vector3 output = worldViewport.getCamera().unproject(new Vector3(mouse, 0));
 				Point targetTile = Entity.getTileCoordinates(output.x, output.y);
 				
-				//TileType type = ((Placeable)getLocalPlayer().getHeldItem()).getTileToPlace();
-				
-				/*if(Placeable.temporaryPlaceTile==null || Placeable.temporaryPlaceTile.getType()!=type) {
-					Placeable.temporaryPlaceTile = Tiles.getTile(type);
-				}*/
-				
 				double time = CustomTime.timeToSeconds(System.nanoTime());
 				float sin = MathUtils.sin((float) ((time*2)%MathUtils.PI2));
 				float random = (sin*sin)/4+(2.5f/4f);
@@ -716,6 +727,11 @@ public class GameScreen implements Screen {
 		game.batch.end();
 	}
 
+	/**
+	 * Renders the game world on the screen.
+	 * 
+	 * @param centerChunk the center chunk of the world to be rendered
+	 */
 	private void renderWorld(Point centerChunk) {
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -733,7 +749,7 @@ public class GameScreen implements Screen {
 		}
 		
 		Comparator<Entity> compare = Comparator.comparing(Entity::getRenderLayer).thenComparing(e1 -> {
-			return (int) -(e1.getRenderYOffset()+e1.getY());
+			return (int) -(-e1.getRenderYOffset()*Tile.TILE_SIZE+e1.getY());
 		});
 		entities.sort(compare);
 		
@@ -773,7 +789,7 @@ public class GameScreen implements Screen {
 				}
 				xStrip.sort(Comparator.comparing(pair -> {
 					Tile t = ((Pair<Integer, Tile>) pair).getSecond();
-					return t.getRenderYOffset();
+					return -t.getRenderYOffset()*Tile.TILE_SIZE;
 				}));
 				while(xStrip.size() > 0) {
 					Pair<Integer, Tile> pair = xStrip.get(0);
@@ -797,7 +813,7 @@ public class GameScreen implements Screen {
 					
 					while(entities.size() > 0) {
 						Entity e = entities.get(0);
-						if(z==e.getRenderLayer()&&-pair.getSecond().getRenderYOffset()+(y*Tile.TILE_SIZE)<(-e.getRenderYOffset()+e.getY())) {
+						if(z==e.getRenderLayer()&&pair.getSecond().getRenderYOffset()*Tile.TILE_SIZE+(y*Tile.TILE_SIZE)<(e.getRenderYOffset()*Tile.TILE_SIZE+e.getY())) {
 							if(e instanceof LightSource) {
 								LightSource light = (LightSource) e;
 								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE, light.getColor());
@@ -883,6 +899,12 @@ public class GameScreen implements Screen {
 		worldViewport.getCamera().position.y = roundToNearest(worldViewport.getCamera().position.y, dist);
 	}
 
+	/**
+	 * Processes mouse inputs for the game screen.
+	 * 
+	 * @param delta the time in seconds since the last frame
+	 * @param mouseLocalPosition the local position of the mouse
+	 */
 	private void processMouseInputs(float delta, Vector2 mouseLocalPosition) {
 		if(!overMenus(mouseLocalPosition)) {
 			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
@@ -986,20 +1008,28 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Processes player movement based on user input and updates the player and local client entities accordingly.
+	 * @param delta The time elapsed since the last frame.
+	 */
 	private void processEntitiesAndPlayerMovement(float delta) {
 		float speed = 1;
 		float ix = 0, iy = 0;
-		if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-			iy += speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-			iy -= speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-			ix += speed;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-			ix -= speed;
+
+
+		if(chatWidget.getStage().getKeyboardFocus()==null) {
+			if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+				iy += speed;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+				iy -= speed;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+				ix += speed;
+			}
+			if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+				ix -= speed;
+			}
 		}
 		
 		Vector2 clamp = CustomMath.clampCircle(ix, iy, 1, .1f);
@@ -1034,6 +1064,11 @@ public class GameScreen implements Screen {
 		}
 	}
 
+	/**
+	 * Processes the network connection by building incoming packets, sending ping packets, and sending queued packets out to the server.
+	 * 
+	 * @param delta the time in seconds since the last frame
+	 */
 	private void processConnection(float delta) {
 		try {
 			builder.build(dataIn);
@@ -1091,6 +1126,10 @@ public class GameScreen implements Screen {
 		leftTopViewport.update(width, height);
 		leftTopViewport.setScreenX(0);
 		leftTopViewport.setScreenY(Gdx.graphics.getHeight()-leftTopViewport.getScreenHeight());
+
+		leftBottomViewport.update(width, height);
+		leftBottomViewport.setScreenX(0);
+		leftBottomViewport.setScreenY(0);
 		
 		if (frameBuffer != null && (frameBuffer.getWidth() != width || frameBuffer.getHeight() != height)) {
 			frameBuffer.dispose();
@@ -1177,6 +1216,7 @@ public class GameScreen implements Screen {
 			PositionUpdatesPacket posPacket = (PositionUpdatesPacket) packet;
 		*/} else if(packet instanceof PlayerConnectionStatusPacket) {
 			PlayerConnectionStatusPacket status = (PlayerConnectionStatusPacket) packet;
+			chat.addMessage(new ChatMessage("", status.getUsername()+" "+status.getStatus()));
 		} else if(packet instanceof ChunkDataPacket) {
 			ChunkDataPacket chunkD = (ChunkDataPacket) packet;
 			tileData.put(chunkD.getChunkCoordinate(), chunkD.getTiles());
@@ -1258,6 +1298,8 @@ public class GameScreen implements Screen {
 					quests.setQuestData(player.getQuestData());
 					barsWidget.setHealth(((HealthEntity)player).getHealth(), ((HealthEntity)player).getMaxHealth());
 					barsWidget.setFood(player.getHunger()/Player.MAX_HUNGER);
+					getLocalPlayer().setHunger(player.getHunger());
+					getLocalPlayer().setHealth(player.getHealth());
 					for(InventorySlot slot : hotbarButtonGroup.getButtons()) {
 						if(slot.getSlot()==player.getHotbarSlot()) {
 							slot.setChecked(true);
@@ -1424,17 +1466,24 @@ public class GameScreen implements Screen {
 			Entity entity = entities.get(healths.getEntityUUID());
 			if(entity instanceof HealthEntity) {
 				HealthEntity hent = ((HealthEntity)entity);
+				float incomingHealth = hent.getHealth();
 				hent.setHealth(healths.getHealth());
 				if(entity.equals(getLocalPlayer())) {
 					barsWidget.setHealth(hent.getHealth(), hent.getMaxHealth());
+					float difference = healths.getHealth()-incomingHealth;
+					float threshold = 1;
+					if(difference <= -threshold) {
+						game.playSoundCooldown("hurt", .5f, .4f);
+					} else if(difference >= threshold) {
+						game.playSoundCooldown("heal", .5f, 1f);
+					}
 				}
-				//System.out.println(entity+" set health to "+healths.getHealth());
 			}
 		} else if(packet instanceof FoodPacket) {
 			FoodPacket foods = (FoodPacket) packet;
 			if(getLocalPlayer()!=null) {
 				barsWidget.setFood(foods.getHunger()/Player.MAX_HUNGER);
-				System.out.println("RECIEVED: "+foods.getHunger());
+				getLocalPlayer().setHunger(foods.getHunger());
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;

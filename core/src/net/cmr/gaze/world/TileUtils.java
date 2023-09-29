@@ -9,10 +9,17 @@ import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 
-public class BreakableUtils {
+public class TileUtils {
 
-	public static void dropItem(World world, int x, int y, Item item) {
-		world.addEntity(new DroppedItem(item, x, y));
+	/**
+	 * Drops an item on the ground at the specified location in the world.
+	 * @param world the world to drop the item in
+	 * @param tileX the tile x-coordinate of the location to drop the item
+	 * @param tileY the tile y-coordinate of the location to drop the item
+	 * @param itemToDrop the item to drop
+	 */
+	public static void dropItem(World world, int tileX, int tileY, Item itemToDrop) {
+		world.addEntity(new DroppedItem(itemToDrop, tileX, tileY));
 	}
 	
 	/**

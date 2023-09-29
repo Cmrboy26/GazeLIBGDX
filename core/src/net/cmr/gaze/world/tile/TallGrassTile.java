@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
@@ -65,10 +65,10 @@ public class TallGrassTile extends Tile {
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
 		//player.addXP(world, Skill.Foraging, .1);
-		BreakableUtils.spawnBreakParticleOffset(world, this, x, y, 0, this);
+		TileUtils.spawnBreakParticleOffset(world, this, x, y, 0, this);
 		Random random = new Random();
 		if(random.nextInt(4)==0) {
-			BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, 1));
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, 1));
 		}
 	}
 

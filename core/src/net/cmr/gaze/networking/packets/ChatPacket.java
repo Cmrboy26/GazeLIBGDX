@@ -9,7 +9,7 @@ import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.networking.Packet;
 import net.cmr.gaze.networking.PacketID;
 
-@PacketID(id = 25)
+@PacketID(id = 26)
 public class ChatPacket extends Packet {
 
     ChatMessage message;

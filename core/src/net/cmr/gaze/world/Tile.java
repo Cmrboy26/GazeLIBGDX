@@ -33,12 +33,23 @@ public abstract class Tile implements Cloneable {
 	private TileType tileType;
 	private int breakAmount;
 	
+	/**
+	 * NOTE: When using the constructor for an object, do NOT use random values here!
+	 * If you use them here, the tiles will be set to ONE random value because of how Tiles.getTile() works
+	 * (it clones one instance of the tile, so it would clone the random value too) 
+	 */
 	public Tile(TileType tileType) {
 		this.tileType = tileType;
 		if(isBreakable()) {
 			breakAmount = tileType.breakAmount;
 		}
 	}
+
+	/**
+	 * Whenever a tile is created from Tiles.getTile(), a constructor, or any other place, it will call this method
+	 * HERE is where you could do random values, fixing the problem mentioned in the constructor above
+	 */
+	public void generateInitialize(int x, int y, double seed) {}
 	
 	public abstract TileType[] belowWhitelist();
 	public abstract TileType[] belowBlacklist();
@@ -59,7 +70,7 @@ public abstract class Tile implements Cloneable {
 	public abstract Tile readTile(DataInputStream input, TileType type) throws IOException;
 	protected abstract void writeTile(TileType tile, DataBuffer buffer) throws IOException;
 	
-	public int getRenderYOffset() {
+	public float getRenderYOffset() {
 		return 0;
 	}
 	public void update(TileData data, Point worldCoordinates) {
@@ -269,6 +280,12 @@ public abstract class Tile implements Cloneable {
 	public int getRandomizedInt(int maxInclusive, int x, int y) {
 		if(randomSprite == -1) {
 			randomSprite = new Random(x/2+y*37*37*37).nextInt(maxInclusive+1);
+		}
+		return randomSprite;
+	}
+	public int getRandomizedInt(int maxInclusive, int x, int y, double seed) {
+		if(randomSprite == -1) {
+			randomSprite = new Random((int) ((x/2+y*37*37*37)*seed)).nextInt(maxInclusive+1);
 		}
 		return randomSprite;
 	}

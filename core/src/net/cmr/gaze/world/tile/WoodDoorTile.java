@@ -12,7 +12,7 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.HousingDoor;
 import net.cmr.gaze.world.Rotatable;
 import net.cmr.gaze.world.RotatableTile;
@@ -76,7 +76,7 @@ public class WoodDoorTile extends RotatableTile implements HousingDoor {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_DOOR, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD_DOOR, 1));
 	}
 	
 	/*public Rectangle getBoundingBox(int x, int y) {

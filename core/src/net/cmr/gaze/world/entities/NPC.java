@@ -14,11 +14,16 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.pathfind.AStar;
+import net.cmr.gaze.world.pathfind.DirectWalk;
 
 public class NPC extends Entity {
 
 	public NPC() {
 		super(EntityType.NPC);
+	}
+
+	public NPC(double x, double y) {
+		super(EntityType.NPC, x, y);
 	}
 	
 	@Override
@@ -38,23 +43,29 @@ public class NPC extends Entity {
 	Vector2 movement;
 	int tileX = -1, tileY = -1;
 	
+	Point targetTile;
+
 	@Override
 	public void update(double deltaTime, TileData data) {
 		super.update(deltaTime, data);
 		if(tileX == -1) {
-			tileX = getTileX()-16;
-			tileY = getTileY()-16;
+			tileX = 0+7;
+			tileY = 0;
 		}
 		if(data.isServer()) {
 			moveDelta+=deltaTime;
 			if(moveDelta>.2f) {
 				moveDelta=0;
 				
-				movement = AStar.findMovementVector(this, data, 1, new Point(tileX, tileY));
-				System.out.println(movement);
+				//movement = AStar.findMovementVector(this, data, 1, new Point(tileX, tileY));
+
+				targetTile = AStar.moveToTile(this, data, 1, new Point(tileX, tileY));
+
+				//System.out.println(movement);
 				
 				
 			}
+			movement = DirectWalk.walkDirectlyTowards(this, targetTile);
 			if(movement != null) {
 				this.setVelocity(-movement.x, -movement.y);
 			}

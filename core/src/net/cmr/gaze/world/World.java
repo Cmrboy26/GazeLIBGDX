@@ -301,6 +301,7 @@ public class World {
 	}
 	
 	public boolean generateTile(Chunk c, Tile t, int x, int y) {
+		t.generateInitialize(x, y, seed);
 		return addTile(t, x, y, true, true);
 	}
 	
@@ -500,6 +501,9 @@ public class World {
 	}
 	
 	public void addPlayer(PlayerConnection connection) {
+		if(connection==null) {
+			return;
+		}
 		if(connection.getPlayer().getWorld()==this) {
 			return;
 		} else {
@@ -643,6 +647,45 @@ public class World {
 				}
 			}
 		}
+	}
+
+	public void sendLoadedChunks(PlayerConnection connection) {
+		for(Chunk chunk : getPlayerLoadedChunks(connection)) {
+			connection.getSender().addPacket(new ChunkDataPacket(chunk));
+		}
+	}
+
+	public void respawnPlayer(Player player) {
+		double x = player.getSpawnPointX();
+		double y = player.getSpawnPointX();
+		if(x == Integer.MIN_VALUE) {
+			x = getRespawnX();
+		}
+		if(y == Integer.MIN_VALUE) {
+			y = getRespawnY();
+		}
+		teleportPlayerToWorld(player, x, y);
+	}
+
+	public void teleportPlayerToWorld(Player player, double x, double y) {
+		PlayerConnection connection = Player.searchForPlayer(player);
+		player.setPosition(x, y);
+		addPlayer(connection);
+		sendLoadedChunks(connection);
+	}
+
+	public void teleportPlayerToWorld(PlayerConnection connection, double x, double y) {
+		connection.getPlayer().setPosition(x, y);
+		addPlayer(connection);
+		sendLoadedChunks(connection);
+	}
+
+	public float getRespawnX() {
+		return 0;
+	}
+
+	public float getRespawnY() {
+		return 0;
 	}
 
 	public static final HealthEntityListener HEALTH_ENTITY_LISTENER = new HealthEntityListener() {

@@ -9,9 +9,12 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
@@ -41,13 +44,13 @@ public class GrassTile extends TransitionTile {
 		super.render(game, chunks, x, y);
 	}
 	
-	final String[] transitionSprite = new String[] {"dirtTransition"};
+	final String[] transitionSprite = new String[] {"dirtTransition", "waterTransition"};
 	@Override
 	public String[] getTransitionSprite() {
 		return transitionSprite;
 	}
 
-	final TileType[] transitionTiles = new TileType[] {TileType.DIRT};
+	final TileType[] transitionTiles = new TileType[] {TileType.DIRT, TileType.WATER};
 	@Override
 	public TileType[] getTransitionTiles() {
 		return transitionTiles;
@@ -64,6 +67,9 @@ public class GrassTile extends TransitionTile {
 				if(held != null && held instanceof Tool && ((Tool)held).toolType()==ToolType.SHOVEL) {
 					player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 					world.addTile(Tiles.getTile(TileType.DIRT), x, y);
+					if(Math.random()<1.05) {
+						TileUtils.dropItem(world, x, y, Items.getItem(ItemType.GRASS_SEEDS, 5));
+					}
 					return true;
 				}
 			}

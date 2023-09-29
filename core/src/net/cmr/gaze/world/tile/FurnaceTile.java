@@ -16,7 +16,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.custom.TorchItem;
 import net.cmr.gaze.networking.PlayerConnection;
-import net.cmr.gaze.world.BreakableUtils;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
@@ -84,7 +84,7 @@ public class FurnaceTile extends Tile implements CraftingStationTile, LightSourc
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
-		BreakableUtils.dropItem(world, x, y, Items.getItem(ItemType.FURNACE, 1));
+		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.FURNACE, 1));
 	}
 	
 	@Override
