@@ -12,6 +12,7 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Tool;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
@@ -54,9 +55,9 @@ public class FarmlandTile extends TransitionTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("farmland"+((moisture>0)?"Moist":"Dry")), x, y, 1, 1);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	boolean dry = false;

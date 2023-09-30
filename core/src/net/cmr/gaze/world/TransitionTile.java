@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomTime;
 
 public abstract class TransitionTile extends Tile {
@@ -21,10 +22,10 @@ public abstract class TransitionTile extends Tile {
 	public long lastCheck;
 	Sprite[] transitionSprites = new Sprite[4];
 	
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		
 		if (CustomTime.timeToSeconds(System.nanoTime() - lastCheck) > .4) {
-			updateSprites(game, chunks, x, y);
+			updateSprites(game, screen, x, y);
 		}
 		
 		for(int i = 0; i < 4; i++) {
@@ -34,10 +35,10 @@ public abstract class TransitionTile extends Tile {
 			}
 		}
 		
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
-	public void updateSprites(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void updateSprites(Gaze game, GameScreen screen, int x, int y) {
 		for (int v = 0; v < 4; v++) {
 			
 			int tx = 0, ty = 0;
@@ -67,7 +68,7 @@ public abstract class TransitionTile extends Tile {
 			
 			Point relative = Chunk.getInsideChunkCoordinates(x+tx, y+ty);
 
-			Tile[][][] chunk = chunks.get(Chunk.getChunk(x+tx, y+ty));
+			Tile[][][] chunk = screen.tileDataObject.getClientData().get(Chunk.getChunk(x+tx, y+ty));
 			if (chunk == null) {
 				continue;
 			}

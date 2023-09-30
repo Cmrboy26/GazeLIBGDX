@@ -132,7 +132,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		if(random == 0) {
 			random = (new Random(x+y*37*37).nextFloat()*1f/4f)-1f/8f;
 		}
@@ -147,7 +147,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		draw(game.batch, game.getSprite("tree"+(getRandomizedInt(1, x, y)+2)), x+random+endShakeX, y, 2, 3);
 		//game.batch.draw(game.getSprite("tree1"), x*TILE_SIZE+random+endShakeX, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*3);
 		
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

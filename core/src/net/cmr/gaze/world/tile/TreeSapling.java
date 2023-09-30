@@ -66,9 +66,9 @@ public class TreeSapling extends BaseTile {
 		}
 	}
     @Override
-    public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+    public void render(Gaze game, GameScreen screen, int x, int y) {
         draw(game.batch, game.getSprite("treeStage"+stage), x, y, 2, 1);
-        super.render(game, chunks, x, y);
+        super.render(game, screen, x, y);
     }
 
 	@Override

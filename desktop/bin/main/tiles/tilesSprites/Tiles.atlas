@@ -13,21 +13,21 @@ anvil
   index: -1
 anvil2
   rotate: false
-  xy: 1235, 171
+  xy: 1462, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 campfire
   rotate: false
-  xy: 727, 69
+  xy: 762, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 chest
   rotate: false
-  xy: 1532, 206
+  xy: 1340, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -41,35 +41,35 @@ chute
   index: -1
 dirt
   rotate: false
-  xy: 762, 34
+  xy: 797, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 dirtTransition
   rotate: false
-  xy: 1497, 206
+  xy: 1305, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 farmlandDry
   rotate: false
-  xy: 762, 69
+  xy: 797, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 farmlandMoist
   rotate: false
-  xy: 797, 69
+  xy: 1235, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 furnace
   rotate: false
-  xy: 657, 53
+  xy: 692, 53
   size: 32, 48
   orig: 32, 48
   offset: 0, 0
@@ -97,14 +97,14 @@ grassOld
   index: -1
 grass0
   rotate: false
-  xy: 1270, 171
+  xy: 1099, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 grass00
   rotate: false
-  xy: 1270, 171
+  xy: 1099, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -118,14 +118,14 @@ grass01
   index: -1
 grass1
   rotate: false
-  xy: 692, 34
+  xy: 727, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 grass10
   rotate: false
-  xy: 1602, 206
+  xy: 1410, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -139,7 +139,7 @@ grass11
   index: -1
 grassTransition
   rotate: false
-  xy: 692, 69
+  xy: 727, 69
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -181,14 +181,14 @@ lava
   index: -1
 lavaTransition
   rotate: false
-  xy: 1099, 136
+  xy: 1532, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 moistDirt
   rotate: false
-  xy: 657, 18
+  xy: 692, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -230,7 +230,7 @@ newWheat5
   index: -1
 oldDirt
   rotate: false
-  xy: 1134, 136
+  xy: 1567, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -244,14 +244,14 @@ player - Copy (2)
   index: -1
 playertest
   rotate: false
-  xy: 1169, 136
+  xy: 1602, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 sand0
   rotate: false
-  xy: 1064, 136
+  xy: 1270, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -265,14 +265,14 @@ sand1
   index: -1
 sand2
   rotate: false
-  xy: 1567, 206
+  xy: 1375, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 sandTransition
   rotate: false
-  xy: 1305, 171
+  xy: 1134, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -284,9 +284,16 @@ stoneBrickWall
   orig: 32, 96
   offset: 0, 0
   index: -1
+stoneBrickWallShortened
+  rotate: false
+  xy: 622, 5
+  size: 32, 96
+  orig: 32, 96
+  offset: 0, 0
+  index: -1
 stoneTile
   rotate: false
-  xy: 727, 34
+  xy: 762, 34
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -314,14 +321,14 @@ stoneWall3
   index: -1
 table
   rotate: false
-  xy: 1340, 171
+  xy: 1169, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 tallGrass
   rotate: false
-  xy: 797, 34
+  xy: 1497, 206
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -419,7 +426,7 @@ waterTransition
   index: -1
 wheat1
   rotate: false
-  xy: 1462, 206
+  xy: 1064, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -433,7 +440,7 @@ wheat2
   index: -1
 wheat3
   rotate: false
-  xy: 1375, 171
+  xy: 1204, 136
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -482,7 +489,7 @@ woodDoor4
   index: -1
 woodWall
   rotate: false
-  xy: 622, 5
+  xy: 657, 5
   size: 32, 96
   orig: 32, 96
   offset: 0, 0

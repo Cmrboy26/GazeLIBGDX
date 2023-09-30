@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.SpeedChangeTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -20,10 +21,10 @@ public class StoneTile extends TransitionTile implements SpeedChangeTile {
 	}
 
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("stoneTile"), x, y, 1, 1);
 		//game.batch.draw(game.getSprite("stoneTile"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

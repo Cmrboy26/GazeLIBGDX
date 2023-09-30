@@ -16,6 +16,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.custom.TorchItem;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.LightSource;
@@ -76,10 +77,10 @@ public class FurnaceTile extends Tile implements CraftingStationTile, LightSourc
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		//draw(game.batch, game.getSprite("furnace"), x, y, 1, 1.5f);
 		draw(game.batch, game.getAnimation("furnace").getKeyFrame(Tile.tileRenderDelta, true), x-.5f, y-.5f, 2, 2);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.custom.TorchItem;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
@@ -42,10 +43,10 @@ public class TorchTile extends Tile implements LightSource {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getAnimation("torch").getKeyFrame(Tile.tileRenderDelta, true), x, y, 1, 1);
 		//game.batch.draw(game.getAnimation("torch").getKeyFrame(Tile.tileRenderDelta, true), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	@Override
 	public float getRenderYOffset() {

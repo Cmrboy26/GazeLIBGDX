@@ -11,6 +11,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.leveling.Skills.Skill;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
@@ -35,7 +36,7 @@ public class WheatTile extends CropTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		//draw(game.batch, game.getSprite("wheat"+stage), x, y, 1, 1);
 		//String wheat = getRandomizedInt(2, x, y)==0?"wheat":"newWheat";
 		//if(wheat.equals("wheat")) {
@@ -43,7 +44,7 @@ public class WheatTile extends CropTile {
 		//} else {
 		draw(game.batch, game.getSprite("newWheat"+stage), x-.5f, y-.5f, 2f, 2f);
 		//}
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 
 	@Override

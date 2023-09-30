@@ -117,8 +117,10 @@ import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.Chunk;
+import net.cmr.gaze.world.Housing;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Lights;
+import net.cmr.gaze.world.RenderRule;
 import net.cmr.gaze.world.Rotatable;
 import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.StructureTile;
@@ -719,7 +721,7 @@ public class GameScreen implements Screen {
 				float random = (sin*sin)/4+(2.5f/4f);
 				
 				game.batch.setColor(1, 1, 1, random);
-				((Placeable)getLocalPlayer().getHeldItem()).getTempPlaceTile(rotation).render(game, tileData, targetTile.x, targetTile.y);
+				((Placeable)getLocalPlayer().getHeldItem()).getTempPlaceTile(rotation).render(game, this, targetTile.x, targetTile.y);
 				
 				game.batch.setColor(Color.WHITE);
 			}
@@ -770,12 +772,17 @@ public class GameScreen implements Screen {
 		Tile.tileRenderDelta += Gdx.graphics.getDeltaTime();
 		
 		int translucentX = Integer.MAX_VALUE, translucentY = Integer.MAX_VALUE;
+
+		currentRenderRule = deriveRenderRule();
 		if(getLocalPlayer()!=null) {
-			translucentX = getLocalPlayer().getTileX();
-			translucentY = getLocalPlayer().getTileY()-1;
+			if(!currentRenderRule.equals(RenderRule.HOUSE_RULE)) {
+				translucentX = getLocalPlayer().getTileX();
+				translucentY = getLocalPlayer().getTileY()-1;
+			}
 		}
 		ArrayList<LightSource> tileLights = new ArrayList<>();
 		ArrayList<Vector2> tileLightsCoordinates = new ArrayList<>();
+
 		for(int z = 0; z < Chunk.LAYERS; z++) {
 			for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
 				ArrayList<Pair<Integer, Tile>> xStrip = new ArrayList<>();
@@ -784,9 +791,17 @@ public class GameScreen implements Screen {
 					if(data == null) {
 						continue;
 					}
-					if(data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z] != null) {
-						xStrip.add(new Pair<>(x, data[Math.floorMod(x, Chunk.CHUNK_SIZE)][Math.floorMod(y, Chunk.CHUNK_SIZE)][z]));
+					// implement render rule here
+					int tx = Math.floorMod(x, Chunk.CHUNK_SIZE);
+					int ty = Math.floorMod(y, Chunk.CHUNK_SIZE);
+					if(currentRenderRule.renderTile(data, tx, ty)) {
+						if(data[tx][ty][z] != null) {
+							xStrip.add(new Pair<>(x, data[tx][ty][z]));
+						}
 					}
+					//if(data[tx][ty][z] != null) {
+					//	xStrip.add(new Pair<>(x, data[tx][ty][z]));
+					//}
 				}
 				xStrip.sort(Comparator.comparing(pair -> {
 					Tile t = ((Pair<Integer, Tile>) pair).getSecond();
@@ -872,7 +887,7 @@ public class GameScreen implements Screen {
 						game.batch.setColor(new Color(1f, 1f, 1f, .5f));
 					}
 					
-					pair.getSecond().render(game, tileData, pair.getFirst(), y);
+					pair.getSecond().render(game, this, pair.getFirst(), y);
 					
 					if(translucent) {
 						game.batch.setColor(Color.WHITE);
@@ -893,6 +908,8 @@ public class GameScreen implements Screen {
 			entities.get(0).render(game, this);
 			entities.remove(0);
 		}
+
+		currentRenderRule = null;
 	}
 
 	/**
@@ -1256,7 +1273,7 @@ public class GameScreen implements Screen {
 				Point inside = Chunk.getInsideChunkCoordinates(upd.getX(), upd.getY());
 				data[inside.x][inside.y][upd.getLayer()] = upd.getTile();
 				if(upd.getTile() instanceof TransitionTile) {
-					((TransitionTile)upd.getTile()).updateSprites(game, tileData, upd.getX(), upd.getY());
+					((TransitionTile)upd.getTile()).updateSprites(game, this, upd.getX(), upd.getY());
 				}
 			}
 			int x = upd.getX();
@@ -1297,7 +1314,7 @@ public class GameScreen implements Screen {
 				Tile at = c[relative.x][relative.y][upd.getLayer()];
 
 				if (at instanceof TransitionTile) {
-					((TransitionTile) at).updateSprites(game, tileData, x+tx, y+ty);
+					((TransitionTile) at).updateSprites(game, this, x+tx, y+ty);
 				}
 			}
 		} else if(packet instanceof SpawnEntity) {
@@ -1698,6 +1715,26 @@ public class GameScreen implements Screen {
 		inventory.setVisible(false);
 		chestInventory.setVisible(false);
 		quests.setVisible(false);
+	}
+
+	public RenderRule currentRenderRule;
+
+	public RenderRule deriveRenderRule() {
+		Player localPlayer = getLocalPlayer();
+		if(localPlayer!=null) {
+			int tx = localPlayer.getTileX();
+			int ty = localPlayer.getTileY();
+			Tile[][][] data = tileData.get(Chunk.getChunk(tx, ty));
+			if(data == null) {
+				return RenderRule.DEFAULT_RULE;
+			}
+			int rx = Math.floorMod(tx, Chunk.CHUNK_SIZE);
+			int ry = Math.floorMod(ty, Chunk.CHUNK_SIZE);
+			if(data[rx][ry][0] instanceof Housing) {
+				return RenderRule.HOUSE_RULE;
+			}
+		}
+		return RenderRule.DEFAULT_RULE;
 	}
     
     public void addLevelUpNotification() {

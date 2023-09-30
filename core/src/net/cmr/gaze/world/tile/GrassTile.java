@@ -14,6 +14,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -38,10 +39,10 @@ public class GrassTile extends TransitionTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		//draw(game.batch, game.getSprite("grass"), x, y, 1, 1);
 		draw(game.batch, game.getSprite("grass"+Math.abs(x%2)+Math.abs(y%2)), x, y, 1, 1);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	final String[] transitionSprite = new String[] {"dirtTransition", "waterTransition"};

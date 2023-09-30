@@ -98,7 +98,7 @@ public abstract class Tile implements Cloneable {
 		batch.draw(sprite, x*Tile.TILE_SIZE, y*Tile.TILE_SIZE, width*TILE_SIZE, height*Tile.TILE_SIZE);
 	}
 	
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		if(Gaze.HITBOXES) {
 			if(getBoundingBox(x, y)!=null) {
 				game.batch.draw(game.getSprite("hitbox"), getBoundingBox(x, y).getX(), getBoundingBox(x, y).getY(), getBoundingBox(x, y).width, getBoundingBox(x, y).height);

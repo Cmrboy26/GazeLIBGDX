@@ -14,6 +14,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.leveling.Skills.Skill;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -28,10 +29,10 @@ public class StoneWall extends Tile implements WallTile {
 	}
 
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("stoneWall"+TileUtils.getBreakSpriteInt(this, 3)), x, y-1, 1, 3);
 		//game.batch.draw(game.getSprite("stoneWall"+BreakableUtils.getBreakSpriteInt(this, 3)), x*TILE_SIZE, y*TILE_SIZE-Tile.TILE_SIZE, TILE_SIZE, TILE_SIZE*3);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

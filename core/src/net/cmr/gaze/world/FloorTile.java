@@ -8,6 +8,7 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.entities.Player;
 
 public abstract class FloorTile extends Tile implements SpeedChangeTile {
@@ -32,9 +33,9 @@ public abstract class FloorTile extends Tile implements SpeedChangeTile {
 		world.addTile(underTile, x, y);
 	}
 
-	protected void renderBelowTile(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	protected void renderBelowTile(Gaze game, GameScreen screen, int x, int y) {
 		if(underTile!=null) {
-			underTile.render(game, chunks, x, y);
+			underTile.render(game, screen, x, y);
 		}
 	}
 	

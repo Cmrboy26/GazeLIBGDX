@@ -10,6 +10,7 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.FloorTile;
 import net.cmr.gaze.world.SpeedChangeTile;
@@ -35,11 +36,11 @@ public class StonePathFloorTile extends FloorTile {
 	}
 
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
-		super.renderBelowTile(game, chunks, x, y);
+	public void render(Gaze game, GameScreen screen, int x, int y) {
+		super.renderBelowTile(game, screen, x, y);
 		draw(game.batch, game.getSprite("stonePathFloor"), x, y, 1, 1);
 		//game.batch.draw(game.getSprite("stonePathFloor"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

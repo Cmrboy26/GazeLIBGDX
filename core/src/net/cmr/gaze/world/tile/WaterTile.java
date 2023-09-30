@@ -32,11 +32,11 @@ public class WaterTile extends TransitionTile implements SpeedChangeTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		//game.batch.draw(game.getSprite("water"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
 		draw(game.batch, game.getAnimation("water").getKeyFrame(Tile.tileRenderDelta, true), x, y, 1, 1);
 		//game.batch.draw(game.getAnimation("water").getKeyFrame(Tile.tileRenderDelta, true), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.cmr.gaze.crafting.Crafting.CraftingStation;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.PlayerConnection;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
@@ -70,10 +71,10 @@ public class TableTile extends Tile implements CraftingStationTile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("table"), x, y, 1, 1);
 		//game.batch.draw(game.getSprite("table"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

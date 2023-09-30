@@ -35,10 +35,10 @@ public class LavaTile extends TransitionTile implements SpeedChangeTile, LightSo
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getAnimation("lava").getKeyFrame(Tile.tileRenderDelta, true), x, y, 1, 1);
 		//game.batch.draw(game.getAnimation("lava").getKeyFrame(Tile.tileRenderDelta, true), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 
 	@Override

@@ -76,5 +76,12 @@ public class TileData {
 			throw new IllegalStateException("Development problem: Attempted to access world object on client side. (Did you forget a isServer() check before accessing?)");
 		}
 	}
+    public HashMap<Point, Tile[][][]> getClientData() {
+        if(isClient()) {
+			return clientData;
+		} else {
+			throw new IllegalStateException("Development problem: Attempted to access world object on server side. (Did you forget a isClient() check before accessing?)");
+		}
+    }
 	
 }

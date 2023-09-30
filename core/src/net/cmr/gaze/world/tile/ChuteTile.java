@@ -12,6 +12,7 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.networking.packets.AudioPacket;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
@@ -36,9 +37,9 @@ public class ChuteTile extends Tile {
 	}
 	
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("chute"), x, y, 1, 1);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

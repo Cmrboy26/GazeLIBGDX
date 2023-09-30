@@ -30,11 +30,11 @@ public class IronOreWall extends Tile implements WallTile {
 	}
 
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("ironOreWall"+TileUtils.getBreakSpriteInt(this, 3)), x, y-1, 1, 3);
 		//draw(game.batch, game.getSprite("campfire"), x, y, 1, 1);
 		//game.batch.draw(, x*TILE_SIZE, y*TILE_SIZE-Tile.TILE_SIZE, TILE_SIZE, TILE_SIZE*3);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override

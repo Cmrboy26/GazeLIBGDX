@@ -1,25 +1,23 @@
 package net.cmr.gaze.world.tile;
 
-import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-
-import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
-import net.cmr.gaze.world.TileUtils;
+import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.FloorTile;
+import net.cmr.gaze.world.HousingFloor;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
 
-public class WoodFloorTile extends FloorTile {
+public class WoodFloorTile extends FloorTile implements HousingFloor {
 
 	public WoodFloorTile() {
 		super(TileType.WOOD_FLOOR);
@@ -36,9 +34,9 @@ public class WoodFloorTile extends FloorTile {
 	}
 
 	@Override
-	public void render(Gaze game, HashMap<Point, Tile[][][]> chunks, int x, int y) {
+	public void render(Gaze game, GameScreen screen, int x, int y) {
 		draw(game.batch, game.getSprite("woodFloor"), x, y, 1, 1);
-		super.render(game, chunks, x, y);
+		super.render(game, screen, x, y);
 	}
 	
 	@Override
