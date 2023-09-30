@@ -50,7 +50,7 @@ public class TreeSapling extends BaseTile {
 		if(data.isServer()) {
 			if(stage<=2) {
 				elapsedTime+=DELTA_TIME;
-				if(elapsedTime > 40 && new Random().nextInt(200)==0) {
+				if(elapsedTime > 80 && new Random().nextInt(300)==0) {
 					elapsedTime=0;
 					stage++;
 					if(stage <= 2) {

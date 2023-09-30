@@ -183,7 +183,7 @@ public abstract class Entity {
 	}
 
 	public int getPathTileX() {
-		return snapPositionToTile(x);
+		return snapPositionToTile(x+getBoundingBox(this, 0, 0).width/2f);
 	}
 	public int getPathTileY() {
 		return snapPositionToTile(y);

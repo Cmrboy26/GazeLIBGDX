@@ -6,8 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.math.Vector2;
 
-import net.cmr.gaze.util.ArrayUtil;
-import net.cmr.gaze.world.Chunk;
+import net.cmr.gaze.world.StructureTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.entities.Entity;
@@ -15,19 +14,18 @@ import net.cmr.gaze.world.entities.Entity;
 public class AStar {
 	
 	private static int chunkRadius;
-	private static int maxIteration = 2000;
+	private static int maxIteration = 4000;
 	private static Point centerChunk;
+	private static Point goalTile;
 
 	public static Vector2 findMovementVector(Entity entity, TileData data, int chunkRadius, Point goalTile) {
 		AStar.chunkRadius = chunkRadius;
+		AStar.goalTile = goalTile;
 		centerChunk = entity.getChunk();
 		AStarNode start = new AStarNode(entity.getPathTileX(), entity.getPathTileY(), null);
 		AStarNode goal = new AStarNode(goalTile.x, goalTile.y, null);
 		//AStarNode start = new AStarNode(Math.abs(entity.getTileX()-((centerChunk.x+chunkRadius)*Chunk.CHUNK_SIZE)), Math.abs(entity.getTileY()-((centerChunk.y+chunkRadius)*Chunk.CHUNK_SIZE)), null);
 		//AStarNode goal = new AStarNode(Math.abs(goalTile.x-((centerChunk.x+chunkRadius)*Chunk.CHUNK_SIZE)), Math.abs(goalTile.y-((centerChunk.y+chunkRadius)*Chunk.CHUNK_SIZE)), null);
-		System.out.println(start);
-		System.out.println(goal);
-		
 		return findMovementVector(data, start, goal);
 	}
 
@@ -37,7 +35,7 @@ public class AStar {
 			return null;
 		}
 		Point p = new Point(entity.getPathTileX(), entity.getPathTileY());
-		p.translate((int)vector.x, (int)vector.y);
+		p.translate((int)-vector.x, (int)-vector.y);
 		return p;
 	}
 
@@ -59,9 +57,9 @@ public class AStar {
 		ArrayList<AStarNode> checked = new ArrayList<>();
 		checked.add(start);
 		
-		if(!isValid(data, goal)) {
+		/*if(!isValid(data, goal)) {
 			return null;
-		}
+		}*/
 		if(!isValid(data, start)) {
 			return null;
 		}
@@ -126,6 +124,13 @@ public class AStar {
 		Tile tile = data.getTile(node.x, node.y, 1);
 		if(tile == null) {
 			return true;
+		}
+
+		if(node.x == goalTile.x && node.y == goalTile.y) {
+			return true;
+		}
+		if(tile instanceof StructureTile) {
+			return false;
 		}
 		if(tile.getBoundingBox(0, 0)!=null) {
 			return false;

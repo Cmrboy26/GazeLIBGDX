@@ -235,7 +235,7 @@ public abstract class Tile implements Cloneable {
 			}
 			
 			if(isInstantBreak()) {
-				player.getPlayer().lastBreakInteraction = 0;
+				player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 			} else {
 				player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 			}

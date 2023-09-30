@@ -774,7 +774,8 @@ public class GameScreen implements Screen {
 			translucentX = getLocalPlayer().getTileX();
 			translucentY = getLocalPlayer().getTileY()-1;
 		}
-		
+		ArrayList<LightSource> tileLights = new ArrayList<>();
+		ArrayList<Vector2> tileLightsCoordinates = new ArrayList<>();
 		for(int z = 0; z < Chunk.LAYERS; z++) {
 			for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
 				ArrayList<Pair<Integer, Tile>> xStrip = new ArrayList<>();
@@ -816,6 +817,8 @@ public class GameScreen implements Screen {
 						if(z==e.getRenderLayer()&&pair.getSecond().getRenderYOffset()*Tile.TILE_SIZE+(y*Tile.TILE_SIZE)<(e.getRenderYOffset()*Tile.TILE_SIZE+e.getY())) {
 							if(e instanceof LightSource) {
 								LightSource light = (LightSource) e;
+								//tileLights.add(light);
+								//tileLightsCoordinates.add(new Vector2((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY()));
 								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE, light.getColor());
 							}
 							if(e instanceof Particle) {
@@ -833,7 +836,9 @@ public class GameScreen implements Screen {
 					
 					if(pair.getSecond() instanceof LightSource) {
 						LightSource lightz = (LightSource) pair.getSecond();
-						lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, lightz.getIntensity()*Tile.TILE_SIZE, lightz.getColor());
+						tileLights.add(lightz);
+						tileLightsCoordinates.add(new Vector2(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2));
+						//lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, lightz.getIntensity()*Tile.TILE_SIZE, lightz.getColor());
 					}
 					
 					boolean translucent = false;
@@ -876,6 +881,14 @@ public class GameScreen implements Screen {
 				}
 			}
 		}
+
+		while(tileLights.size() > 0) {
+			LightSource light = tileLights.get(0);
+			lights.addLight(tileLightsCoordinates.get(0).x, tileLightsCoordinates.get(0).y, light.getIntensity()*Tile.TILE_SIZE, light.getColor());
+			tileLights.remove(0);
+			tileLightsCoordinates.remove(0);
+		}
+
 		while(entities.size() > 0) {
 			entities.get(0).render(game, this);
 			entities.remove(0);

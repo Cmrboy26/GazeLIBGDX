@@ -31,6 +31,9 @@ public class ChatWidget extends WidgetGroup {
     Label chatLabel;
     ScrollPane scrollPane;
     TextField textField;
+
+    long lastMessageMillis = 0;
+
     public ChatWidget(Gaze game, GameScreen screen, ChatManager manager) {
         this.game = game;
         this.manager = manager;
@@ -46,6 +49,7 @@ public class ChatWidget extends WidgetGroup {
                     chat += manager.getMessage(i) + "\n";
                 }
                 chatLabel.setText(chat);
+                lastMessageMillis = System.currentTimeMillis();
             }
         });
 
@@ -102,12 +106,18 @@ public class ChatWidget extends WidgetGroup {
     @Override
     public void act(float delta) {
         super.act(delta);
+        chatLabel.setVisible((System.currentTimeMillis() - lastMessageMillis < 10000)||getStage().getKeyboardFocus()!=null);
         textField.setVisible(getStage().getKeyboardFocus()!=null);
         if(Gdx.input.isKeyJustPressed(Input.Keys.T)) {
             if(getStage().getKeyboardFocus()==null) {
                 getStage().setKeyboardFocus(textField);
             }
         }
+        if(Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            getStage().setKeyboardFocus(null);
+            textField.setText("");
+        }
+
     }
 
 }

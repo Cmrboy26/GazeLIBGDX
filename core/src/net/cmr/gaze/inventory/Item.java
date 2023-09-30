@@ -174,13 +174,21 @@ public abstract class Item implements Cloneable {
 		if(item==null) {
 			return null;
 		}
-		return Items.nameMap.get(item.getType());
+		String name = Items.nameMap.get(item.getType());
+		if(name == null) {
+			return item.getType().name();
+		}
+		return name;
 	}
 	public static String getDescription(Item item) {
 		if(item==null) {
 			return null;
 		}
-		return Items.descriptionMap.get(item.getType());
+		String description = Items.descriptionMap.get(item.getType());
+		if(description == null) {
+			return "It's just "+item.getType().name();
+		}
+		return description; 
 	}
 	
 	public Item clone() {
