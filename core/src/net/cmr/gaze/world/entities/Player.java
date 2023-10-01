@@ -386,7 +386,7 @@ public class Player extends HealthEntity implements LightSource {
 
 	private void onEat(FoodItem food) {
 		//setHealth(0);
-		getWorld().addEntity(new NPC(getX(), getY()));
+		//getWorld().addEntity(new NPC(getX(), getY()));
 	}
 
 	public static PlayerConnection searchForPlayer(Player player) {

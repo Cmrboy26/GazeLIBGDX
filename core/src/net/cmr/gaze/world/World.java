@@ -219,7 +219,12 @@ public class World {
 						if(interact.getClickType()==2) {
 							if(held instanceof Placeable) {
 								Placeable placeable = (Placeable) held;
-								int rotation = CustomMath.minMax(0,interact.getModifier(),3);
+								int max = 0;
+								if(Tiles.getTile(placeable.getTileToPlace()) instanceof Rotatable) {
+									Rotatable rot = (Rotatable) Tiles.getTile(placeable.getTileToPlace());
+									max = rot.maxDirection();
+								}
+								int rotation = CustomMath.minMax(0,interact.getModifier(),max);
 								Tile tile = placeable.getPlaceTile(rotation);
 								Tile at = getTile(x, y, tile.getType().layer);
 								if(at!=null && at.getType()==tile.getType()) {
@@ -277,6 +282,11 @@ public class World {
 								Tile at = getTile(x, y, z);
 								if(at == null) {
 									continue;
+								}
+								if(interact.getExclusionRule()==1) {
+									if(at instanceof CeilingTile) {
+										continue;
+									}
 								}
 								
 								boolean successfulInteract = at.onInteract(connection, this, x, y, interact.getClickType());
@@ -469,21 +479,23 @@ public class World {
 		}
 		Tile at = getTile(x, y, t.getType().layer);
 		Tile below = getTile(x, y, t.getType().layer-1);
-		if(below == null) {
-			return false;
-		}
+		//if(below == null) {
+		//	return false;
+		//}
 		if(at != null) {
 			if(!(at.getReplaceability()==Replaceable.ALWAYS&&countReplacables)) {
 				return false;
 			}
 		}
-		if(t.belowBlacklist()!=null&&ArrayUtil.contains(t.belowBlacklist(), below.getType())) {
-			// below tile is blacklisted
-			return false;
-		}
-		if(t.belowWhitelist()!=null&&!ArrayUtil.contains(t.belowWhitelist(), below.getType())) {
-			// below tile is not whitelisted
-			return false;
+		if(below != null) {
+			if(t.belowBlacklist()!=null&&ArrayUtil.contains(t.belowBlacklist(), below.getType())) {
+				// below tile is blacklisted
+				return false;
+			}
+			if(t.belowWhitelist()!=null&&!ArrayUtil.contains(t.belowWhitelist(), below.getType())) {
+				// below tile is not whitelisted
+				return false;
+			}
 		}
 		return true;
 	}

@@ -116,8 +116,8 @@ import net.cmr.gaze.util.CustomTime;
 import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.BaseTile;
+import net.cmr.gaze.world.CeilingTile;
 import net.cmr.gaze.world.Chunk;
-import net.cmr.gaze.world.Housing;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Lights;
 import net.cmr.gaze.world.RenderRule;
@@ -126,6 +126,7 @@ import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.StructureTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
+import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
@@ -531,6 +532,8 @@ public class GameScreen implements Screen {
 		stepDelta+=Math.min(delta, .25f);
 		logPositionDelta+=delta;
 		
+		currentRenderRule = deriveRenderRule();
+
 		processEntitiesAndPlayerMovement(delta);
 
 		Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
@@ -577,6 +580,8 @@ public class GameScreen implements Screen {
 		}
 		
 		renderUI(delta, mouseLocalPosition);
+
+		currentRenderRule = null;
 	}
 
 	private void renderUI(float delta, Vector2 mouseLocalPosition) {
@@ -698,20 +703,29 @@ public class GameScreen implements Screen {
 	private void renderPlaceableHologram() {
 		if(getLocalPlayer()!=null) {
 			if(getLocalPlayer().getHeldItem() instanceof Placeable) {
-				
-				if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-					rotation++;
-					if(rotation>3) {
+				Placeable placeable = (Placeable) getLocalPlayer().getHeldItem();
+				Tile temp = Tiles.getTile(placeable.getTileToPlace());
+				if(temp instanceof Rotatable) {
+					Rotatable rotatable = (Rotatable) temp;
+					if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+						rotation++;
+						if(rotation>rotatable.maxDirection()) {
+							rotation = 0;
+						}
+					}
+					if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+						rotation--;
+						if(rotation<0) {
+							rotation = rotatable.maxDirection();
+						}
+					}
+					if(rotation > rotatable.maxDirection()) {
 						rotation = 0;
 					}
+				} else {
+					rotation = 0;
 				}
-				if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-					rotation--;
-					if(rotation<0) {
-						rotation = 3;
-					}
-				}
-				
+
 				Vector2 mouse = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 				Vector3 output = worldViewport.getCamera().unproject(new Vector3(mouse, 0));
 				Point targetTile = Entity.getTileCoordinates(output.x, output.y);
@@ -721,7 +735,7 @@ public class GameScreen implements Screen {
 				float random = (sin*sin)/4+(2.5f/4f);
 				
 				game.batch.setColor(1, 1, 1, random);
-				((Placeable)getLocalPlayer().getHeldItem()).getTempPlaceTile(rotation).render(game, this, targetTile.x, targetTile.y);
+				placeable.getTempPlaceTile(rotation).render(game, this, targetTile.x, targetTile.y);
 				
 				game.batch.setColor(Color.WHITE);
 			}
@@ -772,8 +786,6 @@ public class GameScreen implements Screen {
 		Tile.tileRenderDelta += Gdx.graphics.getDeltaTime();
 		
 		int translucentX = Integer.MAX_VALUE, translucentY = Integer.MAX_VALUE;
-
-		currentRenderRule = deriveRenderRule();
 		if(getLocalPlayer()!=null) {
 			if(!currentRenderRule.equals(RenderRule.HOUSE_RULE)) {
 				translucentX = getLocalPlayer().getTileX();
@@ -783,117 +795,17 @@ public class GameScreen implements Screen {
 		ArrayList<LightSource> tileLights = new ArrayList<>();
 		ArrayList<Vector2> tileLightsCoordinates = new ArrayList<>();
 
-		for(int z = 0; z < Chunk.LAYERS; z++) {
-			for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
-				ArrayList<Pair<Integer, Tile>> xStrip = new ArrayList<>();
-				for(int x = (centerChunk.x-1)*Chunk.CHUNK_SIZE; x <= (centerChunk.x+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; x++) {
-					Tile[][][] data = tileData.get(Chunk.getChunk(x, y));
-					if(data == null) {
-						continue;
-					}
-					// implement render rule here
-					int tx = Math.floorMod(x, Chunk.CHUNK_SIZE);
-					int ty = Math.floorMod(y, Chunk.CHUNK_SIZE);
-					if(currentRenderRule.renderTile(data, tx, ty)) {
-						if(data[tx][ty][z] != null) {
-							xStrip.add(new Pair<>(x, data[tx][ty][z]));
-						}
-					}
-					//if(data[tx][ty][z] != null) {
-					//	xStrip.add(new Pair<>(x, data[tx][ty][z]));
-					//}
-				}
-				xStrip.sort(Comparator.comparing(pair -> {
-					Tile t = ((Pair<Integer, Tile>) pair).getSecond();
-					return -t.getRenderYOffset()*Tile.TILE_SIZE;
-				}));
-				while(xStrip.size() > 0) {
-					Pair<Integer, Tile> pair = xStrip.get(0);
-					
-					if(attemptSound) {
-						if(pair.getSecond().getAmbientNoise(this)!=null) {
-							if(soundChance <= 0 || r.nextInt(soundChance)==1) {
-								soundChance = 600;
-								double distance = getLocalPlayer().getDistanceToTile(pair.getFirst(), y);
-								double pow = 1.2;
-								
-								float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
-								
-								game.playSoundCooldown(pair.getSecond().getAmbientNoise(this), 
-										volume*pair.getSecond().getAmbientNoiseVolume()*game.settings.getFloat("ambientVolume"),
-										pair.getSecond().getAmbientNoisePitch(), 7f);
-								attemptSound = false;
-							}
-						}
-					}
-					
-					while(entities.size() > 0) {
-						Entity e = entities.get(0);
-						if(z==e.getRenderLayer()&&pair.getSecond().getRenderYOffset()*Tile.TILE_SIZE+(y*Tile.TILE_SIZE)<(e.getRenderYOffset()*Tile.TILE_SIZE+e.getY())) {
-							if(e instanceof LightSource) {
-								LightSource light = (LightSource) e;
-								//tileLights.add(light);
-								//tileLightsCoordinates.add(new Vector2((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY()));
-								lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE, light.getColor());
-							}
-							if(e instanceof Particle) {
-								if(renderParticles) {
-									e.render(game, this);
-								}
-							} else {
-								e.render(game, this);
-							}
-							entities.remove(0);
-							continue;
-						}
-						break;
-					}
-					
-					if(pair.getSecond() instanceof LightSource) {
-						LightSource lightz = (LightSource) pair.getSecond();
-						tileLights.add(lightz);
-						tileLightsCoordinates.add(new Vector2(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2));
-						//lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, lightz.getIntensity()*Tile.TILE_SIZE, lightz.getColor());
-					}
-					
-					boolean translucent = false;
-					if(pair.getSecond() instanceof SeeThroughTile) {
-						if(pair.getSecond() instanceof BaseTile) {
-							BaseTile tile = ((BaseTile)pair.getSecond());
-							for(int width = 0; width < tile.getWidth(); width++) {
-								for(int height = 0; height < tile.getHeight(); height++) {
-									if(z == 1 
-											&& (pair.getFirst()+width==translucentX)
-											&& (y+height == translucentY || y+height == translucentY+1)
-											&& (pair.getSecond() instanceof SeeThroughTile)) {
-										translucent = true;
-										break;
-									}
-								}
-								if(translucent) {
-									break;
-								}
-							}
-						} else {
-							if(z == 1 
-									&& (pair.getFirst()==translucentX)
-									&& (y == translucentY || y == translucentY+1)
-									&& (pair.getSecond() instanceof SeeThroughTile)) {
-								translucent = true;
-							}
-						}
-					}
-					if(translucent) {
-						game.batch.setColor(new Color(1f, 1f, 1f, .5f));
-					}
-					
-					pair.getSecond().render(game, this, pair.getFirst(), y);
-					
-					if(translucent) {
-						game.batch.setColor(Color.WHITE);
-					}
-					xStrip.remove(0);
-				}
+		int z = 0;
+
+		for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
+			attemptSound = getXStrip(centerChunk, entities, attemptSound, r, renderParticles, translucentX,
+					translucentY, tileLights, tileLightsCoordinates, z, y);
+		}
+
+		for(int y = (centerChunk.y+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y >= (centerChunk.y-1)*Chunk.CHUNK_SIZE; y--) {
+			for(z = 1; z < Chunk.LAYERS; z++) {
+				attemptSound = getXStrip(centerChunk, entities, attemptSound, r, renderParticles, translucentX,
+						translucentY, tileLights, tileLightsCoordinates, z, y);
 			}
 		}
 
@@ -908,8 +820,157 @@ public class GameScreen implements Screen {
 			entities.get(0).render(game, this);
 			entities.remove(0);
 		}
+	}
 
-		currentRenderRule = null;
+	private static class RenderBlock {
+		public int x;
+		public Tile tile;
+		public float alpha;
+		public RenderBlock(int x, Tile tile, float alpha) {
+			this.x = x;
+			this.tile = tile;
+			this.alpha = alpha;
+		}
+		public int getFirst() {
+			return x;
+		} 
+		public Tile getSecond() {
+			return tile;
+		}
+		public float getAlpha() {
+			return alpha;
+		}
+	}
+
+	private boolean getXStrip(Point centerChunk, ArrayList<Entity> entities, boolean attemptSound, Random r,
+			boolean renderParticles, int translucentX, int translucentY, ArrayList<LightSource> tileLights,
+			ArrayList<Vector2> tileLightsCoordinates, int z, int y) {
+		ArrayList<RenderBlock> xStrip = new ArrayList<>();
+		for(int x = (centerChunk.x-1)*Chunk.CHUNK_SIZE; x <= (centerChunk.x+1)*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; x++) {
+			Tile[][][] data = tileData.get(Chunk.getChunk(x, y));
+			if(data == null) {
+				continue;
+			}
+			// implement render rule here
+			int tx = Math.floorMod(x, Chunk.CHUNK_SIZE);
+			int ty = Math.floorMod(y, Chunk.CHUNK_SIZE);
+
+			float alpha = currentRenderRule.renderTile(data, tx, ty);
+			if(alpha != 0) {
+				if(data[tx][ty][z] != null) {
+					xStrip.add(new RenderBlock(x, data[tx][ty][z], alpha));
+				}
+			}
+			
+			//if(currentRenderRule.renderTile(data, tx, ty)) {
+			//	if(data[tx][ty][z] != null) {
+			//		xStrip.add(new Pair<>(x, data[tx][ty][z]));
+			//	}
+			//}
+		}
+		xStrip.sort(Comparator.comparing(pair -> {
+			Tile t = ((RenderBlock) pair).getSecond();
+			return -t.getRenderYOffset()*Tile.TILE_SIZE;
+		}));
+		attemptSound = renderXStrip(entities, attemptSound, r, renderParticles, translucentX, translucentY,
+			tileLights, tileLightsCoordinates, z, y, xStrip);
+		return attemptSound;
+	}
+
+	private boolean renderXStrip(ArrayList<Entity> entities, boolean attemptSound, Random r, boolean renderParticles,
+			int translucentX, int translucentY, ArrayList<LightSource> tileLights,
+			ArrayList<Vector2> tileLightsCoordinates, int z, int y, ArrayList<RenderBlock> xStrip) {
+		while(xStrip.size() > 0) {
+			RenderBlock pair = xStrip.get(0);
+			
+			if(attemptSound) {
+				if(pair.getSecond().getAmbientNoise(this)!=null) {
+					if(soundChance <= 0 || r.nextInt(soundChance)==1) {
+						soundChance = 600;
+						double distance = getLocalPlayer().getDistanceToTile(pair.getFirst(), y);
+						double pow = 1.2;
+						
+						float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
+						
+						game.playSoundCooldown(pair.getSecond().getAmbientNoise(this), 
+								volume*pair.getSecond().getAmbientNoiseVolume()*game.settings.getFloat("ambientVolume"),
+								pair.getSecond().getAmbientNoisePitch(), 7f);
+						attemptSound = false;
+					}
+				}
+			}
+			
+			while(entities.size() > 0) {
+				Entity e = entities.get(0);
+				if(z==e.getRenderLayer()&&pair.getSecond().getRenderYOffset()*Tile.TILE_SIZE+(y*Tile.TILE_SIZE)<(e.getRenderYOffset()*Tile.TILE_SIZE+e.getY())) {
+					if(e instanceof LightSource) {
+						LightSource light = (LightSource) e;
+						//tileLights.add(light);
+						//tileLightsCoordinates.add(new Vector2((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY()));
+						lights.addLight((float) e.getX()+light.offsetX(), (float) e.getY()+light.offsetY(), light.getIntensity()*Tile.TILE_SIZE, light.getColor());
+					}
+					game.batch.setColor(new Color(1f, 1f, 1f, 1f));
+					if(e instanceof Particle) {
+						if(renderParticles) {
+							e.render(game, this);
+						}
+					} else {
+						e.render(game, this);
+					}
+					entities.remove(0);
+					continue;
+				}
+				break;
+			}
+			
+			if(pair.getSecond() instanceof LightSource) {
+				LightSource lightz = (LightSource) pair.getSecond();
+				tileLights.add(lightz);
+				tileLightsCoordinates.add(new Vector2(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2));
+				//lights.addLight(pair.getFirst()*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/2, lightz.getIntensity()*Tile.TILE_SIZE, lightz.getColor());
+			}
+			
+			boolean translucent = false;
+			if(pair.getSecond() instanceof SeeThroughTile) {
+				if(pair.getSecond() instanceof BaseTile) {
+					BaseTile tile = ((BaseTile)pair.getSecond());
+					for(int width = 0; width < tile.getWidth(); width++) {
+						for(int height = 0; height < tile.getHeight(); height++) {
+							if(z == 1 
+									&& (pair.getFirst()+width==translucentX)
+									&& (y+height == translucentY || y+height == translucentY+1)
+									&& (pair.getSecond() instanceof SeeThroughTile)) {
+								translucent = true;
+								break;
+							}
+						}
+						if(translucent) {
+							break;
+						}
+					}
+				} else {
+					if(z == 1 
+							&& (pair.getFirst()==translucentX)
+							&& (y == translucentY || y == translucentY+1)
+							&& (pair.getSecond() instanceof SeeThroughTile)) {
+						translucent = true;
+					}
+				}
+			}
+			float alpha = pair.getAlpha();
+			if(translucent) {
+				alpha = .5f;
+			}
+			game.batch.setColor(new Color(1f, 1f, 1f, alpha));
+			
+			pair.getSecond().render(game, this, pair.getFirst(), y);
+			
+			if(translucent) {
+				game.batch.setColor(Color.WHITE);
+			}
+			xStrip.remove(0);
+		}
+		return attemptSound;
 	}
 
 	/**
@@ -968,21 +1029,49 @@ public class GameScreen implements Screen {
 						Tile at = tileDataObject.getTile(x, y, 1);
 						Tile below = tileDataObject.getTile(x, y-1, 1);
 						
-						if(at instanceof WallTile) {
-							if(below instanceof WallTile) {
-								output.add(0, -Tile.TILE_SIZE, 0);
+						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
+
+						boolean skipWall = false;
+
+						int downwardShift = 0;
+
+						if(ignoreCeiling==0) {
+							Tile ceiling = tileDataObject.getTile(x, y, 2);
+							Tile belowceiling = tileDataObject.getTile(x, y-1, 2);
+							boolean atIsCeiling = ceiling instanceof CeilingTile;
+							boolean belowIsCeiling = belowceiling instanceof CeilingTile;
+
+							if(belowIsCeiling) {
+								downwardShift = 1;
+								skipWall = true;
 							}
-						} else if(below instanceof WallTile) {
-							output.add(0, -Tile.TILE_SIZE, 0);
+							if(atIsCeiling && !belowIsCeiling && at != null) {
+								ignoreCeiling = 1;
+								skipWall = true;
+							}
 						}
 
-						if(below instanceof WallTile && getLocalPlayer().getTileCoordinates().equals(new Point(x, y))) {
-							if(at!=null) {
-								output.add(0, Tile.TILE_SIZE, 0);
+						skipWall = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE) || skipWall;
+
+						if(!skipWall) {
+							if(at instanceof WallTile) {
+								if(below instanceof WallTile) {
+									downwardShift = 1;
+								}
+							} else if(below instanceof WallTile) {
+								downwardShift = 1;
+							}
+
+							if(below instanceof WallTile && getLocalPlayer().getTileCoordinates().equals(new Point(x, y))) {
+								if(at!=null) {
+									downwardShift = 0;
+								}
 							}
 						}
 						
-						sender.addPacket(new PlayerInteractPacket(automaticClick, 0, (int) output.x, (int) output.y, -1));
+						output.add(0, Tile.TILE_SIZE*-downwardShift, 0);
+						
+						sender.addPacket(new PlayerInteractPacket(automaticClick, 0, (int) output.x, (int) output.y, -1, ignoreCeiling));
 					}
 				}
 			} else {
@@ -1025,7 +1114,7 @@ public class GameScreen implements Screen {
 						}
 					}
 					
-					sender.addPacket(new PlayerInteractPacket(automaticClick, 2, (int) output.x, (int) output.y, modifier));
+					sender.addPacket(new PlayerInteractPacket(automaticClick, 2, (int) output.x, (int) output.y, modifier, Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0));
 					
 					int x = (int) Math.floor(output.x/Tile.TILE_SIZE);
 					int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
@@ -1628,6 +1717,9 @@ public class GameScreen implements Screen {
     	if(gammaOverride) {
     		return 1;
     	}
+		if(Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)) {
+			return 0;
+		}
     	
     	float value = 0;
     	if(currentWorldType==null) {
@@ -1721,6 +1813,8 @@ public class GameScreen implements Screen {
 
 	public RenderRule deriveRenderRule() {
 		Player localPlayer = getLocalPlayer();
+		RenderRule.delta += Gdx.graphics.getDeltaTime();
+		RenderRule.delta = Math.min(RenderRule.delta, 1);
 		if(localPlayer!=null) {
 			int tx = localPlayer.getTileX();
 			int ty = localPlayer.getTileY();
@@ -1730,7 +1824,7 @@ public class GameScreen implements Screen {
 			}
 			int rx = Math.floorMod(tx, Chunk.CHUNK_SIZE);
 			int ry = Math.floorMod(ty, Chunk.CHUNK_SIZE);
-			if(data[rx][ry][0] instanceof Housing) {
+			if(data[rx][ry][2] instanceof CeilingTile) {
 				return RenderRule.HOUSE_RULE;
 			}
 		}

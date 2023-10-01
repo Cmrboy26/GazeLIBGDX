@@ -16,11 +16,12 @@ public class AStar {
 	private static int chunkRadius;
 	private static int maxIteration = 4000;
 	private static Point centerChunk;
-	private static Point goalTile;
+	private static Point goalTile, startTile;
 
 	public static Vector2 findMovementVector(Entity entity, TileData data, int chunkRadius, Point goalTile) {
 		AStar.chunkRadius = chunkRadius;
 		AStar.goalTile = goalTile;
+		AStar.startTile = new Point(entity.getPathTileX(), entity.getPathTileY());
 		centerChunk = entity.getChunk();
 		AStarNode start = new AStarNode(entity.getPathTileX(), entity.getPathTileY(), null);
 		AStarNode goal = new AStarNode(goalTile.x, goalTile.y, null);
@@ -127,6 +128,9 @@ public class AStar {
 		}
 
 		if(node.x == goalTile.x && node.y == goalTile.y) {
+			return true;
+		}
+		if(node.x == startTile.x && node.y == startTile.y) {
 			return true;
 		}
 		if(tile instanceof StructureTile) {

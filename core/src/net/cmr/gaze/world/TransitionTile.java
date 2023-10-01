@@ -17,6 +17,10 @@ public abstract class TransitionTile extends Tile {
 
 	public abstract String[] getTransitionSprite();
 	public abstract TileType[] getTransitionTiles();
+
+	public boolean transitionAllExcludeSelf() {
+		return false;
+	}
 	
 	public int[] typeIndex;
 	public long lastCheck;
@@ -39,6 +43,14 @@ public abstract class TransitionTile extends Tile {
 	}
 	
 	public void updateSprites(Gaze game, GameScreen screen, int x, int y) {
+
+		if(getTransitionSprite()==null) {
+			return;
+		}
+		if(getTransitionTiles()==null) {
+			return;
+		}
+
 		for (int v = 0; v < 4; v++) {
 			
 			int tx = 0, ty = 0;
@@ -81,19 +93,26 @@ public abstract class TransitionTile extends Tile {
 
 			
 			boolean set = false;
-			for (int i = 0; i < getTransitionTiles().length; i++) {
-				TileType type = getTransitionTiles()[i];
-				TileType atType = at.getType();
-				if(at instanceof FloorTile) {
-					Tile under = ((FloorTile)at).getUnderTile();
-					if(under!=null) {
-						atType=under.getType();
-					}
-				}
-				if (type == atType) {
-					transitionSprites[v] = game.getSprite(getTransitionSprite()[i]);
+			if(transitionAllExcludeSelf()) {
+				if(at!=null && at.getType()!=getType()) {
+					transitionSprites[v] = game.getSprite(getTransitionSprite()[0]);
 					set = true;
-					break;
+				}
+			} else {
+				for (int i = 0; i < getTransitionTiles().length; i++) {
+					TileType type = getTransitionTiles()[i];
+					TileType atType = at.getType();
+					if(at instanceof FloorTile && ((FloorTile)at).getTransitionSprite()==null) {
+						Tile under = ((FloorTile)at).getUnderTile();
+						if(under!=null) {
+							atType=under.getType();
+						}
+					}
+					if (type == atType) {
+						transitionSprites[v] = game.getSprite(getTransitionSprite()[i]);
+						set = true;
+						break;
+					}
 				}
 			}
 			if(!set) {

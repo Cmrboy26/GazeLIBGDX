@@ -11,7 +11,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.entities.Player;
 
-public abstract class FloorTile extends Tile implements SpeedChangeTile {
+public abstract class FloorTile extends TransitionTile implements SpeedChangeTile {
 	
 	Tile underTile;
 	
@@ -39,6 +39,15 @@ public abstract class FloorTile extends Tile implements SpeedChangeTile {
 		}
 	}
 	
+	@Override
+	public String[] getTransitionSprite() {
+		return null;
+	}
+	@Override
+	public TileType[] getTransitionTiles() {
+		return null;
+	}
+
 	public void setUnderTile(Tile at) {
 		this.underTile = at;
 	}

@@ -23,6 +23,22 @@ public class WoodFloorTile extends FloorTile implements HousingFloor {
 		super(TileType.WOOD_FLOOR);
 	}
 
+	final String[] transitionSprite = new String[] {"woodTransition"};
+	@Override
+	public String[] getTransitionSprite() {
+		return transitionSprite;
+	}
+	final TileType[] transitionTiles = new TileType[] {};
+	@Override
+	public TileType[] getTransitionTiles() {
+		return transitionTiles;
+	}
+
+	@Override
+	public boolean transitionAllExcludeSelf() {
+		return true;
+	}
+	
 	@Override
 	public TileType[] belowWhitelist() {
 		return null;

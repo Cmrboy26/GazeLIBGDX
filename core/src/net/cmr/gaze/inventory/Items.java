@@ -20,6 +20,7 @@ import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.AppleItem;
 import net.cmr.gaze.inventory.custom.BreadItem;
+import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
@@ -30,6 +31,7 @@ import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOreItem;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
 import net.cmr.gaze.inventory.custom.StoneAxe;
+import net.cmr.gaze.inventory.custom.StoneBrickCeilingItem;
 import net.cmr.gaze.inventory.custom.StoneBrickFloorItem;
 import net.cmr.gaze.inventory.custom.StoneBrickWallItem;
 import net.cmr.gaze.inventory.custom.StoneHoe;
@@ -42,6 +44,7 @@ import net.cmr.gaze.inventory.custom.TorchItem;
 import net.cmr.gaze.inventory.custom.WheatItem;
 import net.cmr.gaze.inventory.custom.WheatSeeds;
 import net.cmr.gaze.inventory.custom.WoodAxe;
+import net.cmr.gaze.inventory.custom.WoodCeilingItem;
 import net.cmr.gaze.inventory.custom.WoodDoorItem;
 import net.cmr.gaze.inventory.custom.WoodFloorItem;
 import net.cmr.gaze.inventory.custom.WoodHoe;
@@ -91,9 +94,12 @@ public class Items {
 		WOOD_WALL(WoodWallItem.class), 
 		WOOD_FLOOR(WoodFloorItem.class), 
 		WOOD_DOOR(WoodDoorItem.class),
+		WOOD_CEILING(WoodCeilingItem.class),
 		STONE_PATH_FLOOR(StonePathFloorItem.class), 
 		STONE_BRICK_WALL(StoneBrickWallItem.class), 
 		STONE_BRICK_FLOOR(StoneBrickFloorItem.class), 
+		STONE_BRICK_CEILING(StoneBrickCeilingItem.class),
+		BRICK_CEILING(BrickCeilingItem.class), 
 		ANVIL(AnvilItem.class), 
 		BREAD(BreadItem.class);
 		

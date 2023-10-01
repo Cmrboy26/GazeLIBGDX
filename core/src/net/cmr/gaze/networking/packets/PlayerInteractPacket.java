@@ -13,14 +13,15 @@ import net.cmr.gaze.networking.PlayerConnection;
 public class PlayerInteractPacket extends Packet {
 
 	boolean autorepeat;
-	int clickType, worldX, worldY, modifier;
+	int clickType, worldX, worldY, modifier, exclusionRule;
 	
-	public PlayerInteractPacket(boolean autorepeat, int clickType, int worldX, int worldY, int modifier) {
+	public PlayerInteractPacket(boolean autorepeat, int clickType, int worldX, int worldY, int modifier, int exclusionRule) {
 		this.autorepeat = autorepeat;
 		this.clickType = clickType;
 		this.worldX = worldX;
 		this.worldY = worldY;
 		this.modifier = modifier;
+		this.exclusionRule = exclusionRule;
 	}
 	
 	public PlayerInteractPacket(DataInputStream input, int packetSize) throws IOException {
@@ -39,6 +40,12 @@ public class PlayerInteractPacket extends Packet {
 	public int getWorldY() {
 		return worldY;
 	}
+
+	// zero means nothing
+	// 1 means ignore the ceilings
+	public int getExclusionRule() {
+		return exclusionRule;
+	}
 	/**
 	 * For anything not requiring a modifier, the value will be -1
 	 * For tile placing, the modifier will be the direction value if it is a rotatable object
@@ -54,6 +61,7 @@ public class PlayerInteractPacket extends Packet {
 		buffer.writeInt(worldX);
 		buffer.writeInt(worldY);
 		buffer.writeInt(modifier);
+		buffer.writeInt(exclusionRule);
 	}
 
 	@Override
@@ -63,6 +71,7 @@ public class PlayerInteractPacket extends Packet {
 		worldX = input.readInt();
 		worldY = input.readInt();
 		modifier = input.readInt();
+		exclusionRule = input.readInt();
 	}
 
 }

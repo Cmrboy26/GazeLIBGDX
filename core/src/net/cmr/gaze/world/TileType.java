@@ -2,6 +2,7 @@ package net.cmr.gaze.world;
 
 import net.cmr.gaze.world.tile.AirTile;
 import net.cmr.gaze.world.tile.AnvilTile;
+import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
 import net.cmr.gaze.world.tile.ChuteTile;
@@ -12,6 +13,7 @@ import net.cmr.gaze.world.tile.GrassTile;
 import net.cmr.gaze.world.tile.IronOreWall;
 import net.cmr.gaze.world.tile.LavaTile;
 import net.cmr.gaze.world.tile.SandTile;
+import net.cmr.gaze.world.tile.StoneBrickCeilingTile;
 import net.cmr.gaze.world.tile.StoneBrickFloorTile;
 import net.cmr.gaze.world.tile.StoneBrickWallTile;
 import net.cmr.gaze.world.tile.StonePathFloorTile;
@@ -24,6 +26,7 @@ import net.cmr.gaze.world.tile.Tree;
 import net.cmr.gaze.world.tile.TreeSapling;
 import net.cmr.gaze.world.tile.WaterTile;
 import net.cmr.gaze.world.tile.WheatTile;
+import net.cmr.gaze.world.tile.WoodCeilingTile;
 import net.cmr.gaze.world.tile.WoodDoorTile;
 import net.cmr.gaze.world.tile.WoodFloorTile;
 import net.cmr.gaze.world.tile.WoodWallTile;
@@ -59,7 +62,10 @@ public enum TileType {
 	STONE_BRICK_WALL(StoneBrickWallTile.class, 1, TickType.NONE, 3), 
 	STONE_BRICK_FLOOR(StoneBrickFloorTile.class, 0, TickType.NONE, 3), 
 	ANVIL(AnvilTile.class, 1, TickType.NONE, 3), 
-	TREE_SAPLING(TreeSapling.class, 1, TickType.NEARBY, 4, Replaceable.GENERATION);
+	TREE_SAPLING(TreeSapling.class, 1, TickType.NEARBY, 3, Replaceable.GENERATION), 
+	WOOD_CEILING(WoodCeilingTile.class, 2, TickType.NONE, 2), 
+	STONE_BRICK_CEILING(StoneBrickCeilingTile.class, 2, TickType.NONE, 2), 
+	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2);
 	
 	public enum TickType {
 		CONSTANT,

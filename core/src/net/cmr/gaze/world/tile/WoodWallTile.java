@@ -39,7 +39,7 @@ public class WoodWallTile extends Tile implements HousingWall {
 	
 	@Override
 	public String getWallSpriteName() {
-		return "stoneBrickWall";
+		return "woodWall";
 	}
 
 	@Override

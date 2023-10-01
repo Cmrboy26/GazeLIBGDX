@@ -53,7 +53,6 @@ public class NPC extends Entity {
 		lastX = x;
 		lastY = y;
 		
-		speedChanges(deltaTime, data);
 		//collision(deltaTime, data);
 
 		x += velocityX*deltaTime*Tile.TILE_SIZE;
@@ -90,6 +89,7 @@ public class NPC extends Entity {
 			}
 			if(movement != null) {
 				this.setVelocity(movement.x, movement.y);
+				speedChanges(deltaTime, data);
 			}
 		}
 	}
