@@ -308,69 +308,18 @@ public class Gaze extends Game {
 				int w = animation.getInt("w", region[0].length);
 				float time = animation.getFloat("time", .2f);
 				boolean loop = animation.getBoolean("loop", true);
+				boolean pingpong = animation.getBoolean("pingpong", true);
 				TextureRegion[] animRegion = getTextureArrayFromJSONData(region, x, y, w);
 				
 				Animation<TextureRegion> animationObject = new Animation<TextureRegion>(time, animRegion);
 				animationObject.setPlayMode(loop?PlayMode.LOOP:PlayMode.NORMAL);
+				if(pingpong) {
+					animationObject.setPlayMode(PlayMode.LOOP_PINGPONG);
+				}
 				
 				animations.put(name, animationObject);
-				//System.out.println(name+","+x+","+y+","+w+","+time);
 			}
 		}
-		
-		
-		/*int v = 0;
-		Animation<TextureRegion> walkDown = new Animation<TextureRegion>(.2f, playerRegions[character][v], playerRegions[character][v+1], playerRegions[character][v+2], playerRegions[character][v+3]);
-		walkDown.setPlayMode(PlayMode.LOOP);
-		animations.put("playerWalkDown", walkDown);
-		Animation<TextureRegion> idleDown = new Animation<TextureRegion>(10f, playerRegions[character][v]);
-		idleDown.setPlayMode(PlayMode.NORMAL);
-		animations.put("playerIdleDown", idleDown);
-		v+=4;
-		
-		Animation<TextureRegion> walkUp = new Animation<TextureRegion>(.2f, playerRegions[character][v], playerRegions[character][v+1], playerRegions[character][v+2], playerRegions[character][v+3]);
-		walkUp.setPlayMode(PlayMode.LOOP);
-		animations.put("playerWalkUp", walkUp);
-		Animation<TextureRegion> idleUp = new Animation<TextureRegion>(10f, playerRegions[character][v]);
-		idleUp.setPlayMode(PlayMode.NORMAL);
-		animations.put("playerIdleUp", idleUp);
-		v+=4;
-		
-		Animation<TextureRegion> walkRight = new Animation<TextureRegion>(.2f, playerRegions[character][v], playerRegions[character][v+1], playerRegions[character][v+2], playerRegions[character][v+3]);
-		walkRight.setPlayMode(PlayMode.LOOP);
-		animations.put("playerWalkRight", walkRight);
-		Animation<TextureRegion> idleRight = new Animation<TextureRegion>(10f, playerRegions[character][v]);
-		idleRight.setPlayMode(PlayMode.NORMAL);
-		animations.put("playerIdleRight", idleRight);
-		v+=4;
-		
-		Animation<TextureRegion> walkLeft = new Animation<TextureRegion>(.2f, playerRegions[character][v], playerRegions[character][v+1], playerRegions[character][v+2], playerRegions[character][v+3]);
-		walkLeft.setPlayMode(PlayMode.LOOP);
-		animations.put("playerWalkLeft", walkLeft);
-		Animation<TextureRegion> idleLeft = new Animation<TextureRegion>(10f, playerRegions[character][v]);
-		idleLeft.setPlayMode(PlayMode.NORMAL);
-		animations.put("playerIdleLeft", idleLeft);
-		v+=4;*/
-		
-		/*TextureRegion[][] lavaRegion = getSprite("lava").split(32, 32);
-		Animation<TextureRegion> lava = new Animation<TextureRegion>(.2f, lavaRegion[0]);
-		lava.setPlayMode(PlayMode.LOOP);
-		animations.put("lava", lava);*/
-		
-		/*TextureRegion[][] waterRegion = getSprite("water").split(32, 32);
-		Animation<TextureRegion> water = new Animation<TextureRegion>(.2f, waterRegion[0]);
-		water.setPlayMode(PlayMode.LOOP);
-		animations.put("water", water);
-		
-		TextureRegion[][] torchRegion = getSprite("torch").split(32, 32);
-		Animation<TextureRegion> torch = new Animation<TextureRegion>(.2f, torchRegion[0]);
-		torch.setPlayMode(PlayMode.LOOP);
-		animations.put("torch", torch);
-		
-		TextureRegion[][] arrowRegion = getSprite("upArrow").split(16, 16);
-		Animation<TextureRegion> arrow = new Animation<TextureRegion>(.1f, arrowRegion[0]);
-		arrow.setPlayMode(PlayMode.LOOP);
-		animations.put("upArrow", arrow);*/
 		
 		Player.AVAILABLE_PLAYER_TYPES = 0;
 		while(true) {

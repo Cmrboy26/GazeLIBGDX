@@ -1,6 +1,7 @@
 package net.cmr.gaze.stage.widgets;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
@@ -12,10 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.world.entities.HealthEntity;
+import net.cmr.gaze.world.entities.Player;
 
 public class BarsWidget extends WidgetGroup {
     
     ProgressBar healthBar, foodBar;
+    Image healthUp, healthDown, foodUp, foodDown;
+    float healthUpTime, healthDownTime, foodUpTime, foodDownTime;
 
     //constructor
     public BarsWidget(Gaze game) {
@@ -30,6 +35,40 @@ public class BarsWidget extends WidgetGroup {
         Image icons = new Image(game.getSprite("barsIcons"));
         icons.setBounds(0, 0, 13*2, getHeight());
         addActor(icons);
+
+        healthUp = new Image(game.getSprite("barIconChanges1")) {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                super.draw(batch, healthUpTime);
+            }
+        };
+        healthUp.setBounds(getWidth()+12, 18, 24*2, 12*2);
+        addActor(healthUp);
+        healthDown = new Image(game.getSprite("barIconChanges2")) {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                super.draw(batch, healthDownTime);
+            }
+        };
+        healthDown.setBounds(getWidth()+12, 18, 24*2, 12*2);
+        addActor(healthDown);
+
+        foodUp = new Image(game.getSprite("barIconChanges3")) {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                super.draw(batch, foodUpTime);
+            }
+        };
+        foodUp.setBounds(getWidth()+12, -2, 24*2, 12*2);
+        addActor(foodUp);
+        foodDown = new Image(game.getSprite("barIconChanges4")) {
+            @Override
+            public void draw(Batch batch, float parentAlpha) {
+                super.draw(batch, foodDownTime);
+            }
+        };
+        foodDown.setBounds(getWidth()+12, -2, 24*2, 12*2);
+        addActor(foodDown);
 
 		float scale = 1f;
 
@@ -80,6 +119,13 @@ public class BarsWidget extends WidgetGroup {
 		foodBar.setAnimateDuration(animationDuration);
 		addActor(foodBar);
 
+        
+
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
     }
 
     @Override
@@ -96,12 +142,30 @@ public class BarsWidget extends WidgetGroup {
         } else {
             foodBar.setVisible(true);
         }
+
+        healthUpTime-=delta;
+        healthDownTime-=delta;
+        foodUpTime-=delta;
+        foodDownTime-=delta;
     }
 
     public void setHealth(int health, int maxHealth) {
+        float oldHealth = healthBar.getValue()*maxHealth;
+        if(health > oldHealth) {
+            healthUpTime = 1;
+        } else if(health < oldHealth) {
+            healthDownTime = 1;
+        }
         healthBar.setValue((float)health/(float)maxHealth);
     }
     public void setFood(float food) {
+        float oldFood = foodBar.getValue();
+        float difference = food - oldFood;
+        if(difference > .02f) {
+            foodUpTime = 1;
+        } else if(difference < -.02f) {
+            foodDownTime = 1;
+        }
         foodBar.setValue(food);
     }
 

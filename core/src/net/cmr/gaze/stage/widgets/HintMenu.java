@@ -78,11 +78,21 @@ public class HintMenu extends WidgetGroup {
 						+ "The underground is full of exploitable resources\r\n"
 						+ "for you to discover and utilize in your adventures.\r\n"
 						+ "Wood tools can be used to speed up resource\r\n"
-						+ "collection, and the shovel/hoe pair allow you\r\n"
+						+ "collection, and the shovel/hoe pair allows you\r\n"
 						+ "to create farms after collecting seeds from \r\n"
 						+ "tall grass.\r\n"
 						+ "Now that you have a moderate amount of wood,\r\n"
 						+ "consider crafting some of these recipes.";
+			}
+		},
+		ROTATION {
+			@Override
+			public String getText() {
+				return "The item that you're holding can\r\n" + //
+						"be rotated or has different forms!\r\n" + //
+						"\r\n" + //
+						"Try pressing \"Q\" and \"R\" to change\r\n" + //
+						"the form or rotation of the object!";
 			}
 		};
 		
@@ -141,7 +151,7 @@ public class HintMenu extends WidgetGroup {
 		TextButtonStyle button = new TextButtonStyle(game.getSkin().get("button", TextButtonStyle.class));
 		button.font = game.getFont(15f);
 		
-		TextButton exit = new TextButton("Back", button);
+		TextButton exit = new TextButton("X", button);
 		exit.addListener(new ChangeListener() {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {

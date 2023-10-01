@@ -288,6 +288,7 @@ public class GameScreen implements Screen {
 						sender.addPacket(new HotbarUpdatePacket((byte) (it)));
 						game.playSound("tick", .5f);
 						getLocalPlayer().setHotbarSlot(it);
+						openHelpMenu(HintMenuType.ROTATION, true);
 					}
 				}
 			});
@@ -413,6 +414,7 @@ public class GameScreen implements Screen {
 					sender.addPacket(new HotbarUpdatePacket((byte) (newSlot)));
 					if(getLocalPlayer()!=null) {
 						getLocalPlayer().setHotbarSlot(newSlot);
+						openHelpMenu(HintMenuType.ROTATION, true);
 					}
 					return true;
 				}
@@ -427,6 +429,7 @@ public class GameScreen implements Screen {
 					sender.addPacket(new HotbarUpdatePacket((byte) (character-Input.Keys.NUM_1)));
 					if(getLocalPlayer()!=null) {
 						getLocalPlayer().setHotbarSlot(character-Input.Keys.NUM_1);
+						openHelpMenu(HintMenuType.ROTATION, true);
 					}
 					return true;
 				}
@@ -444,6 +447,7 @@ public class GameScreen implements Screen {
 				if(character == Input.Keys.C) {
 					setCraftingStation(CraftingStation.NONE);
 					setCraftingVisibility(!craftingMenuVisible);
+					openHelpMenu(HintMenuType.CRAFTING);
 					sender.addPacket(new UIEventPacket(craftingMenuVisible, 1));
 				}
 				if(character == Input.Keys.F) {
@@ -586,15 +590,7 @@ public class GameScreen implements Screen {
 
 	private void renderUI(float delta, Vector2 mouseLocalPosition) {
 		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
-		game.batch.setProjectionMatrix(uiViewport.getCamera().combined);
 		game.batch.begin();
-		
-		uiViewport.apply();
-
-		if(showUI) {
-			centerStage.act(delta);
-			centerStage.draw();
-		}
 		
 		game.batch.setProjectionMatrix(topViewport.getCamera().combined);
 		
@@ -653,6 +649,15 @@ public class GameScreen implements Screen {
 			leftBottomStage.draw();
 		}
 		game.batch.end();
+
+		game.batch.setProjectionMatrix(uiViewport.getCamera().combined);
+		
+		uiViewport.apply();
+
+		if(showUI) {
+			centerStage.act(delta);
+			centerStage.draw();
+		}
 		
 		if(GameScreen.hoveredItemViewport!=null) {
 			game.batch.setProjectionMatrix(GameScreen.hoveredItemViewport.getCamera().combined);
@@ -1523,6 +1528,7 @@ public class GameScreen implements Screen {
 			if(entity != null && entity instanceof Player) {
 				Player player = (Player) entity;
 				player.setHotbarSlot(hotbar.getSlot());
+				openHelpMenu(HintMenuType.ROTATION, true);
 			}
 		} else if(packet instanceof PositionPacket) {
 			PositionPacket pos = (PositionPacket) packet;
@@ -1760,7 +1766,11 @@ public class GameScreen implements Screen {
 		
 		if(type == null) {
 			
-			if(crafting.isVisible()) {
+			if(getLocalPlayer()!=null
+					&&getLocalPlayer().getHeldItem() instanceof Placeable
+					&&Tiles.getTile(((Placeable)getLocalPlayer().getHeldItem()).getTileToPlace()) instanceof Rotatable) {
+				type = HintMenuType.ROTATION;
+			} else if(crafting.isVisible()) {
 				type = HintMenuType.CRAFTING;
 			} else if(inventory.isVisible()) {
 				type = HintMenuType.INVENTORY;
@@ -1793,6 +1803,9 @@ public class GameScreen implements Screen {
 			break;
 		case LEVEL_UP:
 			centerStage.addActor(new HintMenu(game, type, (640-270f)/2f, (360-200)/2f, 270, 200, 8f));
+			break;
+		case ROTATION:
+			centerStage.addActor(new HintMenu(game, type, 10f, 360-10-100, 230, 100, 8f));
 			break;
 		default:
 			break;

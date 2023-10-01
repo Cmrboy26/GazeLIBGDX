@@ -60,9 +60,9 @@ public class Crafting {
 		initializeRecipeCategory("Farming", Items.getItem(ItemType.WHEAT_SEEDS, 1));
 		initializeRecipeCategory("Housing", Items.getItem(ItemType.STONE_BRICK_WALL, 1));
 		
-		initializeRecipe("Materials", "DebugItems", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.WOOD, ItemType.WOOD}, new int[] {64, 64});
-		initializeRecipe("Materials", "DebugItems2", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.STONE, ItemType.STONE}, new int[] {64, 64});
-		initializeRecipe("Materials", "DebugItems3", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.WHEAT, ItemType.BREAD}, new int[] {64, 64});
+		//initializeRecipe("Materials", "DebugItems", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.WOOD, ItemType.WOOD}, new int[] {64, 64});
+		//initializeRecipe("Materials", "DebugItems2", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.STONE, ItemType.STONE}, new int[] {64, 64});
+		//initializeRecipe("Materials", "DebugItems3", CraftingStation.NONE, new ItemType[] {ItemType.STONE}, new int[] {0}, new ItemType[] {ItemType.WHEAT, ItemType.BREAD}, new int[] {64, 64});
 		initializeRecipe("Materials", "ironIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {2}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1});
 		
 		initializeRecipe("Tools", "woodAxe", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.WOOD_AXE}, new int[] {1}, level(Skill.FORAGING, 1));

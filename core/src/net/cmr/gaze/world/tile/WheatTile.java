@@ -32,7 +32,7 @@ public class WheatTile extends CropTile {
 
 	@Override
 	public int getAverageTimePerStage() {
-		return 1;
+		return 45;
 	}
 	
 	@Override

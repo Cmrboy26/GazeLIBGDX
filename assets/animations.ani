@@ -52,10 +52,11 @@
 		"animations": [
 			{
 				"name": "playerWalkDown0",
-				"x": 0,
+				"x": 1,
 				"y": 0,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleDown0",
@@ -66,10 +67,11 @@
 			},
 			{
 				"name": "playerWalkUp0",
-				"x": 4,
+				"x": 5,
 				"y": 0,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleUp0",
@@ -80,10 +82,11 @@
 			},
 			{
 				"name": "playerWalkRight0",
-				"x": 8,
+				"x": 9,
 				"y": 0,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleRight0",
@@ -94,10 +97,11 @@
 			},
 			{
 				"name": "playerWalkLeft0",
-				"x": 12,
+				"x": 13,
 				"y": 0,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleLeft0",
@@ -111,10 +115,11 @@
 			
 			{
 				"name": "playerWalkDown1",
-				"x": 0,
+				"x": 1,
 				"y": 1,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleDown1",
@@ -125,10 +130,11 @@
 			},
 			{
 				"name": "playerWalkUp1",
-				"x": 4,
+				"x": 5,
 				"y": 1,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleUp1",
@@ -139,10 +145,11 @@
 			},
 			{
 				"name": "playerWalkRight1",
-				"x": 8,
+				"x": 9,
 				"y": 1,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleRight1",
@@ -153,10 +160,11 @@
 			},
 			{
 				"name": "playerWalkLeft1",
-				"x": 12,
+				"x": 13,
 				"y": 1,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleLeft1",
@@ -170,10 +178,11 @@
 			
 			{
 				"name": "playerWalkDown2",
-				"x": 0,
+				"x": 1,
 				"y": 2,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleDown2",
@@ -184,10 +193,11 @@
 			},
 			{
 				"name": "playerWalkUp2",
-				"x": 4,
+				"x": 5,
 				"y": 2,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleUp2",
@@ -198,10 +208,11 @@
 			},
 			{
 				"name": "playerWalkRight2",
-				"x": 8,
+				"x": 9,
 				"y": 2,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleRight2",
@@ -212,10 +223,11 @@
 			},
 			{
 				"name": "playerWalkLeft2",
-				"x": 12,
+				"x": 13,
 				"y": 2,
-				"w": 4,
-				"time": 0.2
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
 			},
 			{
 				"name": "playerIdleLeft2",
@@ -224,6 +236,68 @@
 				"w": 1,
 				"time": 10
 			}
+
+
+			{
+				"name": "playerWalkDown3",
+				"x": 1,
+				"y": 3,
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
+			},
+			{
+				"name": "playerIdleDown3",
+				"x": 0,
+				"y": 3,
+				"w": 1,
+				"time": 10
+			},
+			{
+				"name": "playerWalkUp3",
+				"x": 5,
+				"y": 3,
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
+			},
+			{
+				"name": "playerIdleUp3",
+				"x": 4,
+				"y": 3,
+				"w": 1,
+				"time": 10
+			},
+			{
+				"name": "playerWalkRight3",
+				"x": 9,
+				"y": 3,
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
+			},
+			{
+				"name": "playerIdleRight3",
+				"x": 8,
+				"y": 3,
+				"w": 1,
+				"time": 10
+			},
+			{
+				"name": "playerWalkLeft3",
+				"x": 13,
+				"y": 3,
+				"w": 3,
+				"time": 0.2,
+				"pingpong": true
+			},
+			{
+				"name": "playerIdleLeft3",
+				"x": 12,
+				"y": 3,
+				"w": 1,
+				"time": 10
+			},
 		]
 	}
 }

@@ -345,13 +345,29 @@ public class Player extends HealthEntity implements LightSource {
 			float decreaseAmount = (new Vector2((float) getVelocityX(), (float)getVelocityY()).len()>.8f?.1f:0f)*(sprinting?1.65f:1f);
 			if(saturation <= 0) {
 				hunger-=decreaseAmount;
-			} else {
+			} /*else {
 				if(getHealth() < getMaxHealth()) {
-					// decrease more health when healing
+					// decrease more food when healing
 					saturation-=.15f;
+					hunger-= .01f;
 				}
 				heal(2);
+			}*/
+
+			// heal if hunger is greater than 3/4 or saturation is greater than 0
+			if(getHealth()<getMaxHealth()) {
+				int healQuantity = 0;
+				if(saturation > 0) {
+					saturation-=.2f;
+					healQuantity+=2;
+				}
+				if(hunger > MAX_HUNGER*(3/4)) {
+					hunger-=.1f;
+					healQuantity++;
+				}
+				heal(healQuantity);
 			}
+
 			if(hunger <= 0) {
 				damage(2);
 			}

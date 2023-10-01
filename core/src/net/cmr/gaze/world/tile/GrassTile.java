@@ -68,8 +68,8 @@ public class GrassTile extends TransitionTile {
 				if(held != null && held instanceof Tool && ((Tool)held).toolType()==ToolType.SHOVEL) {
 					player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 					world.addTile(Tiles.getTile(TileType.DIRT), x, y);
-					if(Math.random()<1.05) {
-						TileUtils.dropItem(world, x, y, Items.getItem(ItemType.GRASS_SEEDS, 5));
+					if(Math.random()<0.05) {
+						TileUtils.dropItem(world, x, y, Items.getItem(ItemType.GRASS_SEEDS, 2));
 					}
 					return true;
 				}

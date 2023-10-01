@@ -75,7 +75,7 @@ public class NPC extends Entity {
 					if(targetTile!=null) {
 						//data.addTile(Tiles.getTile(TileType.DIRT), targetTile.x, targetTile.y);
 					} else {
-						//deleteEntity();
+						deleteEntity();
 					}
 				}
 			}

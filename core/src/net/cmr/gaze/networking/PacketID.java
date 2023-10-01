@@ -12,4 +12,4 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface PacketID {
 	int id();
-}
+} 
