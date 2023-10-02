@@ -85,7 +85,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			}
 		}
 		if(data.isServer()) {
-			Tree.particleDelta+=Tile.DELTA_TIME;
+			Tree.particleDelta+=Tile.DELTA_TIME/2f;
 			Tree.particleDelta2+=((float) (Math.PI+Math.random()));
 			if(particleDelta >= 20f+Math.random() && particleDelta2 > 2) {
 				particleDelta-=10f;

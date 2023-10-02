@@ -308,7 +308,7 @@ public class Gaze extends Game {
 				int w = animation.getInt("w", region[0].length);
 				float time = animation.getFloat("time", .2f);
 				boolean loop = animation.getBoolean("loop", true);
-				boolean pingpong = animation.getBoolean("pingpong", true);
+				boolean pingpong = animation.getBoolean("pingpong", false);
 				TextureRegion[] animRegion = getTextureArrayFromJSONData(region, x, y, w);
 				
 				Animation<TextureRegion> animationObject = new Animation<TextureRegion>(time, animRegion);
