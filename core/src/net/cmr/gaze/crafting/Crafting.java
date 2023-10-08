@@ -77,10 +77,10 @@ public class Crafting {
 		initializeRecipe("Tools", "ironPickaxe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_PICKAXE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_PICKAXE}, new int[] {1}, level(Skill.MINING, 3));
 		
 		initializeRecipe("Appliances", "table", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.TABLE}, new int[] {1});
-		initializeRecipe("Appliances", "chest", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {12}, new ItemType[] {ItemType.CHEST}, new int[] {1});
-		initializeRecipe("Appliances", "chute", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.CHUTE}, new int[] {1}, level(Skill.FORAGING, 1));
 		initializeRecipe("Appliances", "campfire", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.CAMPFIRE}, new int[] {1});
 		initializeRecipe("Appliances", "torch", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {3}, new ItemType[] {ItemType.TORCH}, new int[] {1});
+		initializeRecipe("Appliances", "chute", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.CHUTE}, new int[] {1}, level(Skill.FORAGING, 1));
+		initializeRecipe("Appliances", "chest", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD}, new int[] {12}, new ItemType[] {ItemType.CHEST}, new int[] {1});
 		initializeRecipe("Appliances", "furnace", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {8}, new ItemType[] {ItemType.FURNACE}, new int[] {1}, level(Skill.MINING, 2));
 		initializeRecipe("Appliances", "anvil", CraftingStation.TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {6}, new ItemType[] {ItemType.ANVIL}, new int[] {1});
 		

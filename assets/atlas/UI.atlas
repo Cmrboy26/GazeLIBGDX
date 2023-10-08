@@ -4,16 +4,37 @@ size: 1024, 1024
 format: RGBA8888
 filter: MipMap, MipMap
 repeat: none
+UI-Icons1
+  rotate: false
+  xy: 140, 200
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+UI-Icons2
+  rotate: false
+  xy: 424, 330
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+UI-Icons3
+  rotate: false
+  xy: 644, 526
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 barBackgroundNine
   rotate: false
-  xy: 666, 558
+  xy: 198, 228
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
   index: -1
 barEmptyNine
   rotate: false
-  xy: 938, 798
+  xy: 960, 820
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
@@ -48,14 +69,14 @@ barIconChanges4
   index: -1
 barNine
   rotate: false
-  xy: 644, 536
+  xy: 678, 569
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
   index: -1
 barNine2
   rotate: false
-  xy: 960, 820
+  xy: 666, 558
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
@@ -188,7 +209,7 @@ healthbarNine
   index: -1
 healthbarNineBackground
   rotate: false
-  xy: 902, 784
+  xy: 938, 796
   size: 5, 8
   orig: 5, 8
   offset: 0, 0
@@ -335,14 +356,14 @@ questBook
   index: -1
 questBoxNine
   rotate: false
-  xy: 744, 719
+  xy: 920, 789
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
   index: -1
 sliderKnob
   rotate: false
-  xy: 140, 200
+  xy: 693, 582
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -356,28 +377,28 @@ smallArrow
   index: -1
 smallNumber0
   rotate: false
-  xy: 986, 996
+  xy: 726, 700
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber1
   rotate: false
-  xy: 693, 594
+  xy: 968, 978
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber2
   rotate: false
-  xy: 378, 324
+  xy: 140, 194
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber3
   rotate: false
-  xy: 216, 248
+  xy: 442, 342
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
@@ -391,35 +412,35 @@ smallNumber4
   index: -1
 smallNumber5
   rotate: false
-  xy: 442, 342
+  xy: 744, 718
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber6
   rotate: false
-  xy: 198, 230
+  xy: 986, 996
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber7
   rotate: false
-  xy: 726, 700
+  xy: 158, 212
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber8
   rotate: false
-  xy: 968, 978
+  xy: 378, 324
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber9
   rotate: false
-  xy: 678, 571
+  xy: 216, 248
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
@@ -433,7 +454,7 @@ solid
   index: -1
 translucent
   rotate: false
-  xy: 360, 312
+  xy: 726, 706
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -447,21 +468,21 @@ upArrow
   index: -1
 upArrow2
   rotate: false
-  xy: 726, 706
+  xy: 902, 776
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 upArrow4
   rotate: false
-  xy: 726, 706
+  xy: 902, 776
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 upArrow3
   rotate: false
-  xy: 424, 330
+  xy: 360, 312
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

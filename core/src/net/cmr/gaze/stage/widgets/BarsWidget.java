@@ -151,10 +151,14 @@ public class BarsWidget extends WidgetGroup {
 
     public void setHealth(int health, int maxHealth) {
         float oldHealth = healthBar.getValue()*maxHealth;
+
         if(health > oldHealth) {
-            healthUpTime = 1;
+            if(healthDownTime <= 0) {
+                healthUpTime = 1;
+            }
         } else if(health < oldHealth) {
             healthDownTime = 1;
+            healthUpTime = 0;
         }
         healthBar.setValue((float)health/(float)maxHealth);
     }
@@ -163,8 +167,12 @@ public class BarsWidget extends WidgetGroup {
         float difference = food - oldFood;
         if(difference > .02f) {
             foodUpTime = 1;
+            foodDownTime = 0;
         } else if(difference < -.02f) {
-            foodDownTime = 1;
+            if(foodUpTime <= 0) {
+                foodDownTime = 1;
+                foodUpTime = 0;
+            }
         }
         foodBar.setValue(food);
     }

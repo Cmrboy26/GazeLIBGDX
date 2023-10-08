@@ -79,6 +79,16 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		if(shake < 0) {
 			shake = 0;
 		}
+		if(appleDelta == -1f) {
+			Random r = new Random(getRandomizedInt(Integer.MAX_VALUE-1, worldCoordinates.x, worldCoordinates.y));
+			appleable = r.nextInt(5)==0;
+			if(r.nextInt(3)==0) {
+				appleDelta = 60f+new Random(System.nanoTime()).nextFloat()*240f;
+			} else {
+				appleDelta = 0;
+			}
+		}
+
 		if(appleable) {
 			if(appleDelta > 0) {
 				appleDelta-=Tile.DELTA_TIME;
@@ -108,16 +118,6 @@ public class Tree extends BaseTile implements SeeThroughTile {
 			TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 5);
 			shake+=.5f;
 			shake = CustomMath.minMax(0, shake, .75f);
-			
-			if(appleDelta == -1f) {
-				Random r = new Random(getRandomizedInt(Integer.MAX_VALUE-1, x, y));
-				appleable = r.nextInt(5)==0;
-				if(r.nextInt(3)==0) {
-					appleDelta = 60f+new Random(System.nanoTime()).nextFloat()*240f;
-				} else {
-					appleDelta = 0;
-				}
-			}
 			if(appleable && appleDelta <= 0) {
 				int i = new Random().nextInt(5);
 				if(i==0) {
@@ -163,14 +163,9 @@ public class Tree extends BaseTile implements SeeThroughTile {
 		TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 15);
 		TileUtils.addPlayerXP(player, world, Skill.FORAGING, 3);
 		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WOOD, 3+new Random().nextInt(3)));
-		//if(new Random().nextInt(2)==0) {
 		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.ACORN, 1));
-		//}
 		if(appleable && appleDelta <= 0) {
-			int i = new Random().nextInt(5);
-			if(i==0) {
-				TileUtils.dropItem(world, x+1, y, Items.getItem(ItemType.APPLE, 1));
-			}
+			TileUtils.dropItem(world, x+1, y, Items.getItem(ItemType.APPLE, 1));
 		}
 	}
 	
