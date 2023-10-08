@@ -17,6 +17,7 @@ public class GameMenuIcon extends WidgetGroup {
     public static final String INVENTORY_ICON = "UI-Icons1";
     public static final String CRAFTING_ICON = "UI-Icons2";
     public static final String QUESTS_ICON = "UI-Icons3";
+    public static final String TECH_ICON = "UI-Icons4";
 
     GameScreen screen;
 

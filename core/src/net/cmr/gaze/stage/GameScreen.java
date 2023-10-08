@@ -113,6 +113,7 @@ import net.cmr.gaze.stage.widgets.Notification;
 import net.cmr.gaze.stage.widgets.PauseMenu;
 import net.cmr.gaze.stage.widgets.PlayerInventoryWidget;
 import net.cmr.gaze.stage.widgets.QuestBook;
+import net.cmr.gaze.stage.widgets.TechMenu;
 import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
@@ -178,6 +179,7 @@ public class GameScreen implements Screen {
 	SkillDisplay skillDisplay;
 	QuestBook quests;
 	BarsWidget barsWidget;
+	TechMenu tech;
 	ChatWidget chatWidget;
 
 	ConcurrentHashMap<UUID, Entity> entities;
@@ -303,6 +305,14 @@ public class GameScreen implements Screen {
 		};
 		rightTopStage.addActor(gmicQuest);
 
+		GameMenuIcon gmicTech = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*3, gmicwidth) {
+			@Override
+			public void onClick() {
+				toggleMenu(MenuType.TECH);
+			}
+		};
+		rightTopStage.addActor(gmicTech);
+
 		for(int i = 0; i < 7; i++) {
 			InventorySlot button = new InventorySlot(game, this, i, false);
 			hotbarButtonGroup.add(button);
@@ -334,6 +344,7 @@ public class GameScreen implements Screen {
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
 		quests = new QuestBook(game);
+		tech = new TechMenu(game);
 		chatWidget = new ChatWidget(game, this, chat);
 
 		craftingLeft = new Image(game.getSprite("craftingLeft"));
@@ -394,6 +405,7 @@ public class GameScreen implements Screen {
 		centerStage.addActor(categoryScrollPane);
 		centerStage.addActor(craftDisplay);
 		centerStage.addActor(quests);
+		centerStage.addActor(tech);
 		centerStage.addActor(pauseMenu);
 		rightTopStage.addActor(skillDisplay);
 		leftBottomStage.addActor(chatWidget);
@@ -1704,6 +1716,7 @@ public class GameScreen implements Screen {
 		end = end || pauseMenu.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || chestInventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || quests.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+		end = end || tech.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		
 		return end;
 	}
@@ -1849,6 +1862,8 @@ public class GameScreen implements Screen {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.inventory.setVisible(visible);
+				screen.inventory.inventoryGroup.uncheckAll();
+				screen.inventory.inventoryGroup.selectedSlot = null;
 			}
 		},
 		CRAFTING(MenuGroup.SIDES) {
@@ -1867,6 +1882,12 @@ public class GameScreen implements Screen {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.chestInventory.setVisible(visible);
+			}
+		}, 
+		TECH(MenuGroup.CENTER) {
+			@Override
+			public void setVisible(GameScreen screen, boolean visible) {
+				screen.tech.setVisible(visible);
 			}
 		};
 
@@ -1893,6 +1914,9 @@ public class GameScreen implements Screen {
 		case CHEST:
 			visible = chestInventory.isVisible();
 			break;
+		case TECH:
+			visible = tech.isVisible();
+			break;
 		default:
 			break;
 		}
@@ -1902,43 +1926,13 @@ public class GameScreen implements Screen {
 
 	public void openMenu(MenuType type) {
 		type.group.closeGroup(this);
-		switch(type) {
-		case INVENTORY:
-			inventory.setVisible(true);
-			break;
-		case CRAFTING:
-			setCraftingVisibility(true);
-			break;
-		case QUESTS:
-			quests.setVisible(true);
-			break;
-		case CHEST:
-			chestInventory.setVisible(true);
-			break;
-		default:
-			break;
-		}
+		type.setVisible(this, true);
 	}
 	public void setMenu(MenuType type, boolean state) {
 		if(state) {
 			type.group.closeGroup(this);
 		}
-		switch(type) {
-		case INVENTORY:
-			inventory.setVisible(state);
-			break;
-		case CRAFTING:
-			setCraftingVisibility(state);
-			break;
-		case QUESTS:
-			quests.setVisible(state);
-			break;
-		case CHEST:
-			chestInventory.setVisible(state);
-			break;
-		default:
-			break;
-		}
+		type.setVisible(this, state);
 	}
 
 	public RenderRule currentRenderRule;
