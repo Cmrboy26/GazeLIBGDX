@@ -1,6 +1,9 @@
 package net.cmr.gaze.stage.widgets;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -70,34 +73,65 @@ public class TechMenu extends WidgetGroup {
         addActor(researchPanel);
     } 
 
-    public static class ResearchTree {
+    // TODO: Create a directed graph of research nodes that can be easily written in a text file using json
+    // TODO: Create a parser that can read the text file and create the graph
 
-        ResearchNode rootNode;
+    
+    public static class ResearchGraph {
 
-        private ResearchTree() {
+        private boolean[][] adjacencyGraph; // the first index is the "origin", and the second index is the vertex that the origin is directed towards
+        private Map<Integer, ResearchVertex> vertexMap = new HashMap<>(); // the int is the index of the vertex in the adjacency graph
 
+        private ResearchGraph() {
+            
         }
-        
-    }
 
-    public static class ResearchTreeBuilder {
-        ResearchNode root;
-        ResearchNode current;
+        public static ResearchGraph deriveResearchTree(List<String> lines) {
+            // parse the lines into a tree using json
+            ResearchGraph graph = new ResearchGraph();
+            graph.adjacencyGraph = new boolean[lines.size()][lines.size()];
+
+
+            return graph;
+        }
+
+        public boolean pointsAt(ResearchVertex origin, ResearchVertex vertex) {
+            return pointsAt(vertexMap.get(origin), vertexMap.get(vertex));
+        }
+        public boolean pointsAt(int origin, int vertex) {
+            return adjacencyGraph[origin][vertex];
+        }
+
 
     }
     
-    private static class ResearchNode {
+    private static class ResearchVertex {
         
-        String name;
-        LinkedList<ResearchNode> children;
+        String json;
 
-        public ResearchNode(String name) {
-            this.name = name;
-            children = new LinkedList<>();
+        // JSON needs to contain: requirements for research, research name, research description, research icon, PARENTS of the graph, and the position of the vertex in the graph
+        private ResearchVertex(String json) {
+            this.json = json;
         }
 
-        public void addChild(ResearchNode child) {
-            children.add(child);
+        public String getJSON() {
+            return json;
+        }
+        public static ResearchVertex createVertex(String line) {
+            return new ResearchVertex(line);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if(obj instanceof ResearchVertex) {
+                return ((ResearchVertex) obj).getJSON().equals(getJSON());
+            }
+            return false;
+        }
+
+        @Override
+        public int hashCode() {
+            return getJSON().hashCode();
         }
 
     }

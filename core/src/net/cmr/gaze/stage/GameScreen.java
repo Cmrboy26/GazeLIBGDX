@@ -1,6 +1,5 @@
 package net.cmr.gaze.stage;
 
-import java.awt.Menu;
 import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -40,7 +39,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
