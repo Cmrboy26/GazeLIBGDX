@@ -1,9 +1,8 @@
 package net.cmr.gaze.stage.widgets;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 
 import net.cmr.gaze.Gaze;
 
@@ -72,66 +73,180 @@ public class TechMenu extends WidgetGroup {
 
         addActor(researchPanel);
     } 
-
-    // TODO: Create a directed graph of research nodes that can be easily written in a text file using json
-    // TODO: Create a parser that can read the text file and create the graph
-
     
-    public static class ResearchGraph {
-
-        private boolean[][] adjacencyGraph; // the first index is the "origin", and the second index is the vertex that the origin is directed towards
-        private Map<Integer, ResearchVertex> vertexMap = new HashMap<>(); // the int is the index of the vertex in the adjacency graph
-
-        private ResearchGraph() {
-            
+    /*
+        
+        {
+            "comment": "the id will be appened to the namespace and all research nodes will append 'parent-id' to that",
+            "namespace": "gaze",
+            "root": {
+                "name": "Machinery",
+                "description": "The basis of all industry",
+                "id": "machinery"
+            },
+            "comment2": "the parent research is ALWAYS a requirement",
+            "researchNodes": [{
+                "name": "Electricity",
+                "description": "POWER",
+                "icon": "electricSymbol",
+                "id": "electricity",
+                "parent-id": "root",
+                "requirements": [
+                    "ITEM|WOOD_PICKAXE:1",
+                    "RESEARCH|gaze:machinery.electricity"
+                ],
+                "rewards": [
+                    "XP|MINING|10",
+                    "ITEM|WOOD_PICKAXE:1"
+                ]
+            }, {
+                "name": "Power Transportation",
+                "description": "Move around electricity",
+                "icon": "powerPole",
+                "id": "powerTransport",
+                "parent-id": "electricity",
+                "requirements": [
+                    "ITEM|COPPER_WIRE:10"
+                ],
+                "rewards": [
+                    "XP|MINING:15",
+                    "ITEM|POWER_POLE:10"
+                ]
+            }]
         }
 
-        public static ResearchGraph deriveResearchTree(List<String> lines) {
-            // parse the lines into a tree using json
-            ResearchGraph graph = new ResearchGraph();
-            graph.adjacencyGraph = new boolean[lines.size()][lines.size()];
+         */
 
+    public static class ResearchTree {  
+
+        private ResearchVertex root;
+        private HashMap<String, ResearchVertex> researchNodes;
+        private String namespace;
+
+        public ResearchTree() {
+            researchNodes = new HashMap<>();
+        }
+
+        public static ResearchTree deriveResearchGraph(String inputString) throws InvalidObjectException {
+            ResearchTree graph = new ResearchTree();
+
+            JsonReader reader = new JsonReader();
+            JsonValue mainJSONObject = reader.parse(inputString);
+
+            graph.namespace = mainJSONObject.getString("namespace");
+            graph.root = new ResearchVertex(graph, mainJSONObject.get("root"));
+
+            for(JsonValue value : mainJSONObject.get("researchNodes")) {
+                graph.createVertex(value);
+            }
 
             return graph;
         }
 
-        public boolean pointsAt(ResearchVertex origin, ResearchVertex vertex) {
-            return pointsAt(vertexMap.get(origin), vertexMap.get(vertex));
-        }
-        public boolean pointsAt(int origin, int vertex) {
-            return adjacencyGraph[origin][vertex];
+        private ResearchVertex createVertex(JsonValue value) {
+            ResearchVertex vertex = new ResearchVertex(this, value);
+            researchNodes.put(vertex.getID(), vertex);
+            return vertex;
         }
 
+        public ResearchVertex getVertex(String id) {
+            return researchNodes.get(id);
+        }
+
+        public void addChild(ResearchVertex parent, ResearchVertex child) {
+            parent.children.add(child);
+            child.parent = parent;
+        }
 
     }
     
     private static class ResearchVertex {
         
-        String json;
+        ResearchVertex parent;
+        ArrayList<ResearchVertex> children;
+        ResearchTree tree;
+        Requirement[] requirements;
+        String name, description, icon, ID, parentID;
+
+        /*
+        
+            {
+                "name": "Electricity",
+                "description": "POWER",
+                "icon": "electricSymbol",
+                "id": "electricity",
+                "parent-id": "root",
+                "requirements": [
+                    "ITEM|WOOD_PICKAXE:1",
+                    "RESEARCH|gaze:machinery.electricity"
+                ],
+                "rewards": [
+                    "XP|MINING|10",
+                    "ITEM|WOOD_PICKAXE:1"
+                ]
+            }
+
+         */
 
         // JSON needs to contain: requirements for research, research name, research description, research icon, PARENTS of the graph, and the position of the vertex in the graph
-        private ResearchVertex(String json) {
-            this.json = json;
+        public ResearchVertex(ResearchTree tree, JsonValue json) {
+            this.tree = tree;
+            this.children = new ArrayList<>();
+            // read from json
+            this.name = json.getString("name");
+            this.description = json.getString("description");
+            this.icon = json.getString("icon");
+            this.ID = json.getString("id");
+            String parentID = json.getString("parent-id");
+            if(tree.root == null) {
+                tree.root = this;
+                parent = null;
+            } else {
+                parent = tree.getVertex(parentID);
+                tree.addChild(parent, this);
+            }
+            // read requirements
+            JsonValue requirements = json.get("requirements");
+            this.requirements = new Requirement[requirements.size];
+            for(int i = 0; i < requirements.size; i++) {
+                this.requirements[i] = new Requirement(requirements.getString(i));
+            }
         }
 
-        public String getJSON() {
-            return json;
-        }
-        public static ResearchVertex createVertex(String line) {
-            return new ResearchVertex(line);
+        static class Requirement {
+            enum RequirementType {
+                ITEM, RESEARCH, LEVEL;
+            } 
+            RequirementType category;
+            // category |type     | value
+            // ITEM     |WOOD_AXE | 1
+            // RESEARCH |gaze:machinery.electricity | 1
+            // LEVEL    |MINING   | 10
+            Object type, value;
+
+            public Requirement(String requirementString) {
+                String[] split = requirementString.split("|");
+                category = RequirementType.valueOf(split[0]);
+                type = split[1];
+                value = split[2];
+            }
         }
 
         @Override
         public boolean equals(Object obj) {
             if(obj instanceof ResearchVertex) {
-                return ((ResearchVertex) obj).getJSON().equals(getJSON());
+                return ((ResearchVertex) obj).getID().equals(getID());
             }
             return false;
         }
 
+        public String getID() {
+            return ID;
+        }
+
         @Override
         public int hashCode() {
-            return getJSON().hashCode();
+            return getID().hashCode();
         }
 
     }
