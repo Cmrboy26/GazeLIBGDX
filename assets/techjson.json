@@ -10,48 +10,78 @@
 	},
 	"comment2":"the parent research is ALWAYS a requirement",
 	"researchNodes":[
-		{	
+		{
 			"name":"Gears",
-			"description":"Gears and gadgets",
-			"icon":"gearSymbol",
+			"description":"PTSD from Factorio (Ratios)",
+			"icon":"gears",
 			"id":"gears",
 			"parent-id":"root",
-			"requirements": [
+			"position": [0,10],
+			"requirements":[
+				"SKILL/MINING/2",
 				"ITEM/IRON_INGOT/5"
 			],
-			"rewards": [],
-			"position": [0,10]
+			"rewards": [
+				"XP/MINING/10"
+			]
 		},
 		{
 			"name":"Electricity",
-			"description":"POWER",
-			"icon":"electricSymbol",
+			"description":"SHOCKING!",
+			"icon":"electricity",
 			"id":"electricity",
 			"parent-id":"gears",
+			"position": [0,20],
 			"requirements":[
-				"ITEM/WOOD_PICKAXE/1",
-				"RESEARCH/gaze:machinery.electricity"
+				"ITEM/COPPER_INGOT/5",
+				"ITEM/IRON_GEAR/5"
 			],
-			"rewards":[
-				"XP/MINING/10",
-				"ITEM/WOOD_PICKAXE/1"
-			],
-			"position": [0,20]
+			"rewards": [
+				"XP/MINING/10"
+			]
 		},
 		{
-			"name":"Power Transportation",
-			"description":"Move around electricity",
-			"icon":"powerPole",
-			"id":"powerTransport",
+			"name":"Lighting",
+			"description":"Let there be light!",
+			"icon":"lighting",
+			"id":"lighting",
 			"parent-id":"electricity",
+			"position": [10,30],
 			"requirements":[
 				"ITEM/COPPER_WIRE/10"
 			],
-			"rewards":[
-				"XP/MINING/15",
-				"ITEM/POWER_POLE/10"
+			"rewards": [
+				"XP/MINING/10"
+			]
+		},
+		{
+			"name":"Circuitry",
+			"description":"Circuits are awesome!",
+			"icon":"circuitry",
+			"id":"circuitry",
+			"parent-id":"electricity",
+			"position": [0,30],
+			"requirements":[
+				"ITEM/COPPER_WIRE/10"
 			],
-			"position": [10,20]
+			"rewards": [
+				"XP/MINING/10"
+			]
+		},
+		{
+			"name":"Steam Power",
+			"description":"Steam is the future!",
+			"icon":"steam",
+			"id":"steam",
+			"parent-id":"electricity",
+			"position": [-10,30],
+			"requirements":[
+				"ITEM/COPPER_COIL/10",
+				"ITEM/IRON_GEAR/10"
+			],
+			"rewards": [
+				"XP/MINING/10"
+			]
 		}
 	]
 }

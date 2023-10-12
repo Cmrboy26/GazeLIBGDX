@@ -97,6 +97,10 @@ public class Gaze extends Game {
 	
 	public Gaze() {
  		singleton = this;
+		fontmap = new HashMap<>();
+		sprites = new HashMap<>();
+		sounds = new HashMap<>();
+		music = new HashMap<>();
 	}
 	
 	public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, bar2, barBackground, barEmpty;
@@ -110,11 +114,6 @@ public class Gaze extends Game {
 		//Gdx.files.internal("seymourfont.ttf").file().exists();
 		//System.out.println(Gdx.files.internal("seymourfont.ttf").file().exists());
 		fontgenerator = new FreeTypeFontGenerator(Gdx.files.internal("seymourfont.ttf"));
-		fontmap = new HashMap<>();
-		sprites = new HashMap<>();
-		sounds = new HashMap<>();
-		music = new HashMap<>();
-		
 		
 		UIAtlas = new TextureAtlas(Gdx.files.internal("atlas/UI.atlas"));
 		TilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tilesSprites/Tiles.atlas"));
