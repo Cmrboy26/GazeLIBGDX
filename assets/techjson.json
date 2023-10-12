@@ -1,0 +1,57 @@
+{
+	"comment":"the id will be appened to the namespace and all research nodes will append 'parent-id' to that",
+	"namespace":"gaze",
+	"root":{
+		"name":"Machinery",
+		"description":"The basis of all industry",
+		"icon":"machinery",
+		"id":"machinery",
+		"position": [0,0]
+	},
+	"comment2":"the parent research is ALWAYS a requirement",
+	"researchNodes":[
+		{	
+			"name":"Gears",
+			"description":"Gears and gadgets",
+			"icon":"gearSymbol",
+			"id":"gears",
+			"parent-id":"root",
+			"requirements": [
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [],
+			"position": [0,10]
+		},
+		{
+			"name":"Electricity",
+			"description":"POWER",
+			"icon":"electricSymbol",
+			"id":"electricity",
+			"parent-id":"gears",
+			"requirements":[
+				"ITEM/WOOD_PICKAXE/1",
+				"RESEARCH/gaze:machinery.electricity"
+			],
+			"rewards":[
+				"XP/MINING/10",
+				"ITEM/WOOD_PICKAXE/1"
+			],
+			"position": [0,20]
+		},
+		{
+			"name":"Power Transportation",
+			"description":"Move around electricity",
+			"icon":"powerPole",
+			"id":"powerTransport",
+			"parent-id":"electricity",
+			"requirements":[
+				"ITEM/COPPER_WIRE/10"
+			],
+			"rewards":[
+				"XP/MINING/15",
+				"ITEM/POWER_POLE/10"
+			],
+			"position": [10,20]
+		}
+	]
+}
