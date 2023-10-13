@@ -6,7 +6,7 @@ filter: MipMap, MipMap
 repeat: none
 UI-Icons1
   rotate: false
-  xy: 36, 2
+  xy: 886, 924
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -20,28 +20,28 @@ UI-Icons2
   index: -1
 UI-Icons3
   rotate: false
-  xy: 886, 924
+  xy: 246, 115
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 UI-Icons4
   rotate: false
-  xy: 746, 604
+  xy: 442, 278
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 barBackgroundNine
   rotate: false
-  xy: 360, 248
+  xy: 662, 546
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
   index: -1
 barEmptyNine
   rotate: false
-  xy: 149, 46
+  xy: 360, 248
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
@@ -76,14 +76,14 @@ barIconChanges4
   index: -1
 barNine
   rotate: false
-  xy: 344, 232
+  xy: 644, 528
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
   index: -1
 barNine2
   rotate: false
-  xy: 326, 214
+  xy: 378, 266
   size: 5, 6
   orig: 5, 6
   offset: 0, 0
@@ -223,7 +223,7 @@ healthbarNineBackground
   index: -1
 helpBoxNine
   rotate: false
-  xy: 246, 111
+  xy: 806, 834
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -305,6 +305,27 @@ logo
   orig: 32, 32
   offset: 0, 0
   index: -1
+machinery.electricity
+  rotate: false
+  xy: 586, 328
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+machinery.gears
+  rotate: false
+  xy: 268, 137
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
+machinery.steam
+  rotate: false
+  xy: 746, 604
+  size: 16, 16
+  orig: 16, 16
+  offset: 0, 0
+  index: -1
 minusButton
   rotate: false
   xy: 538, 306
@@ -328,7 +349,7 @@ notification
   index: -1
 particle
   rotate: false
-  xy: 378, 268
+  xy: 678, 564
   size: 4, 4
   orig: 4, 4
   offset: 0, 0
@@ -363,7 +384,7 @@ questBook
   index: -1
 questBoxNine
   rotate: false
-  xy: 263, 128
+  xy: 823, 851
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -377,7 +398,7 @@ researchConfirm
   index: -1
 sliderKnob
   rotate: false
-  xy: 782, 742
+  xy: 560, 310
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -391,70 +412,70 @@ smallArrow
   index: -1
 smallNumber0
   rotate: false
-  xy: 54, 14
+  xy: 782, 736
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber1
   rotate: false
-  xy: 678, 564
+  xy: 604, 340
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber2
   rotate: false
-  xy: 904, 936
+  xy: 286, 149
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber3
   rotate: false
-  xy: 746, 598
+  xy: 460, 290
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber4
   rotate: false
-  xy: 644, 530
+  xy: 696, 582
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber5
   rotate: false
-  xy: 460, 290
+  xy: 246, 109
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber6
   rotate: false
-  xy: 696, 582
+  xy: 54, 14
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber7
   rotate: false
-  xy: 782, 736
+  xy: 578, 322
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber8
   rotate: false
-  xy: 604, 340
+  xy: 904, 936
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
   index: -1
 smallNumber9
   rotate: false
-  xy: 662, 548
+  xy: 746, 598
   size: 3, 4
   orig: 3, 4
   offset: 0, 0
@@ -475,7 +496,7 @@ techBackground
   index: -1
 techCategoryIcon1
   rotate: false
-  xy: 560, 315
+  xy: 326, 209
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
@@ -489,14 +510,14 @@ techCategoryIcon2
   index: -1
 techCategoryIcon3
   rotate: false
-  xy: 806, 843
+  xy: 344, 227
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
   index: -1
 techCategoryIcon4
   rotate: false
-  xy: 268, 142
+  xy: 149, 41
   size: 11, 11
   orig: 11, 11
   offset: 0, 0
@@ -531,7 +552,7 @@ techCheck
   index: -1
 techIconBackground
   rotate: false
-  xy: 246, 116
+  xy: 806, 839
   size: 15, 15
   orig: 15, 15
   offset: 0, 0
@@ -545,7 +566,7 @@ techX
   index: -1
 translucent
   rotate: false
-  xy: 586, 328
+  xy: 36, 2
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -559,14 +580,14 @@ upArrow
   index: -1
 upArrow2
   rotate: false
-  xy: 442, 278
+  xy: 782, 742
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
 upArrow4
   rotate: false
-  xy: 442, 278
+  xy: 782, 742
   size: 16, 16
   orig: 16, 16
   offset: 0, 0

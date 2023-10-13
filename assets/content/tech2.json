@@ -1,0 +1,13 @@
+{
+	"namespace":"gaze",
+	"root":{
+		"name":"Resources",
+		"description":"resource gathering and crap",
+		"icon":"techCategoryIcon3",
+		"id":"resources",
+		"position": [0,0]
+	},
+    "researchNodes":[
+
+    ]
+}
