@@ -18,7 +18,7 @@
 			"parent-id":"root",
 			"position": [0,10],
 			"requirements":[
-				"SKILL/MINING/2",
+				"SKILL/MINING/20",
 				"ITEM/IRON_INGOT/5"
 			],
 			"rewards": [
@@ -33,6 +33,7 @@
 			"parent-id":"gears",
 			"position": [0,20],
 			"requirements":[
+				"SKILL/MINING/2",
 				"ITEM/COPPER_INGOT/5",
 				"ITEM/IRON_GEAR/5"
 			],

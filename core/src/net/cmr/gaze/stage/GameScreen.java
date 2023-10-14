@@ -111,7 +111,7 @@ import net.cmr.gaze.stage.widgets.Notification;
 import net.cmr.gaze.stage.widgets.PauseMenu;
 import net.cmr.gaze.stage.widgets.PlayerInventoryWidget;
 import net.cmr.gaze.stage.widgets.QuestBook;
-import net.cmr.gaze.stage.widgets.TechMenu;
+import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
@@ -177,7 +177,7 @@ public class GameScreen implements Screen {
 	SkillDisplay skillDisplay;
 	QuestBook quests;
 	BarsWidget barsWidget;
-	TechMenu tech;
+	ResearchMenu tech;
 	ChatWidget chatWidget;
 
 	ConcurrentHashMap<UUID, Entity> entities;
@@ -342,7 +342,7 @@ public class GameScreen implements Screen {
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
 		quests = new QuestBook(game);
-		tech = new TechMenu(game);
+		tech = new ResearchMenu(game);
 		chatWidget = new ChatWidget(game, this, chat);
 
 		craftingLeft = new Image(game.getSprite("craftingLeft"));

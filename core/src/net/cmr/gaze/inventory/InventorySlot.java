@@ -1,5 +1,7 @@
 package net.cmr.gaze.inventory;
 
+import java.util.Objects;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.stage.GameScreen;
 
 public class InventorySlot extends ImageButton {
@@ -117,4 +120,35 @@ public class InventorySlot extends ImageButton {
 		
 	}
 	
+	public static class SimpleItemSlot extends InventorySlot {
+
+		Item item;
+		public SimpleItemSlot(Gaze game, ItemType type, int value) {
+			super(game, null, -1, true);
+			this.item = Items.getItem(type, value); 
+		}
+
+		@Override
+		public Item getItem() {
+			return item;
+		}
+
+		@Override
+		public void draw(Batch batch, float parentAlpha) {
+			Item.draw(game, getStage().getViewport(), getItem(), batch, getX(), getY(), getWidth(), getHeight());
+		}
+		
+		@Override
+		public boolean equals(Object object) {
+			if(object instanceof SimpleItemSlot) {
+				SimpleItemSlot slot = (SimpleItemSlot) object;
+				if(Objects.equals(slot.getItem(), getItem())) {
+					return true;
+				}
+			}
+			return super.equals(object);
+		}
+
+	} 
+
 }
