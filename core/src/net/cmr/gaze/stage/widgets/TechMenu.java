@@ -18,10 +18,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
 
 public class TechMenu extends WidgetGroup {
     
@@ -313,6 +317,44 @@ public class TechMenu extends WidgetGroup {
                 if(split.length > 2) {
                     value = split[2];
                 }
+            }
+
+            public RequirementWidget getWidget(Gaze game) {
+                return new RequirementWidget(this, game);
+            }
+
+            static class RequirementWidget extends WidgetGroup {
+
+                public RequirementWidget(Requirement requirement, Gaze game) {
+                    setHeight(20);
+                    Table table = new Table();
+                    table.align(Align.center);
+
+                    switch(requirement.category) {
+                    case ITEM:
+                        ItemType type = ItemType.getItemTypeFromID(requirement.type.hashCode());
+                        Item item = Items.getItem(type, 1);
+
+                        break;
+                    case RESEARCH:
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        break;
+                    case LEVEL:
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        table.add(new Image(game.getSprite("itemSlotBackgroundChecked"))).width(20).height(20);
+                        break;
+                    default:
+                        break;
+                    }
+
+                    addActor(table);
+                }
+
             }
         }
 

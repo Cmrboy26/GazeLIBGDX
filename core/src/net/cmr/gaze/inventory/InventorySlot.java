@@ -72,14 +72,14 @@ public class InventorySlot extends ImageButton {
 			return;
 		}
 		super.draw(batch, parentAlpha);
-		Item.draw(game, getStage().getViewport(), getInventory().get(slot), batch, getX(), getY(), getWidth(), getHeight());
+		Item.draw(game, getStage().getViewport(), getItem(), batch, getX(), getY(), getWidth(), getHeight());
 		
 		Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 		Vector2 mouseLocalPosition = this.screenToLocalCoordinates(mouseScreenPosition);
 		if(hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null) {
 			BitmapFont font = game.getFont(5f);
-			Item item = getInventory().get(slot);
-			if(getInventory().get(slot)!=null) {
+			Item item = getItem();
+			if(getItem()!=null) {
 				//font.draw(batch, Item.getName(item)+"\n"+Item.getDescription(item), getX()+mouseLocalPosition.x/*+getWidth()-5-1*/+getWidth()/4f, getY()+mouseLocalPosition.y/*+getHeight()/2-2*/);
 			}
 		}
