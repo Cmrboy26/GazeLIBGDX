@@ -177,6 +177,7 @@ public class GameScreen implements Screen {
 	PauseMenu pauseMenu;
 	SkillDisplay skillDisplay;
 	QuestBook quests;
+	final static boolean disableQuests = true; // TODO: remove this when quests are implemented fully
 	BarsWidget barsWidget;
 	ResearchMenu tech;
 	ChatWidget chatWidget;
@@ -296,15 +297,17 @@ public class GameScreen implements Screen {
 		};
 		rightTopStage.addActor(gmicCrafting);
 
-		GameMenuIcon gmicQuest = new GameMenuIcon(this, GameMenuIcon.QUESTS_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
-			@Override
-			public void onClick() {
-				toggleMenu(MenuType.QUESTS);
-			}
-		};
-		rightTopStage.addActor(gmicQuest);
+		if(!disableQuests) {
+			GameMenuIcon gmicQuest = new GameMenuIcon(this, GameMenuIcon.QUESTS_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
+				@Override
+				public void onClick() {
+					toggleMenu(MenuType.QUESTS);
+				}
+			};
+			rightTopStage.addActor(gmicQuest);
+		}
 
-		GameMenuIcon gmicTech = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*3, gmicwidth) {
+		GameMenuIcon gmicTech = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
 			@Override
 			public void onClick() {
 				toggleMenu(MenuType.TECH);
@@ -342,7 +345,7 @@ public class GameScreen implements Screen {
 		inventory = new PlayerInventoryWidget(game, this);
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
-		quests = new QuestBook(game);
+		//quests = new QuestBook(game);
 		tech = new ResearchMenu(game, this);
 		chatWidget = new ChatWidget(game, this, chat);
 
@@ -403,7 +406,11 @@ public class GameScreen implements Screen {
 		centerStage.addActor(recipeDisplay);
 		centerStage.addActor(categoryScrollPane);
 		centerStage.addActor(craftDisplay);
-		centerStage.addActor(quests);
+		
+		if(!disableQuests) {
+			centerStage.addActor(quests);
+		}
+
 		centerStage.addActor(tech);
 		centerStage.addActor(pauseMenu);
 		rightTopStage.addActor(skillDisplay);
@@ -469,8 +476,10 @@ public class GameScreen implements Screen {
 					sender.addPacket(new UIEventPacket(craftingMenuVisible, 1));
 				}
 				if(character == Input.Keys.F) {
-					toggleMenu(MenuType.QUESTS);
-					sender.addPacket(new UIEventPacket(craftingMenuVisible, 3));
+					if(!disableQuests) {
+						toggleMenu(MenuType.QUESTS);
+						sender.addPacket(new UIEventPacket(craftingMenuVisible, 3));
+					}
 				}
 				if(character == Input.Keys.ESCAPE) {
 					pauseMenu.setVisible(!pauseMenu.isVisible());
@@ -1435,7 +1444,9 @@ public class GameScreen implements Screen {
 				Player player = (Player) entity;
 				//System.out.println("RECEIVED PLAYER, OBF: "+player.getX()+","+player.getY());
 				if(player.equals(getLocalPlayer())) {
-					quests.setQuestData(player.getQuestData());
+					if(!disableQuests) {
+						quests.setQuestData(player.getQuestData());
+					}
 					barsWidget.setHealth(((HealthEntity)player).getHealth(), ((HealthEntity)player).getMaxHealth());
 					barsWidget.setFood(player.getHunger()/Player.MAX_HUNGER);
 					getLocalPlayer().setHunger(player.getHunger());
@@ -1637,14 +1648,17 @@ public class GameScreen implements Screen {
 			openMenu(MenuType.CHEST);
 		} else if(packet instanceof QuestDataPacket) {
 			QuestDataPacket qdata = (QuestDataPacket) packet;
-			quests.updateQuestData(qdata);
-			if(qdata.getValue()) {
-				addNotification(
-						new String[] {"Quest COMPLETED!",
-								""+qdata.getQuest().getPreReq(qdata.getQuestTier(), qdata.getQuestNumber())}, 
-						new String[] {"upArrow"}, 
-						new boolean[] {true},
-						2f, 4f, "trueSelect");
+			
+			if(!disableQuests) {
+				quests.updateQuestData(qdata);
+				if(qdata.getValue()) {
+					addNotification(
+							new String[] {"Quest COMPLETED!",
+									""+qdata.getQuest().getPreReq(qdata.getQuestTier(), qdata.getQuestNumber())}, 
+							new String[] {"upArrow"}, 
+							new boolean[] {true},
+							2f, 4f, "trueSelect");
+				}
 			}
 		} else if(packet instanceof ChatPacket) {
 			ChatPacket chat = (ChatPacket) packet;
@@ -1652,7 +1666,7 @@ public class GameScreen implements Screen {
 		} else if(packet instanceof ResearchPacket) {
 			ResearchPacket rpacket = (ResearchPacket) packet;
 			if(rpacket.getData()==null) {
-				System.out.println(rpacket.getUniversalID() + " " + rpacket.isResearched());
+				//System.out.println(rpacket.getUniversalID() + " " + rpacket.isResearched());
 				tech.getData().setResearched(rpacket.getUniversalID(), rpacket.isResearched());
 				if(rpacket.isResearched()) {
 					game.playSound("trueSelect", 1f);
@@ -1731,7 +1745,9 @@ public class GameScreen implements Screen {
 		end = end || hotbarTable.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || pauseMenu.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || chestInventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
-		end = end || quests.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+		if(!disableQuests) {
+			end = end || quests.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+		}
 		end = end || tech.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		
 		return end;
@@ -1891,7 +1907,9 @@ public class GameScreen implements Screen {
 		QUESTS(MenuGroup.CENTER) {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
-				screen.quests.setVisible(visible);
+				if(!GameScreen.disableQuests) {
+					screen.quests.setVisible(visible);
+				}
 			}
 		},
 		CHEST(MenuGroup.CENTER) {
@@ -1925,7 +1943,11 @@ public class GameScreen implements Screen {
 			visible = crafting.isVisible();
 			break;
 		case QUESTS:
-			visible = quests.isVisible();
+			if(!disableQuests) {
+				visible = quests.isVisible();
+			} else {
+				visible = false;
+			}
 			break;
 		case CHEST:
 			visible = chestInventory.isVisible();
