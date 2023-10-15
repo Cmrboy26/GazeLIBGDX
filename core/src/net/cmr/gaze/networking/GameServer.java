@@ -330,8 +330,8 @@ public class GameServer {
 				continue;
 			} catch(Exception e) {
 				removeList.add(connection);
-				disconnect(connection, e.getMessage());
 				e.printStackTrace();
+				disconnect(connection, e.getMessage());
 				continue;
 			}
 			

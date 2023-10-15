@@ -75,7 +75,7 @@ public class InventorySlot extends ImageButton {
 			return;
 		}
 		super.draw(batch, parentAlpha);
-		Item.draw(game, getStage().getViewport(), getItem(), batch, getX(), getY(), getWidth(), getHeight());
+		Item.draw(game, this, getItem(), batch, getX(), getY(), getWidth(), getHeight());
 		
 		Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
 		Vector2 mouseLocalPosition = this.screenToLocalCoordinates(mouseScreenPosition);
@@ -135,7 +135,7 @@ public class InventorySlot extends ImageButton {
 
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
-			Item.draw(game, getStage().getViewport(), getItem(), batch, getX(), getY(), getWidth(), getHeight());
+			Item.draw(game, this, getItem(), batch, getX(), getY(), getWidth(), getHeight());
 		}
 		
 		@Override

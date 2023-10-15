@@ -50,7 +50,7 @@ public class CraftDisplay extends WidgetGroup {
 				
 				int times = Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)?5:1;
 				
-				Object result = recipe.craft(screen.getLocalPlayer().getInventory(), times, recipeDisplay.station, screen.getLocalPlayer().getSkills());
+				Object result = recipe.craft(screen.getLocalPlayer().getInventory(), times, recipeDisplay.station, screen.getLocalPlayer());
 				
 				screen.sender.addPacket(new CraftPacket(recipe.getCategory(), recipe.getName(), times));
 				
@@ -73,13 +73,13 @@ public class CraftDisplay extends WidgetGroup {
 			Recipe recipe = recipeSlot.recipe;
 			
 			batch.draw(game.getSprite("itemSlotBackgroundFilled"), 640-120, 190, 78, 78);
-			Item.draw(game, getStage().getViewport(), recipeSlot.displayItem, batch, 640-120, 190, 78, 78);
+			Item.viewportDraw(game, getStage().getViewport(), recipeSlot.displayItem, batch, 640-120, 190, 78, 78);
 			
 			int width = 22*recipe.ingredients.length+2*(recipe.ingredients.length-1);
 			
 			for(int i = 0; i < recipe.ingredients.length; i++) {
 				batch.draw(game.getSprite("itemSlotBackgroundFilled"), 640-80-(width/2)+(i*24), 158, 22, 22);
-				Item.draw(game, getStage().getViewport(), Items.getItem(recipe.ingredients[i], recipe.ingredientsQuantity[i]), batch, 640-80-(width/2)+(i*24), 158, 22, 22);
+				Item.viewportDraw(game, getStage().getViewport(), Items.getItem(recipe.ingredients[i], recipe.ingredientsQuantity[i]), batch, 640-80-(width/2)+(i*24), 158, 22, 22);
 			}
 		}
 	}

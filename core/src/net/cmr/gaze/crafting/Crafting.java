@@ -2,10 +2,13 @@ package net.cmr.gaze.crafting;
 
 import java.util.HashMap;
 
+import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.leveling.Skills;
 import net.cmr.gaze.leveling.Skills.Skill;
+import net.cmr.gaze.world.entities.Player;
 
 public class Crafting {
 
@@ -32,7 +35,13 @@ public class Crafting {
 		
 	}
 	
-	public class LevelRequirement {
+	public static abstract class CraftingRequirement {
+		
+		public abstract boolean canCraft(Recipe recipe, Player player);
+		
+	}
+
+	public static class LevelRequirement extends CraftingRequirement {
 		
 		Skill skill;
 		int requiredLevel;
@@ -41,11 +50,38 @@ public class Crafting {
 			this.skill = skill;
 			this.requiredLevel = requiredLevel;
 		}
+
+		@Override
+		public boolean canCraft(Recipe recipe, Player player) {
+			int level = player.getSkills().getLevel(skill);
+			if(level<requiredLevel) {
+				return false;
+			}
+			return true;
+		}
+		
+	}
+
+	public static class ResearchRequirement extends CraftingRequirement {
+		
+		String universalID;
+		
+		public ResearchRequirement(String universalID) {
+			this.universalID = universalID;
+		}
+
+		@Override
+		public boolean canCraft(Recipe recipe, Player player) {
+			return player.getResearchData().isResearched(universalID);
+		}
 		
 	}
 	
 	private static LevelRequirement level(Skill skill, int req) {
-		return new Crafting().new LevelRequirement(skill, req);
+		return new LevelRequirement(skill, req);
+	}
+	private static ResearchRequirement research(String universalID) {
+		return new ResearchRequirement(universalID);
 	}
 	
 	public static void initialize() {
@@ -84,7 +120,7 @@ public class Crafting {
 		initializeRecipe("Appliances", "furnace", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {8}, new ItemType[] {ItemType.FURNACE}, new int[] {1}, level(Skill.MINING, 2));
 		initializeRecipe("Appliances", "anvil", CraftingStation.TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {6}, new ItemType[] {ItemType.ANVIL}, new int[] {1});
 		
-		initializeRecipe("Farming", "woodWateringCan", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.WOOD_WATERING_CAN}, new int[] {1});
+		initializeRecipe("Farming", "woodWateringCan", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.WOOD_WATERING_CAN}, new int[] {1}, research("gaze:machinery.electricity"));
 		initializeRecipe("Farming", "bread", CraftingStation.NONE, new ItemType[] {ItemType.WHEAT}, new int[] {4}, new ItemType[] {ItemType.BREAD}, new int[] {1});
 		
 		initializeRecipe("Housing", "woodWall", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD}, new int[] {2}, new ItemType[] {ItemType.WOOD_WALL}, new int[] {4});
@@ -121,8 +157,8 @@ public class Crafting {
 		categories.put(name, new RecipeCategory(name, icon));
 	}
 	
-	private static void initializeRecipe(String recipeCategory, String recipeName, CraftingStation station, ItemType[] ingredients, int[] ingredientsQuantity, ItemType[] results, int[] resultsQuantity, LevelRequirement...levelRequirements) {
-		getCategory(recipeCategory).addRecipe(new Recipe(recipeCategory, recipeName, station, ingredients, ingredientsQuantity, results, resultsQuantity, levelRequirements));
+	private static void initializeRecipe(String recipeCategory, String recipeName, CraftingStation station, ItemType[] ingredients, int[] ingredientsQuantity, ItemType[] results, int[] resultsQuantity, CraftingRequirement...requirements) {
+		getCategory(recipeCategory).addRecipe(new Recipe(recipeCategory, recipeName, station, ingredients, ingredientsQuantity, results, resultsQuantity, requirements));
 	}
 	
 }

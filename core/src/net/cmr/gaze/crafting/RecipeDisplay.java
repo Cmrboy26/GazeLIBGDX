@@ -66,7 +66,7 @@ public class RecipeDisplay extends ScrollPane {
 		
 		ArrayList<Recipe> validRecipes = category.recipes.stream().filter(s -> {
 			if(s.station == station) {
-				if(screen.getLocalPlayer()!=null&&s.correctLevel(screen.getLocalPlayer().getSkills())) {
+				if(screen.getLocalPlayer()!=null && s.requirementsMet(screen.getLocalPlayer())) {
 					return true;
 				}
 			}

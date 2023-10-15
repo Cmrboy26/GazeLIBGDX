@@ -77,7 +77,7 @@ public class RecipeSlot extends ImageButton {
 	@Override
 	public void draw(Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		Item.draw(game, null, displayItem, batch, getX(), getY(), getWidth(), getHeight());
+		Item.draw(game, this, displayItem, batch, getX(), getY(), getWidth(), getHeight());
 	}
 	
 }

@@ -97,6 +97,7 @@ import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
+import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.networking.packets.SpawnEntity;
 import net.cmr.gaze.networking.packets.TileUpdatePacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
@@ -342,7 +343,7 @@ public class GameScreen implements Screen {
 		chestInventory = new ChestInventoryWidget(game, this);
 		crafting = new WidgetGroup();
 		quests = new QuestBook(game);
-		tech = new ResearchMenu(game);
+		tech = new ResearchMenu(game, this);
 		chatWidget = new ChatWidget(game, this, chat);
 
 		craftingLeft = new Image(game.getSprite("craftingLeft"));
@@ -1445,6 +1446,8 @@ public class GameScreen implements Screen {
 							break;
 						}
 					}
+					tech.setResearchData(player.getResearchData());
+					tech.refreshResearchPanel(true);
 				}
 			}
 		} else if(packet instanceof DespawnEntity) {
@@ -1646,6 +1649,21 @@ public class GameScreen implements Screen {
 		} else if(packet instanceof ChatPacket) {
 			ChatPacket chat = (ChatPacket) packet;
 			this.chat.addMessage(chat.getMessage());
+		} else if(packet instanceof ResearchPacket) {
+			ResearchPacket rpacket = (ResearchPacket) packet;
+			if(rpacket.getData()==null) {
+				System.out.println(rpacket.getUniversalID() + " " + rpacket.isResearched());
+				tech.getData().setResearched(rpacket.getUniversalID(), rpacket.isResearched());
+				if(rpacket.isResearched()) {
+					game.playSound("trueSelect", 1f);
+					tech.refreshResearchPanel(false);
+				} else {
+					game.playSound("falseSelect", 1f);
+				}
+			} else {
+				tech.setResearchData(rpacket.getData());
+				tech.refreshResearchPanel(false);
+			}
 		}
 	}
 	

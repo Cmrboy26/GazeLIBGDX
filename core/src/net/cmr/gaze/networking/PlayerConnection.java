@@ -36,9 +36,13 @@ import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
+import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.quests.Quests.QuestTier;
+import net.cmr.gaze.research.ResearchVertex;
+import net.cmr.gaze.research.ResearchVertex.Requirement;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
+import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
@@ -318,7 +322,7 @@ public class PlayerConnection {
 				// and the client doesn't know about it
 				// how would i fix this? maybe send a packet to the client to tell it to update the inventory
 
-				Item[] results = recipe.craft(getPlayer().getInventory(), craft.getTimes(), getCraftingStation(), getPlayer().getSkills());
+				Item[] results = recipe.craft(getPlayer().getInventory(), craft.getTimes(), getCraftingStation(), getPlayer());
 				if(craft.getTimes()>0 && results != null) {
 					questCheck(QuestCheckType.CRAFT, recipe);
 				}
@@ -347,6 +351,55 @@ public class PlayerConnection {
 			chat = new ChatPacket(new ChatMessage(getUsername(), chat.getMessage().getMessage()));
 			server.sendAllPacketIf(chat, ConnectionPredicate.SEND_ALL, player.getChunk(), player.getWorld());
 			System.out.println("[CHAT] "+chat.getMessage().toString());
+		}
+		else if(packet instanceof ResearchPacket) {
+			ResearchPacket rPacket = (ResearchPacket) packet;
+			String universalID = rPacket.getUniversalID();
+			// do a check to see if the research has been completed
+			// if so, set the researchdata value in the player to true and update
+			// send the packet to the client
+			ResearchVertex queriedVertex = ResearchMenu.getVertex(universalID);
+
+			if(queriedVertex == null) {
+				return;
+			}
+			boolean requirementsMet = true;
+			for(Requirement requirement : queriedVertex.requirements) {
+				try {
+					switch(requirement.category) {
+						case ITEM:
+							if(!(getPlayer().getInventory().getQuantityOfItem(requirement.getItemType())>=requirement.getItemQuantity())) {
+								requirementsMet = false;
+							}
+							break;
+						case RESEARCH:
+							if(!getPlayer().getResearchData().isResearched(requirement.getResearchID())) {
+								requirementsMet = false;
+							}
+							break;
+						case SKILL:
+							if(!(getPlayer().getSkills().getLevel(requirement.getSkill())>=requirement.getSkillLevel())) {
+								requirementsMet = false;
+							}
+							break;
+						default:
+							break;
+					}
+					if(!requirementsMet) {
+						break;
+					}
+				} catch(Exception e) {
+					requirementsMet = false;
+				}
+			}
+			boolean researched = false;
+			if(requirementsMet) {
+				if(getPlayer().getResearchData().isResearched(queriedVertex.tree.getUniversalID(queriedVertex.parent))) {
+					getPlayer().getResearchData().setResearched(universalID, true);
+					researched = true;
+				}
+			}
+			getSender().addPacket(new ResearchPacket(universalID, researched));
 		}
 	}
 	

@@ -23,6 +23,7 @@ import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.networking.packets.FoodPacket;
+import net.cmr.gaze.research.ResearchData;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.widgets.QuestData;
 import net.cmr.gaze.util.ArrayUtil;
@@ -67,6 +68,8 @@ public class Player extends HealthEntity implements LightSource {
 	private double spawnPointX=Integer.MIN_VALUE, spawnPointY=Integer.MIN_VALUE;
 	private String spawnPointWorld=WorldManager.DEFAULT_WORLD_NAME;
 	
+	private ResearchData researchData;
+
 	/**
 	 * This constructor should only be used in Entity reading and writing
 	 */
@@ -89,9 +92,9 @@ public class Player extends HealthEntity implements LightSource {
 		super(EntityType.Player, listener);
 		this.username = username;
 		inventory = new Inventory(5*7);
-		//inventory.put(4, Items.getItem(ItemType.Stone, 6));
-		skills = new Skills();
+		this.skills = new Skills();
 		this.questData = new QuestData();
+		this.researchData = new ResearchData();
 	}
 
 	public Player(String string, double x, double y, HealthEntityListener listener) {
@@ -99,8 +102,9 @@ public class Player extends HealthEntity implements LightSource {
 		this.username = string;
 		inventory = new Inventory(5*7);
 		setPosition(x, y);
-		skills = new Skills();
+		this.skills = new Skills();
 		this.questData = new QuestData();
+		this.researchData = new ResearchData();
 	}
 
 	public String getUsername() {
@@ -206,7 +210,7 @@ public class Player extends HealthEntity implements LightSource {
 		
 	}
 	
-	final int VERSION = 2;
+	final int VERSION = 0;
 	
 	@Override
 	public HealthEntity readHealthEntityData(DataInputStream input, boolean fromFile) throws IOException {
@@ -225,6 +229,7 @@ public class Player extends HealthEntity implements LightSource {
 		spawnPointWorld = input.readUTF();
 		spawnPointX = input.readDouble();
 		spawnPointY = input.readDouble();
+		researchData = ResearchData.read(input);
 		return this;
 	}
 	
@@ -245,6 +250,7 @@ public class Player extends HealthEntity implements LightSource {
 		buffer.writeUTF(spawnPointWorld);
 		buffer.writeDouble(spawnPointX);
 		buffer.writeDouble(spawnPointY);
+		ResearchData.write(getResearchData(), buffer);
 	}
 
 	public void setHotbarSlot(int slot) {
@@ -495,6 +501,10 @@ public class Player extends HealthEntity implements LightSource {
 			getWorld().getServer().connections.get(getUsername()).inventoryChanged(true);
 		}
 		getInventory().clear();
+	}
+
+	public ResearchData getResearchData() {
+		return researchData;
 	}
 
 	@Override

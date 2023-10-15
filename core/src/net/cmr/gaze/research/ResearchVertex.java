@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.InventorySlot.SimpleItemSlot;
 import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.leveling.Skills.Skill;
 
 public class ResearchVertex {
         
@@ -56,7 +57,7 @@ public class ResearchVertex {
         }
 
         public static class Requirement {
-            enum RequirementType {
+            public enum RequirementType {
                 ITEM, RESEARCH, SKILL;
                 public static RequirementType get(String name) {
                     for(RequirementType type : values()) {
@@ -66,8 +67,8 @@ public class ResearchVertex {
                     return null;
                 }
             } 
-            RequirementType category;
-            Object type, value;
+            public RequirementType category;
+            public Object type, value;
             // category |type     | value
             // ITEM     |WOOD_AXE | 1
             // RESEARCH |gaze:machinery.electricity 
@@ -81,6 +82,41 @@ public class ResearchVertex {
                 if(split.length > 2) {
                     value = split[2];
                 }
+            }
+
+            public ItemType getItemType() {
+                if(category == RequirementType.ITEM) {
+                    return ItemType.getItemTypeFromID(type.hashCode());
+                }
+                throw new RuntimeException("Requirement is not an item requirement!");
+            }
+            public int getSkillLevel() {
+                if(category == RequirementType.SKILL) {
+                    return Integer.valueOf(value.toString());
+                }
+                throw new RuntimeException("Requirement is not a skill requirement!");
+            }
+            public int getItemQuantity() {
+                if(category == RequirementType.ITEM) {
+                    return Integer.valueOf(value.toString());
+                }
+                throw new RuntimeException("Requirement is not an item requirement!");
+            }
+            public Skill getSkill() {
+                if(category == RequirementType.SKILL) {
+                    for(Skill skill : Skill.values()) {
+                        if(skill.name().equals(type.toString())) {
+                            return skill;
+                        }
+                    }
+                }
+                throw new RuntimeException("Requirement is not a skill requirement!");
+            }
+            public String getResearchID() {
+                if(category == RequirementType.RESEARCH) {
+                    return type.toString();
+                }
+                throw new RuntimeException("Requirement is not a research requirement!");
             }
 
             public String toString() {

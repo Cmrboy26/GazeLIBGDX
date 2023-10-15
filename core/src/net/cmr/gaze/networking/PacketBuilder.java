@@ -27,6 +27,7 @@ import net.cmr.gaze.networking.packets.PlayerInputPacket;
 import net.cmr.gaze.networking.packets.PlayerInteractPacket;
 import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.networking.packets.QuestDataPacket;
+import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.networking.packets.SpawnEntity;
 import net.cmr.gaze.networking.packets.TileUpdatePacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
@@ -197,6 +198,10 @@ public abstract class PacketBuilder {
 				}
 				case 26: {
 					processPacket(new ChatPacket(input, nextPacketSize));
+					break;
+				}
+				case 27: {
+					processPacket(new ResearchPacket(input, nextPacketSize));
 					break;
 				}
 				default: {

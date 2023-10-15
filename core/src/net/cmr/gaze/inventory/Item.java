@@ -7,8 +7,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.DataBuffer;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -36,48 +37,67 @@ public abstract class Item implements Cloneable {
 	
 	protected abstract void draw(Gaze game, Batch batch, float x, float y, float width, float height);
 	
-	public static void draw(Gaze game, Viewport port, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
-		draw(game, port, 0, item, batch, x, y, width, height, displayQuantity);
+	public static void draw(Gaze game, Actor widget, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
+		draw(game, widget, 0, item, batch, x, y, width, height, displayQuantity);
 	}
 	
-	public static void draw(Gaze game, Viewport port, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height) {
-		draw(game, port, hoverYOffset, item, batch, x, y, width, height, true);
+	public static void draw(Gaze game, Actor widget, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height) {
+		draw(game, widget, hoverYOffset, item, batch, x, y, width, height, true);
 	}
 	
-	public static void draw(Gaze game, Viewport port, Item item, Batch batch, float x, float y, float width, float height) {
-		draw(game, port, 0, item, batch, x, y, width, height, true);
+	public static void viewportDraw(Gaze game, Viewport viewport, Item item, Batch batch, float x, float y, float width, float height) {
+		standardDraw(game, item, batch, x, y, width, height, true);
+		viewportHoverCheck(viewport, 0, item, x, y, width, height);
+	}
+
+	public static void draw(Gaze game, Actor widget, Item item, Batch batch, float x, float y, float width, float height) {
+		draw(game, widget, 0, item, batch, x, y, width, height, true);
 	}
 	
 	static GlyphLayout layout = new GlyphLayout();
-	public static void draw(Gaze game, Viewport port, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
+	public static void draw(Gaze game, Actor widget, float hoverYOffset, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
+		standardDraw(game, item, batch, x, y, width, height, displayQuantity);
+		actorHoverCheck(widget, hoverYOffset, item, x, y, width, height);
+	}
+	private static void standardDraw(Gaze game, Item item, Batch batch, float x, float y, float width, float height, boolean displayQuantity) {
 		if(item == null) {
 			return;
 		}
 		item.draw(game, batch, x, y, width, height);
-		
+
 		if(item.getSize() != 1 && displayQuantity) {
 			BitmapFont font = game.getFont((width/3f));
-			/*if(item.lastSize != item.getSize()) {
-				item.lastSize = item.getSize();
-				GlyphLayout layout = new GlyphLayout(); //dont do this every frame! Store it as member
-				layout.setText(font, item.getSize()+"");
-				item.sizeWidth = layout.width;
-			}*/
-			 //dont do this every frame! Store it as member
 			layout.setText(font, item.getSize()+"");
 			item.sizeWidth = layout.width;
 			font.draw(batch, item.getSize()+"", x+width-item.sizeWidth-1, y+height/2-2);
 		}
-		
-		if(port != null) {
+	}
+	private static void actorHoverCheck(Actor widget, float hoverYOffset, Item item, float x, float y, float width, float height) {
+		if(item == null) {
+			return;
+		}
+		Stage stage;
+		if(widget != null && ((stage = widget.getStage()).getViewport() != null)) {
 			Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY()+hoverYOffset);
-			Vector2 mouseLocalPosition = port.unproject(mouseScreenPosition);
-			if(x <= mouseLocalPosition.x && x + width >= mouseLocalPosition.x && y <= mouseLocalPosition.y && y + height >= mouseLocalPosition.y) {
-				// OVER
-				GameScreen.setHoveredItem(port, item, mouseLocalPosition);
+			Vector2 mouseLocalPosition = widget.screenToLocalCoordinates(mouseScreenPosition);
+			if(widget.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null) {
+				GameScreen.setHoveredItem(stage.getViewport(), item, mouseLocalPosition);
 			}
 		}
-		
+	}
+	private static void viewportHoverCheck(Viewport viewport, float hoverYOffset, Item item, float x, float y, float width, float height) {
+		if(item == null) {
+			return;
+		}
+		if(viewport != null) {
+			Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY()+hoverYOffset);
+			Vector2 mouseLocalPosition = viewport.unproject(new Vector2(mouseScreenPosition));
+			Vector2 itemLocalPosition = new Vector2(x, y);
+			if(itemLocalPosition.x <= mouseLocalPosition.x && itemLocalPosition.x + width >= mouseLocalPosition.x && itemLocalPosition.y <= mouseLocalPosition.y && itemLocalPosition.y + height >= mouseLocalPosition.y) {
+				// OVER
+				GameScreen.setHoveredItem(viewport, item, mouseLocalPosition);
+			}
+		}
 	}
 	
 	public ItemType getType() {

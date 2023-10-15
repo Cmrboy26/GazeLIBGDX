@@ -28,24 +28,33 @@ public class ResearchData {
         return researched != null && researched;
     }
 
-    public void read(DataInputStream stream) throws IOException {
+    public static ResearchData read(DataInputStream stream) throws IOException {
+        ResearchData end = new ResearchData();
         int size = stream.readInt();
         for (int i = 0; i < size; i++) {
             String techID = stream.readUTF();
             boolean researched = stream.readBoolean();
-            techs.put(techID, researched);
+            end.techs.put(techID, researched);
         }
+        return end;
     }
 
-    public void write(DataBuffer buffer) throws IOException {
-        buffer.writeInt(techs.size());
-        for (String techID : techs.keySet()) {
+    public static void write(ResearchData data, DataBuffer buffer) throws IOException {
+        if(data == null) {
+            buffer.writeInt(-1);
+            return;
+        }
+        buffer.writeInt(data.techs.size());
+        for (String techID : data.techs.keySet()) {
             buffer.writeUTF(techID);
-            buffer.writeBoolean(techs.get(techID));
+            buffer.writeBoolean(data.techs.get(techID));
         }
     }
 
     public void setResearched(ResearchVertex vertex, boolean researched) {
         techs.put(vertex.tree.getUniversalID(vertex), researched);
+    }
+    public void setResearched(String universalID, boolean researched) {
+        techs.put(universalID, researched);
     }
 }

@@ -1,6 +1,5 @@
 package net.cmr.gaze.stage.widgets;
 
-import java.awt.Color;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -8,6 +7,9 @@ import java.util.Objects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -21,14 +23,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.research.ResearchData;
 import net.cmr.gaze.research.ResearchTree;
 import net.cmr.gaze.research.ResearchVertex;
 import net.cmr.gaze.research.ResearchVertex.RequirementWidget;
+import net.cmr.gaze.stage.GameScreen;
 
 public class ResearchMenu extends WidgetGroup {
     
     Gaze game;
+    GameScreen screen;
 
     ButtonGroup<ImageButton> categoryButtonGroup;
     ButtonGroup<ResearchWidget> researchButtonGroup;
@@ -58,8 +63,27 @@ public class ResearchMenu extends WidgetGroup {
         initialized = true;
     }
 
-    public ResearchMenu(Gaze game) {
+    public static ResearchVertex getVertex(String universalID) {
+        for(ResearchTree tree : researchTrees) {
+            String treeTest = tree.getUniversalID(tree.root);
+            if(universalID.indexOf(treeTest) != 0) {
+                continue;
+            }
+            if(universalID.equals(treeTest)) {
+                return tree.root;
+            }
+            String internalID = universalID.substring(treeTest.length()+1);
+            ResearchVertex vertex = tree.getResearchNodes().get(internalID);
+            if(vertex != null) {
+                return vertex;
+            }
+        }
+        return null;
+    }
+
+    public ResearchMenu(Gaze game, GameScreen screen) {
         this.game = game;
+        this.screen = screen;
         this.data = new ResearchData();
         setVisible(false);
 
@@ -124,12 +148,17 @@ public class ResearchMenu extends WidgetGroup {
                     return false;
                 } else if(!data.isResearched(researchButtonGroup.getChecked().vertex)) {
                     ResearchVertex vertex = researchButtonGroup.getChecked().vertex;
-                    data.setResearched(vertex, true);
-                    researchButtonGroup.uncheckAll();
-                    game.playSound("intro", 1f);
-                    refreshResearchPanel(false);
+                    String univString = vertex.tree.getUniversalID(vertex);
+                    screen.sender.addPacket(new ResearchPacket(univString));
+
+                    //data.setResearched(vertex, true);
+                    //researchButtonGroup.uncheckAll();
+                    //game.playSound("intro", 1f);
+                    //refreshResearchPanel(false);
+
+                    return true;
                 }
-                return true;
+                return false;
             }
         });
         addActor(confirmButton);
@@ -143,7 +172,7 @@ public class ResearchMenu extends WidgetGroup {
         refreshResearchPanel(true);
     }
 
-    private void refreshResearchPanel(boolean resetScroll) {
+    public void refreshResearchPanel(boolean resetScroll) {
         WidgetGroup group = new WidgetGroup();
         group.setBounds(0, 0, 168*2, 81*2*5);
 
@@ -169,11 +198,30 @@ public class ResearchMenu extends WidgetGroup {
         }
     } 
 
+    public ResearchTree getTree() {
+        return researchTree;
+    }
+    public void setResearchTree(int index) {
+        researchTree = researchTrees.get(index);
+    }
+
+    public ResearchData getData() {
+        return data;
+    }
+    public void setResearchData(ResearchData data) {
+        this.data = data;
+    }
+
     public static class ResearchWidget extends ImageButton {
+        private static TextureRegionDrawable background;
         public ResearchVertex vertex;
+        boolean hit = false;
+        Gaze game;
+        
         public ResearchWidget(ResearchMenu menu, ResearchVertex vertex, TextureRegionDrawable icon, Gaze game) {
             super(new ImageButtonStyle(icon, icon, icon, null, getBackground(game), getBackground(game)));
             this.vertex = vertex;
+            this.game = game;
             if(vertex.parent != null && !menu.data.isResearched(vertex.parent.tree.getUniversalID(vertex.parent))) {
                 setColor(.75f, .75f, .75f, .5f);
                 setDisabled(true);
@@ -182,14 +230,35 @@ public class ResearchMenu extends WidgetGroup {
             } else {
                 setColor(com.badlogic.gdx.graphics.Color.WHITE);
             }
+            addListener(new InputListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    hit = true;
+                    tdim = ResearchWidget.super.getWidth();
+                    tname = vertex.name;
+                    tdisc = vertex.description;
+                }
+            });
         }
 
         @Override
         public void draw(Batch batch, float parentAlpha) {
             super.draw(batch, parentAlpha);
+            if(hit) {
+                Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+                Vector2 mouseLocalPosition = screenToLocalCoordinates(mouseScreenPosition);
+                if(hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null) {
+                    Vector2 position = localToStageCoordinates(new Vector2(mouseLocalPosition.x, mouseLocalPosition.y));
+                    tx = position.x;
+                    ty = position.y;
+                } else {
+                    hit = false;
+                    tname = null;
+                    tdisc = null;
+                }
+            }
         }
 
-        private static TextureRegionDrawable background;
         private static TextureRegionDrawable getBackground(Gaze game) {
             if(background!=null) {
                 return background;
@@ -233,8 +302,17 @@ public class ResearchMenu extends WidgetGroup {
         }
     }
 
-    public void setResearchTree(int index) {
-        researchTree = researchTrees.get(index);
+    static float tx, ty, tdim;
+    static String tname, tdisc;
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        BitmapFont font = game.getFont(7);
+        if(tname != null) {
+            font.draw(batch, tname, tx+5, ty+5+7/2f);
+            font.draw(batch, tdisc, tx+5, ty-5+7/2f);
+        }
     }
     
 }
