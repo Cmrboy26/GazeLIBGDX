@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Random;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.DataBuffer;
@@ -39,6 +40,7 @@ public class StoneWall extends Tile implements WallTile {
 	protected void onHit(World world, Player player, int x, int y) {
 		super.onHit(world, player, x, y);
 		TileUtils.spawnBreakParticle(world, this, x, y, this);
+		TileUtils.spawnBreakParticle(world, this, x, y+.8f, this);
 	}
 	
 	@Override
@@ -91,6 +93,9 @@ public class StoneWall extends Tile implements WallTile {
 		TileUtils.spawnBreakParticle(world, this, x, y, this);
 		TileUtils.addPlayerXP(player, world, Skill.MINING, 2f);
 		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE, 1));
+		if(0==new Random().nextInt(2)) {
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.STONE, 1));
+		}
 	}
 	
 	public Rectangle getBoundingBox(int x, int y) {

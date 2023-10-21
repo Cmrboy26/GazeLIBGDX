@@ -269,7 +269,7 @@ public class Player extends HealthEntity implements LightSource {
 	}
 	
 	public Rectangle getBoundingBox() {
-		return new Rectangle((float) (getX()-Tile.TILE_SIZE/2+Tile.TILE_SIZE/6), (float) (getY()), Tile.TILE_SIZE-Tile.TILE_SIZE/3, Tile.TILE_SIZE/4);
+		return new Rectangle((float) (getX()-Tile.TILE_SIZE/2+Tile.TILE_SIZE/3f), (float) (getY()), Tile.TILE_SIZE-Tile.TILE_SIZE/1.5f, Tile.TILE_SIZE/4);
 	}
 	
 	@Override
@@ -278,7 +278,7 @@ public class Player extends HealthEntity implements LightSource {
 		if(entityBox == null) {
 			return entityBox;
 		}
-		entityBox.setPosition((float) x-Tile.TILE_SIZE/2f+Tile.TILE_SIZE/6, (float) y);
+		entityBox.setPosition((float) x-Tile.TILE_SIZE/2f+Tile.TILE_SIZE/3f, (float) y);
 		return entityBox;
 	} 
 	
@@ -323,6 +323,12 @@ public class Player extends HealthEntity implements LightSource {
 		return inventory.get(getHotbarSlot());
 	}
 
+	/**
+	 * Gets the player's skills
+	 * WARNING: this should only be used for RENDERING, NOT for adding XP
+	 * Refer to {@link #addXP(World, Skill, double)} for adding XP
+	 * @return
+	 */
 	public Skills getSkills() {
 		return skills;
 	}
@@ -331,6 +337,12 @@ public class Player extends HealthEntity implements LightSource {
 		this.skills = skills2;
 	}
 	
+	/**
+	 * Adds XP to the player's skill
+	 * @param world the world the player is in (used to send the packet to the clients in the world)
+	 * @param skill the skill to add XP to
+	 * @param xp the amount of XP to add
+	 */
 	public void addXP(World world, Skill skill, double xp) {
 		skills.addXP(skill, xp);
 		SkillsPacket packet = new SkillsPacket(skills, this);

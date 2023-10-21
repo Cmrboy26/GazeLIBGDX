@@ -20,7 +20,8 @@ public class ResearchVertex {
         public ResearchVertex parent;
         public ArrayList<ResearchVertex> children;
         public ResearchTree tree;
-        public Requirement[] requirements = null;
+        public ResearchRequirement[] requirements = null;
+        public ResearchReward[] rewards = null;
         public String name, description, icon, ID, parentID;
         public Vector2 position;
 
@@ -28,7 +29,6 @@ public class ResearchVertex {
         public ResearchVertex(ResearchTree tree, JsonValue json) {
             this.tree = tree;
             this.children = new ArrayList<>();
-            // read from json
             this.name = json.getString("name");
             this.description = json.getString("description");
             this.icon = json.getString("icon");
@@ -39,16 +39,82 @@ public class ResearchVertex {
                 tree.root = this;
                 parent = null;
             } else {
+                // PARENTS (mandatory)
                 String parentID = json.getString("parent-id");
                 parent = tree.getVertex(parentID);
                 tree.addChild(parent, this);
-                // read requirements
+                // REQUIREMENTS (mandatory)
                 JsonValue requirements = json.get("requirements");
-                this.requirements = new Requirement[requirements.size];
+                this.requirements = new ResearchRequirement[requirements.size];
                 for(int i = 0; i < requirements.size; i++) {
-                    this.requirements[i] = new Requirement(requirements.getString(i));
+                    this.requirements[i] = new ResearchRequirement(requirements.getString(i));
                 }
-                // read position
+                // REWARDS (optional)
+                JsonValue rewards = json.get("rewards");
+                if(rewards != null) {
+                    this.rewards = new ResearchReward[rewards.size];
+                    for(int i = 0; i < rewards.size; i++) {
+                        this.rewards[i] = new ResearchReward(rewards.getString(i));
+                    }
+                }
+            }
+        }
+
+        public static class ResearchReward {
+            public enum ResearchRewardType {
+                ITEM, XP;
+                public static ResearchRewardType get(String name) {
+                    for(ResearchRewardType type : values()) {
+                        if(type.name().equals(name))
+                            return type;
+                    }
+                    return null;
+                }
+            }
+
+            public ResearchRewardType category;
+            public Object type, value;
+            // category |type     | value
+            // ITEM     |WOOD_AXE | 1
+            // XP       |MINING   | 10
+            public ResearchReward(String rewardString) {
+                String[] split = rewardString.split("/");
+                category = ResearchRewardType.get(split[0]);
+                type = split[1];
+                if(split.length > 2) {
+                    value = split[2];
+                }
+            }
+            public ItemType getItemType() {
+                if(category == ResearchRewardType.ITEM) {
+                    return ItemType.getItemTypeFromID(type.hashCode());
+                }
+                throw new RuntimeException("Reward is not an item reward!");
+            }
+            public int getItemQuantity() {
+                if(category == ResearchRewardType.ITEM) {
+                    return Integer.valueOf(value.toString());
+                }
+                throw new RuntimeException("Reward is not an item reward!");
+            }
+            public int getSkillXP() {
+                if(category == ResearchRewardType.XP) {
+                    return Integer.valueOf(value.toString());
+                }
+                throw new RuntimeException("Reward is not an XP reward!");
+            }
+            public Skill getSkill() {
+                if(category == ResearchRewardType.XP) {
+                    for(Skill skill : Skill.values()) {
+                        if(skill.name().equals(type.toString())) {
+                            return skill;
+                        }
+                    }
+                }
+                throw new RuntimeException("Reward is not an XP reward!");
+            }
+            public String toString() {
+                return category + "/" + type + "/" + value;
             }
         }
 
@@ -56,28 +122,28 @@ public class ResearchVertex {
             return new RequirementWidget(this, game);
         }
 
-        public static class Requirement {
-            public enum RequirementType {
+        public static class ResearchRequirement {
+            public enum ResearchRequirementType {
                 ITEM, RESEARCH, SKILL;
-                public static RequirementType get(String name) {
-                    for(RequirementType type : values()) {
+                public static ResearchRequirementType get(String name) {
+                    for(ResearchRequirementType type : values()) {
                         if(type.name().equals(name))
                             return type;
                     }
                     return null;
                 }
             } 
-            public RequirementType category;
+            public ResearchRequirementType category;
             public Object type, value;
             // category |type     | value
             // ITEM     |WOOD_AXE | 1
             // RESEARCH |gaze:machinery.electricity 
             // SKILL    |MINING   | 10
 
-            public Requirement(String requirementString) {
+            public ResearchRequirement(String requirementString) {
                 String[] split = requirementString.split("/");
                 // print everything in split
-                category = RequirementType.get(split[0]);
+                category = ResearchRequirementType.get(split[0]);
                 type = split[1];
                 if(split.length > 2) {
                     value = split[2];
@@ -85,25 +151,25 @@ public class ResearchVertex {
             }
 
             public ItemType getItemType() {
-                if(category == RequirementType.ITEM) {
+                if(category == ResearchRequirementType.ITEM) {
                     return ItemType.getItemTypeFromID(type.hashCode());
                 }
                 throw new RuntimeException("Requirement is not an item requirement!");
             }
             public int getSkillLevel() {
-                if(category == RequirementType.SKILL) {
+                if(category == ResearchRequirementType.SKILL) {
                     return Integer.valueOf(value.toString());
                 }
                 throw new RuntimeException("Requirement is not a skill requirement!");
             }
             public int getItemQuantity() {
-                if(category == RequirementType.ITEM) {
+                if(category == ResearchRequirementType.ITEM) {
                     return Integer.valueOf(value.toString());
                 }
                 throw new RuntimeException("Requirement is not an item requirement!");
             }
             public Skill getSkill() {
-                if(category == RequirementType.SKILL) {
+                if(category == ResearchRequirementType.SKILL) {
                     for(Skill skill : Skill.values()) {
                         if(skill.name().equals(type.toString())) {
                             return skill;
@@ -113,7 +179,7 @@ public class ResearchVertex {
                 throw new RuntimeException("Requirement is not a skill requirement!");
             }
             public String getResearchID() {
-                if(category == RequirementType.RESEARCH) {
+                if(category == ResearchRequirementType.RESEARCH) {
                     return type.toString();
                 }
                 throw new RuntimeException("Requirement is not a research requirement!");
@@ -147,7 +213,7 @@ public class ResearchVertex {
                 empty.setVisible(false);
                 empty.setWidth(8);
                 empty.setHeight(8);
-                for (Requirement requirement : vertex.requirements) {
+                for (ResearchRequirement requirement : vertex.requirements) {
                     //System.out.println(requirement);
                     try {
                         switch (requirement.category) {

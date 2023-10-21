@@ -6,8 +6,10 @@ import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -27,6 +29,8 @@ import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.research.ResearchData;
 import net.cmr.gaze.research.ResearchTree;
 import net.cmr.gaze.research.ResearchVertex;
+import net.cmr.gaze.research.ResearchVertex.ResearchRequirement;
+import net.cmr.gaze.research.ResearchVertex.ResearchRequirement.ResearchRequirementType;
 import net.cmr.gaze.research.ResearchVertex.RequirementWidget;
 import net.cmr.gaze.stage.GameScreen;
 
@@ -181,7 +185,15 @@ public class ResearchMenu extends WidgetGroup {
         researchButtonGroup.setMaxCheckCount(1);
         if(researchTree == null) {return;}
         for(ResearchVertex vertex : researchTree.getResearchNodes().values()) {
-            TextureRegionDrawable drawable = new TextureRegionDrawable(game.getSprite(vertex.icon));
+            String icon = vertex.icon.replaceAll(">", "");
+            TextureRegion tr = game.getSprite(icon);
+            if(!game.hasSprite(icon) || vertex.icon.contains(">")) {
+                Animation<TextureRegion> anim = game.getAnimation(icon);
+                if(anim != null) {
+                     tr = anim.getKeyFrame(0f);
+                }
+            }
+            TextureRegionDrawable drawable = new TextureRegionDrawable(tr);
             drawable.setMinSize(14*2, 14*2);
             ResearchWidget widget = new ResearchWidget(this, vertex, drawable, game);
             widget.setBounds(vertex.position.x*3f+168-16*.75f, vertex.position.y*3f+16*.75f, 16*1.5f, 16*1.5f);
@@ -222,13 +234,28 @@ public class ResearchMenu extends WidgetGroup {
             super(new ImageButtonStyle(icon, icon, icon, null, getBackground(game), getBackground(game)));
             this.vertex = vertex;
             this.game = game;
-            if(vertex.parent != null && !menu.data.isResearched(vertex.parent.tree.getUniversalID(vertex.parent))) {
-                setColor(.75f, .75f, .75f, .5f);
+            boolean canBeResearched = false;
+            if(vertex.parent != null) {
+                boolean cannotBeResearched = false;
+                cannotBeResearched = cannotBeResearched || !menu.data.isResearched(vertex.parent.tree.getUniversalID(vertex.parent));
+                for(ResearchRequirement requirement : vertex.requirements) {
+                    if(requirement.category != ResearchRequirementType.RESEARCH) {
+                        continue;
+                    }
+                    cannotBeResearched = cannotBeResearched || !menu.data.isResearched(requirement.getResearchID());
+                }
+                canBeResearched = !cannotBeResearched;
+            } else {
+                canBeResearched = true;
+            }
+
+            if(!canBeResearched) {
+                setColor(.75f, .75f, .75f, .25f);
                 setDisabled(true);
             } else if(!menu.data.isResearched(vertex)) {
-                setColor(.75f, .75f, .75f, 1);
+                setColor(1, 1, 1f, 1);
             } else {
-                setColor(com.badlogic.gdx.graphics.Color.WHITE);
+                setColor(148/255f, 255/255f, 159/255f, 1);
             }
             addListener(new InputListener() {
                 @Override
@@ -279,6 +306,9 @@ public class ResearchMenu extends WidgetGroup {
             getStage().setScrollFocus(researchPanel);
             if(lastVisibility) {
                 refreshResearchPanel(false);
+            } else {
+                tname = null;
+                tdisc = null;
             }
         }
         if(!isVisible() && getStage().getScrollFocus()!=null) {

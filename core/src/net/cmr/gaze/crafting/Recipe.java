@@ -62,7 +62,8 @@ public class Recipe {
 		if(!canCraft(inventory, times, player)) {
 			return null;
 		}
-		if(this.station != station) {
+		
+		if(this.station != station && this.station != CraftingStation.NONE) {
 			return null;
 		}
 		

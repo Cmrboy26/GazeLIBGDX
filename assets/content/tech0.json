@@ -2,12 +2,84 @@
 	"namespace":"gaze",
 	"root":{
 		"name":"Resources",
-		"description":"resource gathering and crap",
+		"description":"You can't build anything without resources!",
 		"icon":"techCategoryIcon1",
 		"id":"resources",
 		"position": [0,0]
 	},
     "researchNodes":[
+		{
+			"name":"Underground",
+			"description":"Digging deeper will reveal more resources.\n-Unlocks the chute, which grants access the underground.",
+			"icon":"chute",
+			"id":"underground",
+			"parent-id":"root",
+			"position": [5,10],
+			"requirements":[
+				"SKILL/FORAGING/2",
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Wood Tools",
+			"description":"Wood tools are better than nothing.",
+			"icon":"woodPickaxe",
+			"id":"woodTools",
+			"parent-id":"root",
+			"position": [-5,10],
+			"requirements":[
+				"ITEM/WOOD/5"
+			],
+			"rewards": [
 
+			]
+		},
+		{
+			"name":"Stone Tools",
+			"description":"A great upgrade!",
+			"icon":"stonePickaxe",
+			"id":"stoneTools",
+			"parent-id":"woodTools",
+			"position": [-5,20],
+			"requirements":[
+				"ITEM/STONE/5",
+				"RESEARCH/gaze:resources.underground"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Smelting",
+			"description":"Smelting allows you to turn ore into ingots.",
+			"icon":">furnace",
+			"id":"smelting",
+			"parent-id":"woodTools",
+			"position": [5,20],
+			"requirements":[
+				"SKILL/MINING/2",
+				"RESEARCH/gaze:resources.underground"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Forging",
+			"description":"Forging allows you to turn ingots into tools.\n-Unlocks the anvil.\n-Unlocks iron tools.",
+			"icon":"anvil",
+			"id":"forging",
+			"parent-id":"smelting",
+			"position": [0,30],
+			"requirements":[
+				"SKILL/MINING/3",
+				"ITEM/IRON_INGOT/2"
+			],
+			"rewards": [
+				
+			]
+		}
     ]
 }

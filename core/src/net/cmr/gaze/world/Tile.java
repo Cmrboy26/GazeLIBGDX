@@ -84,7 +84,6 @@ public abstract class Tile implements Cloneable {
 			average = Gaze.getAverageColor(sprite);
 			Tiles.setAverageColor(tileType, average);
 		}
-		
 		batch.draw(sprite, x*Tile.TILE_SIZE, y*Tile.TILE_SIZE, width*TILE_SIZE, height*Tile.TILE_SIZE);
 	}
 	public void draw(Batch batch, TextureRegion sprite, float x, float y, float width, float height) {
@@ -94,7 +93,6 @@ public abstract class Tile implements Cloneable {
 			average = Gaze.getAverageColor(sprite);
 			Tiles.setAverageColor(tileType, average);
 		}
-		
 		batch.draw(sprite, x*Tile.TILE_SIZE, y*Tile.TILE_SIZE, width*TILE_SIZE, height*Tile.TILE_SIZE);
 	}
 	

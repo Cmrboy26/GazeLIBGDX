@@ -1604,10 +1604,10 @@ public class GameScreen implements Screen {
 					for(int i = 0; i < Skill.values().length; i++) {
 						int newLevel = player.getSkills().getLevel(Skill.values()[i]);
 						if(newLevel>array[i]) {
-							String[] text = new String[] {Skill.values()[i].name()+" LEVEL UP!\n"+array[i]+" -> "+newLevel, "New recipes unlocked!"};
+							String[] text = new String[] {Skill.values()[i].name()+" LEVEL UP!\n"+array[i]+" -> "+newLevel};
 							String[] sprites = new String[] {"upArrow"};
 							boolean[] animation = new boolean[] {true};
-							addNotification(text, sprites, animation, 3f, 5f, "intro");
+							addNotification(text, sprites, animation, 3f, 3f, "intro");
 							if(Skill.values()[i]==Skill.FORAGING) {
 								openHelpMenu(HintMenuType.LEVEL_UP);
 							}
@@ -1671,6 +1671,11 @@ public class GameScreen implements Screen {
 				if(rpacket.isResearched()) {
 					game.playSound("trueSelect", 1f);
 					tech.refreshResearchPanel(false);
+					addNotification(
+							new String[] {"Researched "+ResearchMenu.getVertex(rpacket.getUniversalID()).name+"!"}, 
+							new String[] {"upArrow"}, 
+							new boolean[] {true},
+							4, 4f, "trueSelect");
 				} else {
 					game.playSound("falseSelect", 1f);
 				}

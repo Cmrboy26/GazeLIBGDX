@@ -1,7 +1,6 @@
 package net.cmr.gaze.crafting;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -64,14 +63,23 @@ public class RecipeDisplay extends ScrollPane {
 		group.setMaxCheckCount(1);
 		group.setMinCheckCount(0);
 		
-		ArrayList<Recipe> validRecipes = category.recipes.stream().filter(s -> {
+		ArrayList<Recipe> validRecipes = new ArrayList<>();
+		for(Recipe recipe : category.recipes) {
+			if(recipe.station == station || recipe.station == CraftingStation.NONE) {
+				if(screen.getLocalPlayer()!=null && recipe.requirementsMet(screen.getLocalPlayer())) {
+					validRecipes.add(recipe);
+				}
+			}
+		}
+
+		/*ArrayList<Recipe> validRecipes = category.recipes.stream().filter(s -> {
 			if(s.station == station) {
 				if(screen.getLocalPlayer()!=null && s.requirementsMet(screen.getLocalPlayer())) {
 					return true;
 				}
 			}
 			return false;
-		}).collect(Collectors.toCollection(ArrayList::new));
+		}).collect(Collectors.toCollection(ArrayList::new));*/
 		
 		for(int i = 0; i < validRecipes.size(); i++) {
 			if(i%4==0) {

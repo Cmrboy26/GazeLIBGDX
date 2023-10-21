@@ -511,6 +511,10 @@ public class Gaze extends Game {
 		System.out.println("COULD NOT FIND SPRITE "+name);
 		return sprites.get("logo");
 	}
+    public boolean hasSprite(String icon) {
+        return sprites.containsKey(icon);
+    }
+
 	public Animation<TextureRegion> getAnimation(String animation) {
 		return animations.get(animation);
 	}

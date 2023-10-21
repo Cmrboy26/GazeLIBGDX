@@ -17,6 +17,7 @@ import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.inventory.Inventory;
 import net.cmr.gaze.inventory.InventoryListener;
 import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
@@ -40,7 +41,8 @@ import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.quests.Quests.QuestTier;
 import net.cmr.gaze.research.ResearchVertex;
-import net.cmr.gaze.research.ResearchVertex.Requirement;
+import net.cmr.gaze.research.ResearchVertex.ResearchRequirement;
+import net.cmr.gaze.research.ResearchVertex.ResearchReward;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.CustomMath;
@@ -364,7 +366,7 @@ public class PlayerConnection {
 				return;
 			}
 			boolean requirementsMet = true;
-			for(Requirement requirement : queriedVertex.requirements) {
+			for(ResearchRequirement requirement : queriedVertex.requirements) {
 				try {
 					switch(requirement.category) {
 						case ITEM:
@@ -394,6 +396,33 @@ public class PlayerConnection {
 			}
 			boolean researched = false;
 			if(requirementsMet) {
+				boolean inventoryChanged = false;
+				for(ResearchRequirement requirement : queriedVertex.requirements) {
+					switch(requirement.category) {
+						case ITEM:
+							getPlayer().getInventory().remove(Items.getItem(requirement.getItemType(), requirement.getItemQuantity()));
+							inventoryChanged = true;
+							break;
+						default:
+							break;
+					}
+				}
+				for(ResearchReward reward : queriedVertex.rewards) {
+					switch(reward.category) {
+						case ITEM:
+							getPlayer().getInventory().add(Items.getItem(reward.getItemType(), reward.getItemQuantity()));
+							inventoryChanged = true;
+							break;
+						case XP:
+							getPlayer().addXP(getPlayer().getWorld(), reward.getSkill(), reward.getSkillXP());
+							break;
+						default:
+							break;
+					}
+				}
+				if(inventoryChanged) {
+					inventoryChanged();
+				}
 				if(getPlayer().getResearchData().isResearched(queriedVertex.tree.getUniversalID(queriedVertex.parent))) {
 					getPlayer().getResearchData().setResearched(universalID, true);
 					researched = true;

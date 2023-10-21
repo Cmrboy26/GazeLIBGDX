@@ -41,6 +41,7 @@ public class IronOreWall extends Tile implements WallTile {
 	protected void onHit(World world, Player player, int x, int y) {
 		super.onHit(world, player, x, y);
 		TileUtils.spawnBreakParticle(world, this, x, y, this);
+		TileUtils.spawnBreakParticle(world, this, x, y+.8f, this);
 	}
 	
 	@Override
@@ -93,10 +94,12 @@ public class IronOreWall extends Tile implements WallTile {
 	
 	@Override
 	public void onBreak(World world, Player player, int x, int y) {
+		TileUtils.spawnBreakParticle(world, this, x, y+.8f, this);
+		TileUtils.spawnBreakParticle(world, this, x, y+.4f, this);
 		TileUtils.spawnBreakParticle(world, this, x, y, this);
 		TileUtils.addPlayerXP(player, world, Skill.MINING, 8);
 		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
-		if(0==new Random().nextInt(3)) {
+		if(0==new Random().nextInt(2)) {
 			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.IRON_ORE, 1));
 		}
 	}
