@@ -75,12 +75,13 @@ public abstract class Structure {
 							Point p = c.relativeToWorldCoordinates(new Point(endX, endY));
 							if(at != null) {
 								if(at instanceof ChestTile) {
-									generateChestLoot((ChestTile) at, endX, endY);
+									generateChestLoot((ChestTile) Tiles.getTile(TileType.CHEST), endX, endY);
 								}
 								if(at instanceof AirTile) {
 									at = null;
 									c.getWorld().removeTile(p.x, p.y, z);
 								} else {
+									c.getWorld().removeTile(p.x, p.y, at.getType().layer);
 									c.getWorld().generateTile(c, at, p.x, p.y);
 								}
 							}
