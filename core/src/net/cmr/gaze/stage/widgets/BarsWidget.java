@@ -72,15 +72,15 @@ public class BarsWidget extends WidgetGroup {
 
 		float scale = 1f;
 
-        NinePatch patch = new NinePatch(game.bar);
+        NinePatch patch = new NinePatch(game.getNinePatch("bar"));
 		patch.scale(scale, scale);
 		NinePatchDrawable bar = new NinePatchDrawable(patch);
 		
-		NinePatch patchEMP = new NinePatch(game.barEmpty);
+		NinePatch patchEMP = new NinePatch(game.getNinePatch("barEmpty"));
 		patchEMP.scale(scale, scale);
 		NinePatchDrawable barEMP = new NinePatchDrawable(patchEMP);
 
-		NinePatch patchBCK = new NinePatch(game.barBackground);
+		NinePatch patchBCK = new NinePatch(game.getNinePatch("barBackground"));
 		patchBCK.scale(scale, scale);
 		NinePatchDrawable barBCK = new NinePatchDrawable(patchBCK);
 		

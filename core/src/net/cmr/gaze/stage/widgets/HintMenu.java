@@ -136,7 +136,7 @@ public class HintMenu extends WidgetGroup {
 		this.game = game;
 		setBounds(x, y-exitButtonHeight, w, h+exitButtonHeight);
 		
-		background = new Image(game.helpBox);
+		background = new Image(game.getNinePatch("helpBox"));
 		background.setBounds(0, 0, w, h+exitButtonHeight);
 		addActor(background);
 		

@@ -47,8 +47,8 @@ import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.IntroScreen;
 import net.cmr.gaze.stage.SettingScreen;
-import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
+import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.entities.Player;
@@ -78,14 +78,16 @@ public class Gaze extends Game {
 	public SpriteBatch batch;
 	public HashMap<Float, BitmapFont> fontmap;
 	public HashMap<String, Sprite> sprites;
+	public HashMap<String, NinePatch> ninePatch;
 	public HashMap<String, Animation<TextureRegion>> animations;
 	public HashMap<String, Sound> sounds;
 	public HashMap<String, Music> music;
 	
-	TextureAtlas UIAtlas;
-	TextureAtlas TilesAtlas;
-	TextureAtlas ItemsAtlas;
-	TextureAtlas PlayerAtlas;
+	TextureAtlas spriteAtlas;
+	//TextureAtlas UIAtlas;
+	//TextureAtlas TilesAtlas;
+	//TextureAtlas ItemsAtlas;
+	//TextureAtlas PlayerAtlas;
 	
 	public ExtendViewport backgroundViewport;
 	
@@ -102,9 +104,10 @@ public class Gaze extends Game {
 		sprites = new HashMap<>();
 		sounds = new HashMap<>();
 		music = new HashMap<>();
+		ninePatch = new HashMap<>();
 	}
 	
-	public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, bar2, barBackground, barEmpty;
+	//public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, bar2, barBackground, barEmpty;
 	
 	@Override
 	public void create () {
@@ -116,18 +119,35 @@ public class Gaze extends Game {
 		//System.out.println(Gdx.files.internal("seymourfont.ttf").file().exists());
 		fontgenerator = new FreeTypeFontGenerator(Gdx.files.internal("seymourfont.ttf"));
 		
-		UIAtlas = new TextureAtlas(Gdx.files.internal("atlas/UI.atlas"));
-		TilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tilesSprites/Tiles.atlas"));
-		ItemsAtlas = new TextureAtlas(Gdx.files.internal("atlas/Items.atlas"));  
-		PlayerAtlas = new TextureAtlas(Gdx.files.internal("entities/atlases/Player.atlas"));  
+		spriteAtlas = new TextureAtlas(Gdx.files.internal("sprites.atlas"));
+		//UIAtlas = new TextureAtlas(Gdx.files.internal("atlas/UI.atlas"));
+		//TilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tilesSprites/Tiles.atlas"));
+		//ItemsAtlas = new TextureAtlas(Gdx.files.internal("atlas/Items.atlas"));  
+		//PlayerAtlas = new TextureAtlas(Gdx.files.internal("entities/atlases/Player.atlas"));  
 		
-		int size = UIAtlas.getRegions().size;
-		size += TilesAtlas.getRegions().size;
-		size += ItemsAtlas.getRegions().size;
-		size += PlayerAtlas.getRegions().size;
+		int size = spriteAtlas.getRegions().size;//UIAtlas.getRegions().size;
+		//size += TilesAtlas.getRegions().size;
+		//size += ItemsAtlas.getRegions().size;
+		//size += PlayerAtlas.getRegions().size;
 		int counter = 1;
 		
-		for(int i = 0; i < UIAtlas.getRegions().size; i++) {
+		for(int i = 0; i < spriteAtlas.getRegions().size; i++) {
+			AtlasRegion region = spriteAtlas.getRegions().get(i);
+			sprites.put(region.name, new Sprite(region));
+			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
+		}
+
+		String[] ninePatches = Gdx.files.internal("ninepatch.txt").readString().split("\n");
+		for(String string : ninePatches) {
+			String[] split = string.split(":");
+			NinePatch tempNine = spriteAtlas.createPatch(split[0]);
+			if(tempNine == null) {continue;}
+			float value = Float.parseFloat(split[1]);
+			tempNine.scale(value, value);
+			ninePatch.put(split[0].replaceAll("Nine", ""), tempNine);
+		}
+
+		/*for(int i = 0; i < UIAtlas.getRegions().size; i++) {
 			AtlasRegion region = UIAtlas.getRegions().get(i);
 			sprites.put(region.name, new Sprite(region));
 			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
@@ -147,7 +167,7 @@ public class Gaze extends Game {
 			AtlasRegion region = PlayerAtlas.getRegions().get(i);
 			sprites.put(region.name, new Sprite(region));
 			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
-		}
+		}*/
 		
 		//healthbar = new NinePatch(sprites.get("healthbarNine"), 2, 2, 3, 4);
 		//healthbar.scale(2, 2);
@@ -155,7 +175,7 @@ public class Gaze extends Game {
 		//ShealthbarBackground.scale(2, 2);
 		
 		
-		helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
+		/*helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
 		helpBox.scale(2, 2);
 		questBoxNine = new NinePatch(sprites.get("questBoxNine"), 1, 1, 1, 1);
 		
@@ -175,7 +195,7 @@ public class Gaze extends Game {
 		barEmpty.scale(2, 2);
 		
 		barBackground = new NinePatch(sprites.get("barBackgroundNine"), 2, 2, 2, 3);
-		barBackground.scale(2, 2);		
+		barBackground.scale(2, 2);*/		
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();
@@ -416,10 +436,11 @@ public class Gaze extends Game {
 		for(String music : music.keySet()) {
 			this.music.get(music).dispose();
 		}
-		TilesAtlas.dispose();
-		UIAtlas.dispose();
-		ItemsAtlas.dispose();
-		PlayerAtlas.dispose();
+		spriteAtlas.dispose();
+		//TilesAtlas.dispose();
+		//UIAtlas.dispose();
+		//ItemsAtlas.dispose();
+		//PlayerAtlas.dispose();
 	}
 	
 	@Override
@@ -504,6 +525,14 @@ public class Gaze extends Game {
 		return font;*/
 	}
 	
+	public NinePatch getNinePatch(String name) {
+		NinePatch patch = ninePatch.get(name);
+		if(patch !=null) {
+			return patch;
+		}
+		System.out.println("COULD NOT FIND NINEPATCH "+name);
+		return ninePatch.get("button");
+	}
 	public Sprite getSprite(String name) {
 		Sprite sprite = sprites.get(name);
 		if(sprite !=null) {
@@ -605,9 +634,9 @@ public class Gaze extends Game {
 		//style.down = new TextureRegionDrawable(getSprite("buttonSelected"));
 		//style.over = new TextureRegionDrawable(getSprite("buttonSelected"));
 		//style.up = new TextureRegionDrawable(getSprite("button"));
-		style.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		style.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		style.up = new NinePatchDrawable(buttonNineSmall);
+		style.down = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		style.over = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		style.up = new NinePatchDrawable(getNinePatch("buttonSmall"));
 		
 		
 		style.font = getFont(25);
@@ -620,9 +649,9 @@ public class Gaze extends Game {
 		//largeStyle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
 		//largeStyle.over = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
 		//largeStyle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
-		largeStyle.down = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		largeStyle.over = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		largeStyle.up = new NinePatchDrawable(buttonNine);
+		largeStyle.down = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		largeStyle.over = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		largeStyle.up = new NinePatchDrawable(getNinePatch("button"));
 		
 		largeStyle.font = getFont(25);
 		largeStyle.fontColor = Color.WHITE;
@@ -634,9 +663,9 @@ public class Gaze extends Game {
 		//smallstyle.down = new TextureRegionDrawable(getSprite("buttonSelected"));
 		//smallstyle.over = new TextureRegionDrawable(getSprite("buttonSelected"));
 		//smallstyle.up = new TextureRegionDrawable(getSprite("button"));
-		smallstyle.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		smallstyle.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		smallstyle.up = new NinePatchDrawable(buttonNineSmall);
+		smallstyle.down = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		smallstyle.over = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		smallstyle.up = new NinePatchDrawable(getNinePatch("buttonSmall"));
 		
 		smallstyle.font = getFont(20);
 		smallstyle.fontColor = Color.WHITE;
@@ -652,10 +681,10 @@ public class Gaze extends Game {
 		//toggle.checked = new TextureRegionDrawable(getSprite("buttonSelected"));
 		//toggle.up = new TextureRegionDrawable(getSprite("button"));
 		
-		toggle.down = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		toggle.over = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		toggle.checked = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
-		toggle.up = new NinePatchDrawable(buttonNineSmall);
+		toggle.down = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		toggle.over = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		toggle.checked = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
+		toggle.up = new NinePatchDrawable(getNinePatch("buttonSmall"));
 
 		toggle.unpressedOffsetY = 1;
 		toggle.pressedOffsetY = 0;
@@ -672,10 +701,10 @@ public class Gaze extends Game {
 		//largeToggle.checked = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
 		//largeToggle.up = new TextureRegionDrawable(getSprite("buttonLarge"));
 		
-		largeToggle.down = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		largeToggle.over = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		largeToggle.checked = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		largeToggle.up = new NinePatchDrawable(buttonNine);
+		largeToggle.down = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		largeToggle.over = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		largeToggle.checked = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		largeToggle.up = new NinePatchDrawable(getNinePatch("button"));
 
 		largeToggle.unpressedOffsetY = 3;
 		largeToggle.pressedOffsetY = 0;
@@ -688,8 +717,8 @@ public class Gaze extends Game {
 		SliderStyle sliderStyle = new SliderStyle();
 		//sliderStyle.background = new TextureRegionDrawable(getSprite("button"));
 		//sliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
-		sliderStyle.background = new NinePatchDrawable(buttonNineSmall);
-		sliderStyle.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		sliderStyle.background = new NinePatchDrawable(getNinePatch("buttonSmall"));
+		sliderStyle.backgroundOver = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
 		sliderStyle.background.setMinHeight(25);
 		sliderStyle.backgroundOver.setMinHeight(25);
 		sliderStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -699,8 +728,8 @@ public class Gaze extends Game {
 		SliderStyle invertedSliderStyle = new SliderStyle();
 		//invertedSliderStyle.background = new TextureRegionDrawable(getSprite("button"));
 		//invertedSliderStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
-		invertedSliderStyle.background = new NinePatchDrawable(buttonNineSmall);
-		invertedSliderStyle.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		invertedSliderStyle.background = new NinePatchDrawable(getNinePatch("buttonSmall"));
+		invertedSliderStyle.backgroundOver = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
 		invertedSliderStyle.background.setMinHeight(25);
 		invertedSliderStyle.backgroundOver.setMinHeight(25);
 		invertedSliderStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -710,8 +739,8 @@ public class Gaze extends Game {
 		SliderStyle sliderNoFill = new SliderStyle();
 		//sliderNoFill.background = new TextureRegionDrawable(getSprite("button"));
 		//sliderNoFill.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelected"));
-		sliderNoFill.background = new NinePatchDrawable(buttonNineSmall);
-		sliderNoFill.backgroundOver = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		sliderNoFill.background = new NinePatchDrawable(getNinePatch("buttonSmall"));
+		sliderNoFill.backgroundOver = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
 		sliderNoFill.background.setMinHeight(25);
 		sliderNoFill.backgroundOver.setMinHeight(25);
 		sliderNoFill.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -720,8 +749,8 @@ public class Gaze extends Game {
 		SliderStyle sliderLargeStyle = new SliderStyle();
 		//sliderLargeStyle.backgroundOver = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
 		//sliderLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
-		sliderLargeStyle.backgroundOver = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
-		sliderLargeStyle.background = new NinePatchDrawable(buttonNine);
+		sliderLargeStyle.backgroundOver = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
+		sliderLargeStyle.background = new NinePatchDrawable(getNinePatch("button"));
 		sliderLargeStyle.background.setMinHeight(25);
 		sliderLargeStyle.backgroundOver.setMinHeight(25);
 		sliderLargeStyle.knob = new TextureRegionDrawable(getSprite("sliderKnob"));
@@ -730,8 +759,8 @@ public class Gaze extends Game {
 		TextFieldStyle textFieldStyle = new TextFieldStyle();
 		//textFieldStyle.background = new TextureRegionDrawable(getSprite("button"));
 		//textFieldStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelected"));
-		textFieldStyle.background = new NinePatchDrawable(buttonNineSmall);
-		textFieldStyle.focusedBackground = new NinePatchDrawable(buttonNineSmall).tint(Color.YELLOW);
+		textFieldStyle.background = new NinePatchDrawable(getNinePatch("buttonSmall"));
+		textFieldStyle.focusedBackground = new NinePatchDrawable(getNinePatch("buttonSmall")).tint(Color.YELLOW);
 		textFieldStyle.font = getFont(15);
 		textFieldStyle.focusedFontColor = Color.YELLOW;
 		textFieldStyle.fontColor = Color.WHITE;
@@ -740,8 +769,8 @@ public class Gaze extends Game {
 		TextFieldStyle textFieldLargeStyle = new TextFieldStyle();
 		//textFieldLargeStyle.background = new TextureRegionDrawable(getSprite("buttonLarge"));
 		//textFieldLargeStyle.focusedBackground = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));
-		textFieldLargeStyle.background = new NinePatchDrawable(buttonNine);
-		textFieldLargeStyle.focusedBackground = new NinePatchDrawable(buttonNine).tint(Color.YELLOW);
+		textFieldLargeStyle.background = new NinePatchDrawable(getNinePatch("button"));
+		textFieldLargeStyle.focusedBackground = new NinePatchDrawable(getNinePatch("button")).tint(Color.YELLOW);
 		textFieldLargeStyle.font = getFont(20);
 		textFieldLargeStyle.focusedFontColor = Color.YELLOW;
 		textFieldLargeStyle.fontColor = Color.WHITE;

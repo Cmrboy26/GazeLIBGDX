@@ -29,6 +29,7 @@ import net.cmr.gaze.inventory.custom.FurnaceItem;
 import net.cmr.gaze.inventory.custom.GrassSeeds;
 import net.cmr.gaze.inventory.custom.IronAxe;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
+import net.cmr.gaze.inventory.custom.IronOreItem;
 import net.cmr.gaze.inventory.custom.CopperOreItem;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
 import net.cmr.gaze.inventory.custom.StoneAxe;
@@ -65,7 +66,7 @@ public class Items {
 		IRON_INGOT(IronIngotItem.class),
 		COPPER_INGOT(CopperIngotItem.class),
 		
-		IRON_ORE(CopperOreItem.class),
+		IRON_ORE(IronOreItem.class),
 		COPPER_ORE(CopperOreItem.class),
 		
 		WOOD_AXE(WoodAxe.class, 1),

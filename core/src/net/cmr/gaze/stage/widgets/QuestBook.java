@@ -159,8 +159,8 @@ public class QuestBook extends WidgetGroup {
 		group.setMinCheckCount(1);
 		
 		TextButtonStyle style = new TextButtonStyle();
-		style.up = new NinePatchDrawable(game.questBoxNine).tint(new Color(0.141f, 0.075f, 0.02f, 1f));
-		style.checked = new NinePatchDrawable(game.questBoxNine).tint(Color.YELLOW);
+		style.up = new NinePatchDrawable(game.getNinePatch("questBox")).tint(new Color(0.141f, 0.075f, 0.02f, 1f));
+		style.checked = new NinePatchDrawable(game.getNinePatch("questBox")).tint(Color.YELLOW);
 		style.font = game.getFont(7);
 		style.checkedFontColor = Color.YELLOW;
 		style.fontColor = Color.WHITE;

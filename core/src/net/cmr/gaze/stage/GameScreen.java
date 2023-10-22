@@ -205,7 +205,7 @@ public class GameScreen implements Screen {
 		this.serverSinglePlayer = singlePlayer;
 		this.entities = new ConcurrentHashMap<>();
 		Preferences prefs = SettingScreen.initializePreferences();
-		lights = new Lights();
+		lights = new Lights(game);
 		chat = new ChatManager();
 		
 		this.uiViewport = new FitViewport(640, 360);

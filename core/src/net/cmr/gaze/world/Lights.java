@@ -7,17 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
+import net.cmr.gaze.Gaze;
+
 public class Lights {
 	
 	private ArrayList<Float[]> lightData;
 
 	Sprite lighting;
-	Texture lightTexture;
 	
-	public Lights() {
+	public Lights(Gaze game) {
 		this.lightData = new ArrayList<>();
-		this.lightTexture = new Texture("atlas/atlasSprites/lighting.png");
-		this.lighting = new Sprite(lightTexture);
+		this.lighting = new Sprite(game.getSprite("lighting"));
 	}
 	
 	public void renderLights(Batch batch) {

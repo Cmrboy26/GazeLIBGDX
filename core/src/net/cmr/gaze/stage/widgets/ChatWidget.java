@@ -56,7 +56,7 @@ public class ChatWidget extends WidgetGroup {
         TextFieldStyle style = new TextFieldStyle();
         style.font = game.getFont(8);
         style.fontColor = Color.WHITE;
-        NinePatch smallButton = new NinePatch(game.buttonNine);
+        NinePatch smallButton = new NinePatch(game.getNinePatch("button"));
         smallButton.scale(.5f, .5f);
         style.background = new NinePatchDrawable(smallButton);
         style.focusedBackground = new NinePatchDrawable(smallButton);
