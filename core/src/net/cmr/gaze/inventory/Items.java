@@ -24,11 +24,12 @@ import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
+import net.cmr.gaze.inventory.custom.CopperIngotItem;
 import net.cmr.gaze.inventory.custom.FurnaceItem;
 import net.cmr.gaze.inventory.custom.GrassSeeds;
 import net.cmr.gaze.inventory.custom.IronAxe;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
-import net.cmr.gaze.inventory.custom.IronOreItem;
+import net.cmr.gaze.inventory.custom.CopperOreItem;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
 import net.cmr.gaze.inventory.custom.StoneAxe;
 import net.cmr.gaze.inventory.custom.StoneBrickCeilingItem;
@@ -62,8 +63,10 @@ public class Items {
 		WOOD(WoodItem.class),
 		STONE(StoneItem.class),
 		IRON_INGOT(IronIngotItem.class),
+		COPPER_INGOT(CopperIngotItem.class),
 		
-		IRON_ORE(IronOreItem.class),
+		IRON_ORE(CopperOreItem.class),
+		COPPER_ORE(CopperOreItem.class),
 		
 		WOOD_AXE(WoodAxe.class, 1),
 		WOOD_PICKAXE(WoodPickaxe.class, 1),
@@ -127,6 +130,9 @@ public class Items {
 				throw new NullPointerException("Could not find ItemType for identifier "+identifier);
 			}
 			return end;
+		}
+		public static boolean itemIDExists(int identifier) {
+			return identifierStorage.containsKey(identifier);
 		}
 		public int getID() {
 			return name().hashCode();
@@ -225,8 +231,12 @@ public class Items {
 		String string = handle.readString();
 		Reader freader = new StringReader(string);
 		BufferedReader reader = new BufferedReader(freader);
-		
-		while(true) {
+
+		String[] lines = string.split("\n");
+		int index = 0;
+		int lineLength = lines.length;
+		System.out.println(index+","+lineLength);
+		while(index<lineLength) {
 			String itemTypeName = reader.readLine();
 			String name = reader.readLine();
 			String description = reader.readLine();
@@ -236,13 +246,15 @@ public class Items {
 			name = name.substring(1);
 			description = description.substring(1);
 			
-			ItemType type = ItemType.getItemTypeFromID(itemTypeName.hashCode());
-			if(type == null) {
-				reader.close();
-				throw new NullPointerException("ItemType with name \""+itemTypeName+"\" does not exist.");
+			if(!ItemType.itemIDExists(itemTypeName.hashCode())) {
+				Logger.log("ERROR", "["+((index+1)/3)+"/"+(lineLength/3)+"] ItemType with name \""+itemTypeName+"\" does not exist.");
+			} else {
+				Logger.log("INFO", "["+((index+1)/3)+"/"+(lineLength/3)+"] \tCreating Item Descriptions... "+itemTypeName);
+				ItemType type = ItemType.getItemTypeFromID(itemTypeName.hashCode());
+				nameMap.put(type, name);
+				descriptionMap.put(type, description);
 			}
-			nameMap.put(type, name);
-			descriptionMap.put(type, description);
+			index+=3;
 		}
 		
 		reader.close();

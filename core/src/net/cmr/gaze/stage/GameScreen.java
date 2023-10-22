@@ -1639,6 +1639,9 @@ public class GameScreen implements Screen {
 			FoodPacket foods = (FoodPacket) packet;
 			if(getLocalPlayer()!=null) {
 				barsWidget.setFood(foods.getHunger()/Player.MAX_HUNGER);
+				if(foods.getHunger()-getLocalPlayer().getHunger()>=1) {
+					game.playSound("eat", 1f);
+				}
 				getLocalPlayer().setHunger(foods.getHunger());
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
@@ -1903,7 +1906,7 @@ public class GameScreen implements Screen {
 				screen.inventory.inventoryGroup.selectedSlot = null;
 			}
 		},
-		CRAFTING(MenuGroup.SIDES) {
+		CRAFTING(MenuGroup.CENTER) {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.setCraftingVisibility(visible);

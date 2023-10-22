@@ -7,9 +7,21 @@ STONE
 IRON_INGOT
 	Iron Ingot
 	A dense and useful ingot.
+COPPER_INGOT
+	Copper Ingot
+	Conductive.
 IRON_ORE
 	Iron Ore
 	A chunk of stone with salvageable pieces of iron.
+COPPER_ORE
+	Copper Ore
+	A chunk of stone with salvageable pieces of copper.
+IRON_GEAR
+	Iron Gear
+	Ratios.
+COPPER_COIL
+	Copper Coil
+	Long conductive wire.
 WOOD_AXE
 	Wood Axe
 	An axe made of wood.
@@ -37,6 +49,12 @@ STONE_SHOVEL
 STONE_HOE
 	Stone Hoe
 	A hoe made of stone.
+IRON_PICKAXE
+	Iron Pickaxe
+	A strong pickaxe capable of mining hard materials.
+IRON_AXE
+	Iron Axe
+	A strong axe capable of harvesting wood efficiently.
 TABLE
 	Table
 	Can be used to craft many items.
@@ -58,9 +76,18 @@ TORCH
 WHEAT_SEEDS
 	Wheat Seeds
 	Can be planted.
+GRASS_SEEDS
+	Grass Seeds
+	Can be planted.
 WHEAT
 	Wheat
 	It's just wheat.
+APPLE
+	Apple
+	A crisp apple with that perfect snap.
+ACORN
+	Acorn
+	The beginnings of something woody.
 WOOD_WALL
 	Wood Wall
 	Build a house!
@@ -70,6 +97,9 @@ WOOD_FLOOR
 WOOD_DOOR
 	Wood Door
 	Enter your house!
+WOOD_CEILING
+	Wood Ceiling
+	Put a roof over your head!
 STONE_PATH_FLOOR
 	Stone Path Floor
 	Decorate the outside!
@@ -79,15 +109,15 @@ STONE_BRICK_WALL
 STONE_BRICK_FLOOR
 	Stone Brick Floor
 	Floor your house!
-IRON_PICKAXE
-	Iron Pickaxe
-	A strong pickaxe capable of mining hard materials.
-IRON_AXE
-	Iron Axe
-	A strong axe capable of harvesting wood efficiently.
+STONE_BRICK_CEILING
+	Stone Brick Ceiling
+	Put a roof over your head!
+BRICK_CEILING
+	Brick Ceiling
+	Put a roof over your head!
 ANVIL
 	Anvil
 	Make some REAL tools!
-APPLE
-	Apple
-	A crisp apple with that perfect snap.
+BREAD
+	Bread
+	Raw toast.

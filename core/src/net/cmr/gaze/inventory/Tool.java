@@ -23,7 +23,8 @@ public abstract class Tool extends Item {
 	public enum Material {
 		WOOD,
 		STONE,
-		IRON,
+		IRON, 
+		COPPER,
 	}
 
 	public abstract int breakLevel();

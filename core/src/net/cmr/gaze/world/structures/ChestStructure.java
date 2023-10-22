@@ -50,7 +50,11 @@ public class ChestStructure extends Structure {
 					break;
 				}
 				case 2: {
-					tile.getInventory().put(i, Items.getItem(ItemType.IRON_ORE, random.nextInt(2)+1));
+					if(random.nextInt(2)==0) {
+						tile.getInventory().put(i, Items.getItem(ItemType.COPPER_ORE, random.nextInt(2)+1));
+					} else {
+						tile.getInventory().put(i, Items.getItem(ItemType.IRON_ORE, random.nextInt(2)+1));
+					}
 					break;
 				}
 				case 1: {

@@ -6,6 +6,7 @@ import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
 import net.cmr.gaze.world.tile.ChuteTile;
+import net.cmr.gaze.world.tile.CopperOreWall;
 import net.cmr.gaze.world.tile.DirtTile;
 import net.cmr.gaze.world.tile.FarmlandTile;
 import net.cmr.gaze.world.tile.FurnaceTile;
@@ -65,7 +66,8 @@ public enum TileType {
 	TREE_SAPLING(TreeSapling.class, 1, TickType.NEARBY, 3, Replaceable.GENERATION), 
 	WOOD_CEILING(WoodCeilingTile.class, 2, TickType.NONE, 2), 
 	STONE_BRICK_CEILING(StoneBrickCeilingTile.class, 2, TickType.NONE, 2), 
-	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2);
+	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2),
+	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 10, Replaceable.GENERATION);
 	
 	public enum TickType {
 		CONSTANT,

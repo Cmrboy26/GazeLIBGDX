@@ -15,8 +15,8 @@
 			"id":"underground",
 			"parent-id":"root",
 			"position": [5,10],
-			"requirements":[
-				"SKILL/FORAGING/2",
+			"requirements": [
+				"SKILL/FORAGING/2"
 			],
 			"rewards": [
 				
@@ -63,7 +63,7 @@
 				"RESEARCH/gaze:resources.underground"
 			],
 			"rewards": [
-
+				
 			]
 		},
 		{
