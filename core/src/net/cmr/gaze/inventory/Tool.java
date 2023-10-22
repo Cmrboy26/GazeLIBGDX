@@ -24,7 +24,7 @@ public abstract class Tool extends Item {
 		WOOD,
 		STONE,
 		IRON, 
-		COPPER,
+		COPPER, COAL,
 	}
 
 	public abstract int breakLevel();

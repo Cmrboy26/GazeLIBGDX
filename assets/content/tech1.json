@@ -11,14 +11,30 @@
 	"comment2":"the parent research is ALWAYS a requirement",
 	"researchNodes":[
 		{
-			"name":"Gears",
-			"description":"PTSD from Factorio (Ratios)",
-			"icon":"machinery.gears",
-			"id":"gears",
+			"name":"Technology",
+			"description":"The basis of all industry.\n-Unlocks the technology table, which permits the \ncrafting of machine components and electronics",
+			"icon":"technologyTableItem",
+			"id":"technology",
 			"parent-id":"root",
 			"position": [0,10],
 			"requirements":[
-				"SKILL/MINING/3",
+				"SKILL/MINING/5",
+				"ITEM/IRON_INGOT/1",
+				"ITEM/COPPER_INGOT/2",
+				"RESEARCH/gaze:resources.forging"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Gears",
+			"description":"Iron gears are cool I suppose.\n-Unlocks Iron Gears",
+			"icon":"ironGear",
+			"id":"gears",
+			"parent-id":"technology",
+			"position": [0,20],
+			"requirements":[
 				"ITEM/IRON_INGOT/5"
 			],
 			"rewards": [
@@ -27,25 +43,27 @@
 		},
 		{
 			"name":"Electricity",
-			"description":"SHOCKING!",
+			"description":"SHOCKING!\n-Unlocks Copper Wire",
 			"icon":"machinery.electricity",
 			"id":"electricity",
 			"parent-id":"gears",
-			"position": [0,20],
+			"position": [0,30],
 			"requirements":[
-				"SKILL/MINING/4"
+				"ITEM/IRON_GEAR/5"
 			],
 			"rewards": [
 				"XP/MINING/10"
 			]
-		},
+		}
+	],
+	"addLater": [
 		{
 			"name":"Lighting",
 			"description":"Let there be light!",
 			"icon":"lighting",
 			"id":"lighting",
 			"parent-id":"electricity",
-			"position": [10,30],
+			"position": [10,40],
 			"requirements":[
 				"ITEM/COPPER_WIRE/10"
 			],
@@ -59,7 +77,7 @@
 			"icon":"wheat5",
 			"id":"circuitry",
 			"parent-id":"electricity",
-			"position": [0,30],
+			"position": [0,40],
 			"requirements":[
 				"ITEM/COPPER_WIRE/10"
 			],
@@ -73,9 +91,9 @@
 			"icon":"machinery.steam",
 			"id":"steam",
 			"parent-id":"electricity",
-			"position": [-10,30],
+			"position": [-10,40],
 			"requirements":[
-				"ITEM/COPPER_COIL/10",
+				"ITEM/COPPER_WIRE/10",
 				"ITEM/IRON_GEAR/10"
 			],
 			"rewards": [

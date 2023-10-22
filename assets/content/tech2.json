@@ -1,13 +1,43 @@
 {
 	"namespace":"gaze",
 	"root":{
-		"name":"Resources",
-		"description":"resource gathering and crap",
+		"name":"Farming",
+		"description":"Time to plant some grass.\nShovel some grass, hoe the dirt, plant some seeds!",
 		"icon":"techCategoryIcon3",
-		"id":"resources",
+		"id":"farming",
 		"position": [0,0]
 	},
     "researchNodes":[
-
+		{
+			"name":"Where's my Water?",
+			"description":"Crops need water in order to grow.\n-Unlocks a watering can.",
+			"icon":"woodWateringCan",
+			"id":"watering",
+			"parent-id":"root",
+			"position": [0,10],
+			"requirements":[
+				"ITEM/WOOD/5",
+				"RESEARCH/gaze:resources.woodTools"
+			],
+			"rewards": [
+				"XP/FARMING/5",
+				"ITEM/WHEAT_SEEDS/5"
+			]
+		},
+		{
+			"name":"BREAD!",
+			"description":"Wheat can be used to make bread.\n-Unlocks a bread recipe.",
+			"icon":"bread",
+			"id":"bread",
+			"parent-id":"watering",
+			"position": [0,20],
+			"requirements":[
+				"ITEM/WHEAT/5"
+			],
+			"rewards": [
+				"XP/FARMING/5",
+				"ITEM/BREAD/2"
+			]
+		}
     ]
 }

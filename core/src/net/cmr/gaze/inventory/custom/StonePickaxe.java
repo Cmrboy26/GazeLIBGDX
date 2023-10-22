@@ -33,7 +33,7 @@ public class StonePickaxe extends Tool {
 
 	@Override
 	public Material[] breakMaterials() {
-		return new Material[] {Material.STONE, Material.IRON, Material.COPPER};
+		return new Material[] {Material.STONE, Material.IRON, Material.COPPER, Material.COAL};
 	}
 	
 	@Override

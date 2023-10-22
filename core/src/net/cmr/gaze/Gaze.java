@@ -107,28 +107,17 @@ public class Gaze extends Game {
 		ninePatch = new HashMap<>();
 	}
 	
-	//public NinePatch /*healthbar, healthbarBackground,*/ helpBox, questBoxNine, buttonNine, buttonNineSmall, bar, bar2, barBackground, barEmpty;
-	
 	@Override
 	public void create () {
 		this.viewport = new ExtendViewport(640, 360);
 		this.viewport.getCamera().position.set(640f/2f, 360f/2f, 0);
 		backgroundViewport = new ExtendViewport(640, 360);
 		batch = new SpriteBatch();
-		//Gdx.files.internal("seymourfont.ttf").file().exists();
-		//System.out.println(Gdx.files.internal("seymourfont.ttf").file().exists());
 		fontgenerator = new FreeTypeFontGenerator(Gdx.files.internal("seymourfont.ttf"));
 		
 		spriteAtlas = new TextureAtlas(Gdx.files.internal("sprites.atlas"));
-		//UIAtlas = new TextureAtlas(Gdx.files.internal("atlas/UI.atlas"));
-		//TilesAtlas = new TextureAtlas(Gdx.files.internal("tiles/tilesSprites/Tiles.atlas"));
-		//ItemsAtlas = new TextureAtlas(Gdx.files.internal("atlas/Items.atlas"));  
-		//PlayerAtlas = new TextureAtlas(Gdx.files.internal("entities/atlases/Player.atlas"));  
 		
-		int size = spriteAtlas.getRegions().size;//UIAtlas.getRegions().size;
-		//size += TilesAtlas.getRegions().size;
-		//size += ItemsAtlas.getRegions().size;
-		//size += PlayerAtlas.getRegions().size;
+		int size = spriteAtlas.getRegions().size;
 		int counter = 1;
 		
 		for(int i = 0; i < spriteAtlas.getRegions().size; i++) {
@@ -145,57 +134,7 @@ public class Gaze extends Game {
 			float value = Float.parseFloat(split[1]);
 			tempNine.scale(value, value);
 			ninePatch.put(split[0].replaceAll("Nine", ""), tempNine);
-		}
-
-		/*for(int i = 0; i < UIAtlas.getRegions().size; i++) {
-			AtlasRegion region = UIAtlas.getRegions().get(i);
-			sprites.put(region.name, new Sprite(region));
-			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
-		}
-		for(int i = 0; i < TilesAtlas.getRegions().size; i++) {
-			AtlasRegion region = TilesAtlas.getRegions().get(i);
-			Sprite s = new Sprite(region);
-			sprites.put(region.name, new Sprite(region));
-			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
-		}
-		for(int i = 0; i < ItemsAtlas.getRegions().size; i++) {
-			AtlasRegion region = ItemsAtlas.getRegions().get(i);
-			sprites.put(region.name, new Sprite(region));
-			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
-		}
-		for(int i = 0; i < PlayerAtlas.getRegions().size; i++) {
-			AtlasRegion region = PlayerAtlas.getRegions().get(i);
-			sprites.put(region.name, new Sprite(region));
-			Logger.log("INFO", "["+(counter++)+"/"+size+"]\t"+" Initializing Texture... "+region.name);
-		}*/
-		
-		//healthbar = new NinePatch(sprites.get("healthbarNine"), 2, 2, 3, 4);
-		//healthbar.scale(2, 2);
-		//healthbarBackground = new NinePatch(sprites.get("healthbarNineBackground"), 2, 2, 3, 4);
-		//ShealthbarBackground.scale(2, 2);
-		
-		
-		/*helpBox = new NinePatch(sprites.get("helpBoxNine"), 1, 1, 1, 1);
-		helpBox.scale(2, 2);
-		questBoxNine = new NinePatch(sprites.get("questBoxNine"), 1, 1, 1, 1);
-		
-		buttonNine = new NinePatch(sprites.get("buttonNine"), 3, 3, 3, 4);
-		buttonNine.scale(2, 2);
-		
-		buttonNineSmall = new NinePatch(sprites.get("buttonNine"), 3, 3, 3, 4);
-		buttonNineSmall.scale(1.5f, 1.5f);
-		
-		bar = new NinePatch(sprites.get("barNine"), 2, 2, 2, 3);
-		bar.scale(2, 2);
-
-		bar = new NinePatch(sprites.get("barNine2"), 2, 2, 2, 3);
-		bar.scale(2, 2);
-		
-		barEmpty = new NinePatch(sprites.get("barEmptyNine"), 2, 2, 2, 3);
-		barEmpty.scale(2, 2);
-		
-		barBackground = new NinePatch(sprites.get("barBackgroundNine"), 2, 2, 2, 3);
-		barBackground.scale(2, 2);*/		
+		}	
 		
 		settings = SettingScreen.initializePreferences();
 		setFPS();
@@ -251,8 +190,6 @@ public class Gaze extends Game {
 		playMusic("peacefulOne");
 		
 		HintMenuType.loadViewedHints();
-		
-		//System.out.println(getAverageColor(getSprite("itemSlotBackgroundCheckedFilled")));
 	}
 
 	public static Color getAverageColor(TextureRegion region) {
@@ -288,8 +225,6 @@ public class Gaze extends Game {
 			}
 		}
 		Color output = new Color((redSum/totalPixel)/255f, (greenSum/totalPixel)/255f, (blueSum/totalPixel)/255f, 1f);
-		//System.out.println(output);
-		// put color into the cache
 		averageColorCache.put(sprite, output);
 		return output;
 	}

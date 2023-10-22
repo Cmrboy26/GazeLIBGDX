@@ -545,6 +545,7 @@ public class GameScreen implements Screen {
 	
 	long lastUpdate = 0;
 	long lastSoundAttempt = 0;
+	int lastZoom = 0;
 	int soundChance = 500;
 	
 	@Override
@@ -579,6 +580,28 @@ public class GameScreen implements Screen {
 		
 		recipeDisplay.update();
 		
+		// Allows the player to change the zoom of the world using the + and - keys instead of going into the settings menu
+		float zoomAmount=0;
+		if(Gdx.input.isKeyPressed(Input.Keys.PLUS) || Gdx.input.isKeyPressed(Input.Keys.EQUALS)) {
+			zoomAmount = -1;
+		}
+		if(Gdx.input.isKeyPressed(Input.Keys.MINUS)) {
+			zoomAmount = 1;
+		}
+		zoomAmount*=Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)?5:1;
+
+		float zoom = ((OrthographicCamera)worldViewport.getCamera()).zoom;
+		if(zoomAmount!=0) {
+			zoom+=zoomAmount*Gdx.graphics.getDeltaTime();
+			zoom = CustomMath.minMax(0.1f, zoom, 10);
+			((OrthographicCamera)worldViewport.getCamera()).zoom = zoom;
+		}
+		if(lastZoom != zoomAmount) {
+			Preferences prefs = SettingScreen.initializePreferences();
+			prefs.putFloat("worldZoom", zoom);
+			prefs.flush();
+		}
+
 		Point centerChunk = null;
 		if(getLocalPlayer()!=null) {
 			Vector2Double pos = new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY());

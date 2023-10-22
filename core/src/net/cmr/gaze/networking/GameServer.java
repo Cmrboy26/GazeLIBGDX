@@ -1,6 +1,5 @@
 package net.cmr.gaze.networking;
 
-import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,9 +17,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
-import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.PingPacket;
 import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
@@ -41,7 +40,8 @@ public class GameServer {
 	
 	public ConcurrentHashMap<String, PlayerConnection> connections;
 	ArrayList<PlayerConnection> connectionInitializeQueue;
-	
+	ArrayList<ChatProcessor> chatProcessors;
+
 	ConnectionPredicates connectionPredicates;
 	
 	public static final String DISCONNECT_GENERIC = "Disconnected";
@@ -84,6 +84,9 @@ public class GameServer {
 		connections = new ConcurrentHashMap<>();
 		connectionInitializeQueue = new ArrayList<>();
 		connectionPredicates = new ConnectionPredicates(this);
+		chatProcessors = new ArrayList<>();
+
+		registerChatProcessor(ChatProcessor.COMMAND_PROCESSOR);
 	}
 	
 	public void acceptIncomingSockets() {
@@ -601,4 +604,16 @@ public class GameServer {
 		return universalSeed;
 	}
 	
+	public void registerChatProcessor(ChatProcessor processor) {
+		chatProcessors.add(processor);
+	}
+	public boolean processMessage(PlayerConnection connection, ChatMessage message) {
+		for(ChatProcessor processor : chatProcessors) {
+			if(processor.processMessage(connection, message)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }

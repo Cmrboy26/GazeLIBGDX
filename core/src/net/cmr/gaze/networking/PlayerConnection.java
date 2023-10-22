@@ -350,9 +350,13 @@ public class PlayerConnection {
 		}
 		else if(packet instanceof ChatPacket) {
 			ChatPacket chat = (ChatPacket) packet;
-			chat = new ChatPacket(new ChatMessage(getUsername(), chat.getMessage().getMessage()));
-			server.sendAllPacketIf(chat, ConnectionPredicate.SEND_ALL, player.getChunk(), player.getWorld());
-			System.out.println("[CHAT] "+chat.getMessage().toString());
+			ChatMessage message = new ChatMessage(getUsername(), chat.getMessage().getMessage());
+			chat = new ChatPacket(message);
+			boolean processed = server.processMessage(this, message);
+			if(!processed) {
+				server.sendAllPacketIf(chat, ConnectionPredicate.SEND_ALL, player.getChunk(), player.getWorld());
+				System.out.println("[CHAT] "+chat.getMessage().toString());
+			}
 		}
 		else if(packet instanceof ResearchPacket) {
 			ResearchPacket rPacket = (ResearchPacket) packet;

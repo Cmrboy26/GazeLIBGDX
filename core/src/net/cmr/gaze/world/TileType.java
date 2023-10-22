@@ -6,6 +6,7 @@ import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
 import net.cmr.gaze.world.tile.ChuteTile;
+import net.cmr.gaze.world.tile.CoalOreWall;
 import net.cmr.gaze.world.tile.CopperOreWall;
 import net.cmr.gaze.world.tile.DirtTile;
 import net.cmr.gaze.world.tile.FarmlandTile;
@@ -22,6 +23,7 @@ import net.cmr.gaze.world.tile.StoneTile;
 import net.cmr.gaze.world.tile.StoneWall;
 import net.cmr.gaze.world.tile.TableTile;
 import net.cmr.gaze.world.tile.TallGrassTile;
+import net.cmr.gaze.world.tile.TechnologyTableTile;
 import net.cmr.gaze.world.tile.TorchTile;
 import net.cmr.gaze.world.tile.Tree;
 import net.cmr.gaze.world.tile.TreeSapling;
@@ -50,12 +52,12 @@ public enum TileType {
 	STONE_WALL(StoneWall.class, 1, TickType.NONE, 5, Replaceable.GENERATION), 
 	CHUTE(ChuteTile.class, 1, TickType.NONE, 3), 
 	TORCH(TorchTile.class, 1, TickType.NONE), 
-	IRON_ORE_WALL(IronOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION), 
+	IRON_ORE_WALL(IronOreWall.class, 1, TickType.NONE, 10, Replaceable.GENERATION), 
 	FURNACE(FurnaceTile.class, 1, TickType.NONE, 2),
 	FARMLAND(FarmlandTile.class, 0, TickType.CONSTANT), 
 	WHEAT(WheatTile.class, 1, TickType.NONE), 
 	CAMPFIRE(CampfireTile.class, 1, TickType.NONE, 3),
-	CHEST(ChestTile.class, 1, TickType.NONE, 3), 
+	CHEST(ChestTile.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
 	WOOD_WALL(WoodWallTile.class, 1, TickType.NONE, 3),
 	WOOD_FLOOR(WoodFloorTile.class, 0, TickType.NONE, 3),
 	WOOD_DOOR(WoodDoorTile.class, 1, TickType.NONE, 3), 
@@ -67,7 +69,9 @@ public enum TileType {
 	WOOD_CEILING(WoodCeilingTile.class, 2, TickType.NONE, 2), 
 	STONE_BRICK_CEILING(StoneBrickCeilingTile.class, 2, TickType.NONE, 2), 
 	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2),
-	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 10, Replaceable.GENERATION);
+	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 10, Replaceable.GENERATION), 
+	TECHNOLOGY_TABLE(TechnologyTableTile.class, 1, TickType.NONE, 3),
+	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 9, Replaceable.GENERATION);
 	
 	public enum TickType {
 		CONSTANT,

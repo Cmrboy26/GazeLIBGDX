@@ -16,11 +16,14 @@ IRON_ORE
 COPPER_ORE
 	Copper Ore
 	A chunk of stone with salvageable pieces of copper.
+COAL
+	Coal
+	Burnable.
 IRON_GEAR
 	Iron Gear
 	Ratios.
-COPPER_COIL
-	Copper Coil
+COPPER_WIRE
+	Copper Wire
 	Long conductive wire.
 WOOD_AXE
 	Wood Axe
@@ -70,6 +73,12 @@ CAMPFIRE
 CHEST
 	Chest
 	Can be used to store items.
+ANVIL
+	Anvil
+	Make some REAL tools!
+TECHNOLOGY_TABLE
+	Technology Table
+	Capable of creating advanced electronic tech.
 TORCH
 	Torch
 	Can be used to light up the world.
@@ -115,9 +124,6 @@ STONE_BRICK_CEILING
 BRICK_CEILING
 	Brick Ceiling
 	Put a roof over your head!
-ANVIL
-	Anvil
-	Make some REAL tools!
 BREAD
 	Bread
 	Raw toast.

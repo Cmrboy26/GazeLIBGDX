@@ -24,13 +24,16 @@ import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
+import net.cmr.gaze.inventory.custom.CoalItem;
 import net.cmr.gaze.inventory.custom.CopperIngotItem;
+import net.cmr.gaze.inventory.custom.CopperOreItem;
+import net.cmr.gaze.inventory.custom.CopperWire;
 import net.cmr.gaze.inventory.custom.FurnaceItem;
 import net.cmr.gaze.inventory.custom.GrassSeeds;
 import net.cmr.gaze.inventory.custom.IronAxe;
+import net.cmr.gaze.inventory.custom.IronGear;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOreItem;
-import net.cmr.gaze.inventory.custom.CopperOreItem;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
 import net.cmr.gaze.inventory.custom.StoneAxe;
 import net.cmr.gaze.inventory.custom.StoneBrickCeilingItem;
@@ -42,6 +45,7 @@ import net.cmr.gaze.inventory.custom.StonePathFloorItem;
 import net.cmr.gaze.inventory.custom.StonePickaxe;
 import net.cmr.gaze.inventory.custom.StoneShovel;
 import net.cmr.gaze.inventory.custom.TableItem;
+import net.cmr.gaze.inventory.custom.TechnologyTableItem;
 import net.cmr.gaze.inventory.custom.TorchItem;
 import net.cmr.gaze.inventory.custom.WheatItem;
 import net.cmr.gaze.inventory.custom.WheatSeeds;
@@ -65,9 +69,13 @@ public class Items {
 		STONE(StoneItem.class),
 		IRON_INGOT(IronIngotItem.class),
 		COPPER_INGOT(CopperIngotItem.class),
+
+		IRON_GEAR(IronGear.class),
+		COPPER_WIRE(CopperWire.class),
 		
 		IRON_ORE(IronOreItem.class),
 		COPPER_ORE(CopperOreItem.class),
+		COAL(CoalItem.class),
 		
 		WOOD_AXE(WoodAxe.class, 1),
 		WOOD_PICKAXE(WoodPickaxe.class, 1),
@@ -86,6 +94,8 @@ public class Items {
 		FURNACE(FurnaceItem.class, 4), 
 		CAMPFIRE(CampfireItem.class, 4), 
 		CHEST(ChestItem.class, 4), 
+		ANVIL(AnvilItem.class, 4),
+		TECHNOLOGY_TABLE(TechnologyTableItem.class, 4),
 		
 		TORCH(TorchItem.class), 
 		
@@ -104,7 +114,6 @@ public class Items {
 		STONE_BRICK_FLOOR(StoneBrickFloorItem.class), 
 		STONE_BRICK_CEILING(StoneBrickCeilingItem.class),
 		BRICK_CEILING(BrickCeilingItem.class), 
-		ANVIL(AnvilItem.class), 
 		BREAD(BreadItem.class);
 		
 		final int maxSize;
@@ -140,6 +149,9 @@ public class Items {
 		}
 		public Class<? extends Item> getItemClass() {
 			return clazz;
+		}
+		public int getMaxStackSize() {
+			return maxSize;
 		}
 	}
 	

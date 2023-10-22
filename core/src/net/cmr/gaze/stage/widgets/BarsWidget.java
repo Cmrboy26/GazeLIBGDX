@@ -72,7 +72,7 @@ public class BarsWidget extends WidgetGroup {
 
 		float scale = 1f;
 
-        NinePatch patch = new NinePatch(game.getNinePatch("bar"));
+        NinePatch patch = new NinePatch(game.getNinePatch("bar2"));
 		patch.scale(scale, scale);
 		NinePatchDrawable bar = new NinePatchDrawable(patch);
 		

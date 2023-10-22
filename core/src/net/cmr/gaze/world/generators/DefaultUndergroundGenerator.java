@@ -47,12 +47,16 @@ public class DefaultUndergroundGenerator extends WorldGenerator {
 						
 						double ironNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/9, seed/1.1);
 						double copperNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/2, seed/3.1);
+						double coalNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/5f, seed/2.1);
 						
-						if(ironNoise > .5) {
+						if(ironNoise > .55) {
 							generateTile(chunk, Tiles.getTile(TileType.IRON_ORE_WALL), x, y);
 						} 
-						else if(copperNoise > .5) {
+						else if(copperNoise > .55) {
 							generateTile(chunk, Tiles.getTile(TileType.COPPER_ORE_WALL), x, y);
+						}
+						else if(coalNoise > .55) {
+							generateTile(chunk, Tiles.getTile(TileType.COAL_ORE_WALL), x, y);
 						}
 						else generateTile(chunk, Tiles.getTile(TileType.STONE_WALL), x, y);
 					}
