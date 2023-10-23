@@ -1,7 +1,6 @@
 package net.cmr.gaze.world.powerGrid;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public interface EnergyDistributor {
@@ -11,8 +10,16 @@ public interface EnergyDistributor {
     
     public ArrayList<EnergyDistributor> getNeighbors();
     public void clearNeighbors();
-    public void addNeighbor(EnergyDistributor neighbor);
+    void addNeighbor(EnergyDistributor neighbor);
     public void removeNeighbor(EnergyDistributor neighbor);
+
+    /**
+    * WARNING!!!: USE {@link #connectNodes(EnergyDistributor, EnergyDistributor)} INSTEAD, this method is only for internal use.
+    */
+    public static void connectNodes(EnergyDistributor node1, EnergyDistributor node2) {
+        node1.addNeighbor(node2);
+        node2.addNeighbor(node1);
+    }
 
     public static class DefaultEnergyDistributor implements EnergyDistributor {
         PowerGrid grid;
@@ -41,6 +48,9 @@ public interface EnergyDistributor {
         public void addNeighbor(EnergyDistributor neighbor) {
             if(!neighbors.contains(neighbor)) {
                 neighbors.add(neighbor);
+            }
+            if(!Objects.equals(neighbor.getPowerGrid(), grid)) {
+                neighbor.setPowerGrid(grid);
             }
         }
 

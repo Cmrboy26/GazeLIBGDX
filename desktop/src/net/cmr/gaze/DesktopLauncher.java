@@ -20,13 +20,26 @@ public class DesktopLauncher {
 
 		PowerGrid grid = new PowerGrid();
 
-		EnergyDistributor dist1 = new DefaultEnergyDistributor();
-		EnergyDistributor dist2 = new DefaultEnergyDistributor();
-		EnergyDistributor dist3 = new DefaultEnergyDistributor();
-		grid.addEnergyDistributor(dist1);
-		grid.addEnergyDistributor(dist2);
-		grid.addEnergyDistributor(dist3);
+		EnergyDistributor[] distributors = new EnergyDistributor[9];
+		for(int i = 0; i < distributors.length; i++) {
+			distributors[i] = new DefaultEnergyDistributor();
+			grid.addEnergyDistributor(distributors[i]);
+		}
 
+		EnergyDistributor.connectNodes(distributors[0], distributors[1]);
+		EnergyDistributor.connectNodes(distributors[1], distributors[3]);
+		EnergyDistributor.connectNodes(distributors[3], distributors[4]);
+		EnergyDistributor.connectNodes(distributors[4], distributors[2]);
+		EnergyDistributor.connectNodes(distributors[4], distributors[5]);
+		EnergyDistributor.connectNodes(distributors[4], distributors[6]);
+		EnergyDistributor.connectNodes(distributors[6], distributors[7]);
+		EnergyDistributor.connectNodes(distributors[7], distributors[8]);
+
+		grid.removeEnergyDistributor(distributors[4]);
+
+		for(int i = 0; i < distributors.length; i++) {
+			System.out.println(distributors[i].getPowerGrid());
+		}
 
 		/*try {
 			ResearchTree.deriveResearchGraph(

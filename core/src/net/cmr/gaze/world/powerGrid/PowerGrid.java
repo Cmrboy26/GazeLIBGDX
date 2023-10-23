@@ -20,14 +20,26 @@ public class PowerGrid {
         energyDistributors.remove(distributor);
         distributor.setPowerGrid(null);
         ArrayList<EnergyDistributor> neighbors = snapBranches(distributor);
-		ArrayList<PowerGrid> newGrids = new ArrayList<>();
+		for(int i = 0; i < neighbors.size(); i++) {
+			EnergyDistributor neighbor = neighbors.get(i);
+			if(Objects.equals(neighbor.getPowerGrid(), this)) {
+				PowerGrid grid = new PowerGrid();
+				setNetworkGrid(grid, neighbor);
+				continue;
+			}
+		}
+		for(int i = 0; i < neighbors.size(); i++) {
+			//System.out.println(neighbors.get(i).getPowerGrid());
+		}
+
+		/*ArrayList<PowerGrid> newGrids = new ArrayList<>();
 		int gridIndex = 0;
         for(int i = 0; i < neighbors.size(); i++) {
             EnergyDistributor neighbor = neighbors.get(i);
 			if(newGrids.contains(neighbor.getPowerGrid())) {
 				continue;
 			}
-			if(newGrids.size() < gridIndex) {
+			if(newGrids.size() <= gridIndex) {
 				newGrids.add(neighbor.getPowerGrid());
 				gridIndex++;
 			}
@@ -35,7 +47,7 @@ public class PowerGrid {
             if(newGrids.size() == getSize()) {
 				break;
 			}
-        }
+        }*/
     }
 
 	/**
