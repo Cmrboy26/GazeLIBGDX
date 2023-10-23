@@ -1,118 +1,91 @@
 package net.cmr.gaze.world.powerGrid;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class PowerGrid {
 
-    private AdjacencyMap adjacencyMap;
+    ArrayList<EnergyDistributor> energyDistributors;
 
     public PowerGrid() {
-        adjacencyMap = new AdjacencyMap();
+        this.energyDistributors = new ArrayList<EnergyDistributor>();
     }
 
-    private class AdjacencyMap extends HashMap<EnergyDistributor, List<EnergyDistributor>> {
-        
-    }
-
-    public void addTransmitter(EnergyDistributor distributor) {
-
-        if(this.equals(distributor.getPowerGrid())) {
-            return;
-        }/*else if(distributor.getPowerGrid()!=null) {
-            // might be bad??
-            distributor.getPowerGrid().removeTransmitter(distributor);
-        }*/
-
+    public void addEnergyDistributor(EnergyDistributor distributor) {
+        energyDistributors.add(distributor);
         distributor.setPowerGrid(this);
-        adjacencyMap.put(distributor, new ArrayList<>());
-        remapIDs();
     }
 
-    public void addConnection(EnergyDistributor distributor, EnergyDistributor neighbor) {
-        if(!adjacencyMap.containsKey(distributor)) {
-            addTransmitter(distributor);
-        }
-        if(!adjacencyMap.containsKey(neighbor)) {
-            addTransmitter(neighbor);
-        }
-        adjacencyMap.get(distributor).add(neighbor);
-        adjacencyMap.get(neighbor).add(distributor);
-    }
-
-    public void removeTransmitter(EnergyDistributor distributor) {
-        List<EnergyDistributor> neighbors = adjacencyMap.get(distributor);
+    public void removeEnergyDistributor(EnergyDistributor distributor) {
+        energyDistributors.remove(distributor);
+        distributor.setPowerGrid(null);
+        ArrayList<EnergyDistributor> neighbors = new ArrayList<>(distributor.getNeighbors());
         for(EnergyDistributor neighbor : neighbors) {
-            adjacencyMap.get(neighbor).remove(distributor);
+            distributor.removeNeighbor(neighbor);
+            neighbor.removeNeighbor(distributor);
         }
+        for(int i = 0; i < neighbors.size(); i++) {
+            EnergyDistributor neighbor = neighbors.get(i);
+            ArrayList<EnergyDistributor> localGraph = new ArrayList<>();
+            searchNode(neighbor, localGraph);
+            if(localGraph.size() == energyDistributors.size()) {
 
-        PowerGrid[] grids = new PowerGrid[neighbors.size()];
-        int index = 0;
-
-        for(EnergyDistributor neighbor : neighbors) {
-            if(grids[index]==null) grids[index] = new PowerGrid();
-            if(this.equals(neighbor.getPowerGrid())) {
-                recursiveSetPowerGrid(grids[index], neighbor);
-            }
-            index++;
-        }
-
-        adjacencyMap.remove(distributor);
-        remapIDs();
-    }
-
-    public static void recursiveSetPowerGrid(PowerGrid newGrid, EnergyDistributor distributor) {
-        if(distributor.getPowerGrid().equals(newGrid)) {
-            return;
-        }
-        ArrayList<EnergyDistributor> neighbors = new ArrayList<>(distributor.getPowerGrid().getNeighbors(distributor));
-        distributor.getPowerGrid().removeTransmitter(distributor);
-        newGrid.addTransmitter(distributor);
-        for(EnergyDistributor neighbor : neighbors) {
-            recursiveSetPowerGrid(newGrid, neighbor);
-        }
-    }
-
-    public List<EnergyDistributor> getNeighbors(EnergyDistributor distributor) {
-        return adjacencyMap.get(distributor);
-    }
-
-    public void remapIDs() {
-        int i = 0;
-        for(EnergyDistributor distributor : adjacencyMap.keySet()) {
-            distributor.setPowerGridID(i);
-            i++;
-        }
-    }
-
-    public String printGrid() {
-        String s = "";
-        for(EnergyDistributor distributor : adjacencyMap.keySet()) {
-            s += distributor.getPowerGridID() + ": ";
-            for(EnergyDistributor neighbor : adjacencyMap.get(distributor)) {
-                s += neighbor.getPowerGridID() + ", ";
-            }
-            s += "\n";
-        }
-        return s;
-    }
-
-    /*ArrayList<EnergyDistributor> distributors;
-
-    public PowerGrid() {
-        distributors = new ArrayList<>();
-    }
-
-    public void addDistributor(EnergyDistributor dist, List<EnergyDistributor> neighbors) {
-        distributors.add(dist);
-        dist.setPowerGrid(this);
-        for(EnergyDistributor neighbor : neighbors) {
-            if(!distributors.contains(neighbor)) {
-                distributors.add(neighbor);
-                neighbor.setPowerGrid(this);
             }
         }
-    }*/
+    }
+    /*
+     * public void remove(GraphNode<T> splitPoint) {
+		// iterate through neighbors of splitPoint
+		// could maybe clone the whole map and remove connections once theyve been found so theres a big o of N, but bad memory 
+		
+		ArrayList<GraphNode<T>> removedConnections = new ArrayList<>();
 
+		for(int i = 0; i < splitPoint.getConnections().size(); i++) {
+			GraphNode<T> temp = splitPoint.getConnections().get(i);
+			temp.removeConnection(splitPoint);
+			removedConnections.add(temp);
+		}
+		splitPoint.setParentList(null);
+		allConnections.remove(splitPoint);
+		//System.out.println("REMOVING "+splitPoint.getData());
+		for(int i = 0; i < removedConnections.size(); i++) {
+			GraphNode<T> temp = removedConnections.get(i);
+			ArrayList<GraphNode<T>> graph = new ArrayList<>();
+			searchNode(temp, graph);
+			//System.out.println(temp.getData()+" SEARCHED COUNT: "+graph.size());
+			//System.out.println(i+": "+removedConnections.size()+","+graph.size()+", "+getSize());
+			if(graph.size()!=getSize()) {
+				// there is a split
+				// loop through all the nodes in the split section
+				// remove them from allConnections
+				UndirectedGraph<T> newList = new UndirectedGraph<T>();
+				graph.add(temp); // this may not work
+				for(int v = 0; v < graph.size(); v++) {
+					GraphNode<T> newNode = graph.get(v);
+					if(newNode != splitPoint) {
+						if(!newList.allConnections.contains(newNode)) {
+							newNode.setParentList(newList);
+							if(!allConnections.remove(newNode)) {
+								// new ConcurrentModificationException();
+							}
+							newList.allConnections.add(newNode);
+						}
+					}
+				}
+				//System.out.println("NEW LIST: " +newList.getSize()+", "+newList.allConnections);
+			}
+		}
+
+		splitPoint.clearConnections();
+	}
+     */
+
+    public static void searchNode(EnergyDistributor connection, ArrayList<EnergyDistributor> progress) {
+		for(int i = 0; i < connection.getNeighbors().size(); i++) {
+			EnergyDistributor temp = connection.getNeighbors().get(i);
+			if(!progress.contains(temp)) {
+				progress.add(temp);
+				searchNode(temp, progress);
+			}
+		}
+	}
 }
