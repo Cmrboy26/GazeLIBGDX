@@ -1,6 +1,7 @@
 package net.cmr.gaze.world.powerGrid;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class PowerGrid {
 
@@ -18,20 +19,45 @@ public class PowerGrid {
     public void removeEnergyDistributor(EnergyDistributor distributor) {
         energyDistributors.remove(distributor);
         distributor.setPowerGrid(null);
-        ArrayList<EnergyDistributor> neighbors = new ArrayList<>(distributor.getNeighbors());
-        for(EnergyDistributor neighbor : neighbors) {
-            distributor.removeNeighbor(neighbor);
-            neighbor.removeNeighbor(distributor);
-        }
+        ArrayList<EnergyDistributor> neighbors = snapBranches(distributor);
+		ArrayList<PowerGrid> newGrids = new ArrayList<>();
+		int gridIndex = 0;
         for(int i = 0; i < neighbors.size(); i++) {
             EnergyDistributor neighbor = neighbors.get(i);
-            ArrayList<EnergyDistributor> localGraph = new ArrayList<>();
-            searchNode(neighbor, localGraph);
-            if(localGraph.size() == energyDistributors.size()) {
-
-            }
+			if(newGrids.contains(neighbor.getPowerGrid())) {
+				continue;
+			}
+			if(newGrids.size() < gridIndex) {
+				newGrids.add(neighbor.getPowerGrid());
+				gridIndex++;
+			}
+			setNetworkGrid(newGrids.get(gridIndex), distributor);
+            if(newGrids.size() == getSize()) {
+				break;
+			}
         }
     }
+
+	/**
+	 * "Snaps" the "branches" of a specific energy distributor.
+	 * In other words, it removes all the connections between the distributor and its neighbors.
+	 * @param distributor
+	 * @return the list of the distributor's neighbors prior to snaping
+	 */
+	public static ArrayList<EnergyDistributor> snapBranches(EnergyDistributor distributor) {
+		ArrayList<EnergyDistributor> neighbors = new ArrayList<>();
+		for(EnergyDistributor neighbor : distributor.getNeighbors()) {
+			neighbors.add(neighbor);
+			neighbor.removeNeighbor(distributor);
+		}
+		distributor.clearNeighbors();
+		return neighbors;
+	}
+
+	public int getSize() {
+		return energyDistributors.size();
+	}
+
     /*
      * public void remove(GraphNode<T> splitPoint) {
 		// iterate through neighbors of splitPoint
@@ -79,7 +105,17 @@ public class PowerGrid {
 	}
      */
 
-    public static void searchNode(EnergyDistributor connection, ArrayList<EnergyDistributor> progress) {
+	public static void setNetworkGrid(PowerGrid grid, EnergyDistributor selectedDistributor) {
+		if(Objects.equals(grid, selectedDistributor.getPowerGrid())) {
+			return;
+		}
+		selectedDistributor.setPowerGrid(grid);
+		for(EnergyDistributor neighbor : selectedDistributor.getNeighbors()) {
+			setNetworkGrid(grid, neighbor);
+		}
+	}
+
+    /*public static void searchNode(EnergyDistributor connection, ArrayList<EnergyDistributor> progress) {
 		for(int i = 0; i < connection.getNeighbors().size(); i++) {
 			EnergyDistributor temp = connection.getNeighbors().get(i);
 			if(!progress.contains(temp)) {
@@ -87,5 +123,5 @@ public class PowerGrid {
 				searchNode(temp, progress);
 			}
 		}
-	}
+	}*/
 }
