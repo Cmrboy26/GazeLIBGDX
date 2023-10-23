@@ -38,7 +38,9 @@ public class DesktopLauncher {
 		grid.removeEnergyDistributor(distributors[4]);
 
 		for(int i = 0; i < distributors.length; i++) {
-			System.out.println(distributors[i].getPowerGrid());
+			if(distributors[i].getPowerGrid() != null) {
+				System.out.println(distributors[i].getPowerGrid().hashCode());
+			} else System.out.println(distributors[i].getPowerGrid());
 		}
 
 		/*try {
