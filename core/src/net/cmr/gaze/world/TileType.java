@@ -71,7 +71,8 @@ public enum TileType {
 	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2),
 	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION), 
 	TECHNOLOGY_TABLE(TechnologyTableTile.class, 1, TickType.NONE, 3),
-	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION);
+	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION)/*,
+	WOOD_ELECTRICITY_POLE(WoodElectricityPole.class, 1, TickType.NONE, 3, Replaceable.NEVER)*/;
 	
 	public enum TickType {
 		CONSTANT,

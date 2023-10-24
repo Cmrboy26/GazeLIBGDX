@@ -1,17 +1,26 @@
 package net.cmr.gaze.world.powerGrid;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public interface EnergyDistributor {
     
+    public EnergySubnet getEnergyUsers();
+
     public void setPowerGrid(PowerGrid grid);
     public PowerGrid getPowerGrid();
     
-    public ArrayList<EnergyDistributor> getNeighbors();
+    public List<EnergyDistributor> getNeighbors();
     public void clearNeighbors();
     void addNeighbor(EnergyDistributor neighbor);
     public void removeNeighbor(EnergyDistributor neighbor);
+
+    public default void removeFromGrid() {
+        if(getPowerGrid() != null) {
+            getPowerGrid().removeEnergyDistributor(this);
+        }
+    }
 
     /**
     * WARNING!!!: USE {@link #connectNodes(EnergyDistributor, EnergyDistributor)} INSTEAD, this method is only for internal use.
@@ -24,6 +33,12 @@ public interface EnergyDistributor {
     public static class DefaultEnergyDistributor implements EnergyDistributor {
         PowerGrid grid;
         ArrayList<EnergyDistributor> neighbors = new ArrayList<>();
+        EnergySubnet subnet = new EnergySubnet();
+
+        public EnergySubnet getEnergyUsers() {
+            return subnet;
+        }
+
         @Override
         public void setPowerGrid(PowerGrid grid) {
             this.grid = grid;
@@ -35,7 +50,7 @@ public interface EnergyDistributor {
         }
 
         @Override
-        public ArrayList<EnergyDistributor> getNeighbors() {
+        public List<EnergyDistributor> getNeighbors() {
             return neighbors;
         }
 
