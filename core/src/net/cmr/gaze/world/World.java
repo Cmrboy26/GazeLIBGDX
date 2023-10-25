@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Null;
 
 import net.cmr.gaze.inventory.InteractiveItem;
 import net.cmr.gaze.inventory.InteractiveItem.ItemInteraction;
@@ -265,10 +266,9 @@ public class World {
 									}
 								}
 								if(!doNotPlace) {
-									boolean placed = addTile(tile, x, y, true);
+									boolean placed = placeTile(at, x, y, player);
 									if(placed) {
 										connection.questCheck(QuestCheckType.PLACEMENT, tile);
-										tile.onPlace(this, x, y, player);
 										player.getInventory().remove(Items.getItem(held.getType(), 1), player.getHotbarSlot());
 										playSound(placeable.getPlaceAudio(), 1f, x, y);
 										connection.inventoryChanged(true);
@@ -302,17 +302,21 @@ public class World {
 		}
 	}
 	
+	public boolean placeTile(Tile t, int x, int y, Player player) {
+		return addTile(t, x, y, false, true, player);
+	}
+
 	public boolean addTile(Tile t, int x, int y, boolean countReplacables) {
-		return addTile(t, x, y, false, countReplacables);
+		return addTile(t, x, y, false, countReplacables, null);
 	}
 	
 	public boolean addTile(Tile t, int x, int y) {
-		return addTile(t, x, y, false, true);
+		return addTile(t, x, y, false, true, null);
 	}
 	
 	public boolean generateTile(Chunk c, Tile t, int x, int y) {
 		t.generateInitialize(x, y, seed);
-		return addTile(t, x, y, true, true);
+		return addTile(t, x, y, true, true, null);
 	}
 	
 	/**
@@ -322,8 +326,21 @@ public class World {
 		getChunk(Chunk.getChunk(tilex, tiley), true).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
 	}
 	
-	public boolean addTile(Tile t, int tilex, int tiley, boolean disableGenerate, boolean countReplacables) {
-		getChunk(Chunk.getChunk(tilex, tiley), disableGenerate);
+	/**
+	 * Adds a tile to the world and handles all the necessary logic for it.
+	 * 
+	 * @param t The tile to be added to the world
+	 * @param tilex The world x coordinate of the tile
+	 * @param tiley The world y coordinate of the tile
+	 * @param disableGenerate If true, the chunk will not be generated if it is null
+	 * @param countReplacables If true, the method will check if the tile being placed is replacing a tile that is replaceable
+	 * @param placingPlayer The player that is placing the tile (if applicable, otherwise null)
+	 * @return
+	 */
+	public boolean addTile(Tile t, int tilex, int tiley, boolean disableGenerate, boolean countReplacables, @Null Player placingPlayer) {
+		// TODO: to improve performance, use subtype polymorphism to avoid instanceof checks as shown here (the first answer): 
+		// - https://stackoverflow.com/questions/5579309/is-it-possible-to-use-the-instanceof-operator-in-a-switch-statement
+		getChunk(Chunk.getChunk(tilex, tiley), disableGenerate); // Generates the chunk if it is null
 		if(t instanceof BaseTile) {
 			BaseTile base = (BaseTile) t;
 			int width = base.width;
@@ -344,9 +361,10 @@ public class World {
 				for(int y = 0; y<height; y++) {
 					if((x==0&&y==0)) {
 						getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
+						if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
 						if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 					} else {
-						addTile(new StructureTile(base.getType(), x, y), tilex+x, tiley+y, disableGenerate, countReplacables);
+						addTile(new StructureTile(base.getType(), x, y), tilex+x, tiley+y, disableGenerate, countReplacables, null);
 					}
 				}
 			}
@@ -377,6 +395,7 @@ public class World {
 			
 			((FloorTile)t).setUnderTile(at);
 			getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
+			if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
 			if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 		} else {
 			Tile at = getTile(tilex, tiley, t.getType().layer);
@@ -392,6 +411,7 @@ public class World {
 				}				
 				
 				getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
+				if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
 				if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 				
 				if(t.getType().layer == 0) {

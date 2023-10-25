@@ -50,11 +50,29 @@ public class PowerGrid {
 		return energyDistributors.size();
 	}
 
+	/**
+	 * Effectively flood fills the network with the specified grid.
+	 * 
+	 * In other words, this method will recursively iterate through 
+	 * every neighbor of selectedDistributor and set their grid to the
+	 * specified grid.
+	 * 
+	 * @param grid the grid to set the network to
+	 * @param selectedDistributor the distributor to start the fill from
+	 */
 	public static void setNetworkGrid(PowerGrid grid, EnergyDistributor selectedDistributor) {
+		// If its already in the grid, return
 		if(Objects.equals(grid, selectedDistributor.getPowerGrid())) {
 			return;
 		}
-		selectedDistributor.setPowerGrid(grid);
+
+		// Removes the distributor from the old grid and adds it to the new grid
+		if(selectedDistributor.getPowerGrid() != null) {
+			selectedDistributor.getPowerGrid().removeEnergyDistributor(selectedDistributor);
+		}
+		grid.addEnergyDistributor(selectedDistributor);
+
+		// Iterates through the rest of the neighbors
 		for(EnergyDistributor neighbor : selectedDistributor.getNeighbors()) {
 			setNetworkGrid(grid, neighbor);
 		}

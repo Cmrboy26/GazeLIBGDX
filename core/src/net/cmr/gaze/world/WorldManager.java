@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.networking.CompressedPacket;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
+import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
 public class WorldManager {
 
@@ -67,6 +68,7 @@ public class WorldManager {
 		}
 		
 		File worldData = server.getFile("/worlds/"+worldName+"/world.data");
+		File electricityData = server.getFile("/worlds/"+worldName+"/electricity.data");
 		
 		try {
 			worldData.delete();
@@ -88,17 +90,18 @@ public class WorldManager {
 			e.printStackTrace();
 		}
 		
+		DataBuffer electricityBuffer = new DataBuffer();
 		for(Point point : regions.keySet()) {
 			ArrayList<Chunk> chunks = regions.get(point);
 			String fileName = point.x+"~"+point.y+".region";
 			
 			File regionFile = server.getFile("/worlds/"+worldName+"/"+fileName);
-			
+
 			try {
 				
 				DataBuffer buffer = new DataBuffer();
 				for(Chunk c : chunks) {
-					c.writeChunk(buffer);
+					c.writeChunk(buffer, electricityBuffer);
 				}
 				
 				byte[] result = CompressedPacket.compress(buffer.toArray());
@@ -116,6 +119,20 @@ public class WorldManager {
 			
 		}
 		
+		try {
+			electricityData.delete();
+			FileOutputStream outputStream = new FileOutputStream(electricityData);
+			
+			outputStream.write(electricityBuffer.toArray());
+			electricityBuffer.close();
+			
+			outputStream.flush();
+			outputStream.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 	public void saveAllWorlds() {
 		for(String worldName : worldMap.keySet()) {
@@ -137,6 +154,11 @@ public class WorldManager {
 		if(!worldFolder.exists()) {
 			// TODO: remove this in the future probably
 			throw new NullPointerException("world.data does not exist for world name "+worldName);
+		}
+
+		File electricityData = server.getFile("/worlds/"+worldName+"/electricity.data");
+		if(!electricityData.exists()) {
+			throw new NullPointerException();
 		}
 		
 		WorldGeneratorType type = null;
@@ -169,9 +191,9 @@ public class WorldManager {
 				continue;
 			}
 			
-			String strx = region.getName().substring(0, region.getName().indexOf("~"));
-			String stry = region.getName().substring(region.getName().indexOf("~")+1, region.getName().indexOf("."));
-			int x = Integer.parseInt(strx), y = Integer.parseInt(stry);
+			//String strx = region.getName().substring(0, region.getName().indexOf("~"));
+			//String stry = region.getName().substring(region.getName().indexOf("~")+1, region.getName().indexOf("."));
+			//int x = Integer.parseInt(strx), y = Integer.parseInt(stry);
 			
 			try {
 				FileInputStream fileInput = new FileInputStream(region);
@@ -198,6 +220,25 @@ public class WorldManager {
 				e.printStackTrace();
 			}
 		}
+
+		try {
+			
+			FileInputStream fileInput = new FileInputStream(electricityData);
+			DataInputStream input = new DataInputStream(fileInput);
+			
+			// READ CONNECTIONS AND SET THEM
+
+			while(input.available() > 0) {
+				ElectricityPole.readConnections(input, world);
+			}
+			
+			input.close();
+			fileInput.close();
+			
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+
 		worldMap.put(worldName, world);
 	}
 	public void loadAllWorlds() {

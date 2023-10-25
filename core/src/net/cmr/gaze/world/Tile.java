@@ -3,8 +3,6 @@ package net.cmr.gaze.world;
 import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import com.badlogic.gdx.Input;
@@ -110,7 +108,7 @@ public abstract class Tile implements Cloneable {
 	
 	public static void writeOutgoingTile(Tile tile, DataBuffer buffer) throws IOException {
 		if(tile == null) {
-			buffer.writeInt(-1);
+			writeNullTile(buffer);
 			return;
 		} else if(tile instanceof StructureTile) {
 			buffer.writeInt(-2);
@@ -123,6 +121,11 @@ public abstract class Tile implements Cloneable {
 			tile.writeTile(tile.tileType, buffer);
 		}
 	};
+
+	public final static void writeNullTile(DataBuffer buffer) throws IOException {
+		buffer.writeInt(-1);
+	}
+
 	public static Tile readIncomingTile(DataInputStream input) throws IOException {
 		int index = input.readInt();
 		//System.out.println(index);

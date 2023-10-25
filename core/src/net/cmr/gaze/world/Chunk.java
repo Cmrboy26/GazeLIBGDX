@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.badlogic.gdx.utils.DataBuffer;
@@ -12,6 +11,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.world.TileType.TickType;
 import net.cmr.gaze.world.entities.Entity;
+import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
 public class Chunk {
 
@@ -22,6 +22,7 @@ public class Chunk {
 	World world = null;
 	private Point chunkCoordinate = null;
 	private ArrayList<Entity> entities = null;
+
 	/**
 	 * The point stored in the Pair contains the tile's WORLD coordinates, not CHUNK coordinates
 	 */
@@ -200,7 +201,7 @@ public class Chunk {
 	
 	// NOTE: this should only be used for reading/writing to file, not for sending data over to the client.
 		// (because of Entity.writeEntity(buffer, false, TRUE) where true means that it is writing to FILE)
-	public void writeChunk(DataBuffer buffer) throws IOException {
+	public void writeChunk(DataBuffer buffer, DataBuffer electricityDistributors) throws IOException {
 		buffer.writeInt(chunkCoordinate.x);
 		buffer.writeInt(chunkCoordinate.y);
 		buffer.writeBoolean(generated);
@@ -209,6 +210,9 @@ public class Chunk {
 				for(int z = 0; z < Chunk.LAYERS; z++) {
 					Tile toAdd = tileData[x][y][z];
 					Tile.writeOutgoingTile(toAdd, buffer);
+					if(toAdd instanceof ElectricityPole) {
+						((ElectricityPole) toAdd).writeConnections(electricityDistributors);
+					}
 				}
 			}
 		}

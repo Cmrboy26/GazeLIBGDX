@@ -52,6 +52,7 @@ import net.cmr.gaze.inventory.custom.WheatSeeds;
 import net.cmr.gaze.inventory.custom.WoodAxe;
 import net.cmr.gaze.inventory.custom.WoodCeilingItem;
 import net.cmr.gaze.inventory.custom.WoodDoorItem;
+import net.cmr.gaze.inventory.custom.WoodElectricityPoleItem;
 import net.cmr.gaze.inventory.custom.WoodFloorItem;
 import net.cmr.gaze.inventory.custom.WoodHoe;
 import net.cmr.gaze.inventory.custom.WoodItem;
@@ -114,7 +115,9 @@ public class Items {
 		STONE_BRICK_FLOOR(StoneBrickFloorItem.class), 
 		STONE_BRICK_CEILING(StoneBrickCeilingItem.class),
 		BRICK_CEILING(BrickCeilingItem.class), 
-		BREAD(BreadItem.class);
+		BREAD(BreadItem.class), 
+		
+		WOOD_ELECTRICITY_POLE(WoodElectricityPoleItem.class);
 		
 		final int maxSize;
 		final Class<? extends Item> clazz;
