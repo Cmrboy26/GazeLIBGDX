@@ -1,14 +1,9 @@
 package net.cmr.gaze;
 
-import java.awt.Point;
 import java.io.InvalidObjectException;
 
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
-import net.cmr.gaze.world.ElectricityPole;
-import net.cmr.gaze.world.powerGrid.EnergyDistributor;
-import net.cmr.gaze.world.powerGrid.PowerGrid;
-import net.cmr.gaze.world.tile.WoodElectricityPole;
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -18,9 +13,9 @@ public class DesktopLauncher {
 		config.useVsync(false);
 		config.setTitle("Gaze");
 		config.setWindowedMode(640, 360);
-		//new Lwjgl3Application(new Gaze() {}, config);
+		new Lwjgl3Application(new Gaze() {}, config);
 
-		int size = 52;
+		/*int size = 52;
 		WoodElectricityPole[] array = new WoodElectricityPole[size];
 		for(int i = 0; i < size; i++) {
 			array[i] = new WoodElectricityPole();
@@ -43,7 +38,7 @@ public class DesktopLauncher {
 			} else {
 				System.out.println(i+" : "+array[i].getPowerGrid().hashCode());
 			}
-		}
+		}*/
 
 
 		/*WoodElectricityPole pole1 = new WoodElectricityPole();

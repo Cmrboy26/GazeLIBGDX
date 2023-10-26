@@ -1,6 +1,7 @@
 package net.cmr.gaze.world.powerGrid;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
@@ -23,13 +24,13 @@ public class PowerGrid {
         removeEnergyDistributor(distributor);
 		if(snap) {
 			ArrayList<EnergyDistributor> neighbors = snapBranches(distributor);
-			System.out.println(neighbors.size());
-			for(int i = 0; i < neighbors.size(); i++) {
+			PowerGrid tempGrid = null;
+			for(int i = 1; i < neighbors.size(); i++) {
 				EnergyDistributor neighbor = neighbors.get(i);
-				if(Objects.equals(neighbor.getPowerGrid(), this)) {
-					PowerGrid grid = new PowerGrid();
-					grid.add(neighbor);
-					dfsSetGrid(grid, neighbor);
+				if(Objects.equals(neighbor.getPowerGrid(), this) && !Objects.equals(neighbor.getPowerGrid(), tempGrid)) {
+					tempGrid = new PowerGrid();
+					tempGrid.add(neighbor);
+					dfsSetGrid(tempGrid, neighbor);
 					continue;
 				}
 			}
@@ -44,6 +45,10 @@ public class PowerGrid {
 	void addEnergyDistributor(EnergyDistributor distributor) {
 		energyDistributors.add(distributor);
 		distributor.setPowerGrid(this);
+	}
+
+	public List<EnergyDistributor> getDistributors() {
+		return energyDistributors;
 	}
 
 	/**
@@ -94,7 +99,6 @@ public class PowerGrid {
 				newGrid.add(current);
 				for(EnergyDistributor neighbor : current.getNeighbors()) {
 					stack.push(neighbor);
-					System.out.println(neighbor+" added to stack");
 				}
 			}
 		}

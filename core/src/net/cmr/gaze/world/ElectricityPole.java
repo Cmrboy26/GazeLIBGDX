@@ -58,7 +58,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         PowerGrid.adaptiveSetGrid(this);
 
         world.onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
-        for(EnergyDistributor neighbor : tempNeighbors) {
+        for(EnergyDistributor neighbor : getPowerGrid().getDistributors()) {
             ElectricityPole pole = (ElectricityPole) neighbor;
             world.onTileChange(pole.worldCoordinates.x, pole.worldCoordinates.y, 1);
         }
@@ -79,6 +79,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     }
 
     protected Color DEBUG_COLOR;
+    protected int TEST_SIZE;
 
     public static void readConnections(DataInputStream in, World world) throws IOException {
         Point worldCoordinates = new Point(in.readInt(), in.readInt());
@@ -88,9 +89,9 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     @Override
     public void onBreak(World world, Player player, int x, int y) {
-        ArrayList<EnergyDistributor> tempNeighbors = new ArrayList<>();
+        ArrayList<EnergyDistributor> update = new ArrayList<>(getPowerGrid().getDistributors());
         removeFromGrid();
-        for(EnergyDistributor neighbor : tempNeighbors) {
+        for(EnergyDistributor neighbor : update) {
             ElectricityPole pole = (ElectricityPole) neighbor;
             world.onTileChange(pole.worldCoordinates.x, pole.worldCoordinates.y, 1);
         }
@@ -177,6 +178,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         float f2 = input.readFloat();
         float f3 = input.readFloat();
         pole.DEBUG_COLOR = new Color(f1, f2, f3, 1f);
+        pole.TEST_SIZE = input.readInt();
         return pole;
     }
     @Override
@@ -193,11 +195,13 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
             buffer.writeFloat(0);
             buffer.writeFloat(0);
             buffer.writeFloat(0);
+            buffer.writeInt(-1);
         } else {
             Random r = new Random(grid.hashCode());
             buffer.writeFloat(r.nextFloat());
             buffer.writeFloat(r.nextFloat());
             buffer.writeFloat(r.nextFloat());
+            buffer.writeInt(grid.getSize());
         }
     }
     

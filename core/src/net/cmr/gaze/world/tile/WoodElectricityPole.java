@@ -36,7 +36,7 @@ public class WoodElectricityPole extends ElectricityPole {
 	@Override
 	public void render(Gaze game, GameScreen screen, int x, int y) {
 		game.batch.draw(game.getSprite("woodPowerPole"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE*2);
-        game.getFont(5).draw(game.batch, DEBUG_COLOR+"", x*TILE_SIZE, y*TILE_SIZE);
+        game.getFont(5).draw(game.batch, DEBUG_COLOR+" : "+TEST_SIZE, x*TILE_SIZE, y*TILE_SIZE);
 		super.render(game, screen, x, y);
 	}
 
