@@ -20,7 +20,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(640, 360);
 		//new Lwjgl3Application(new Gaze() {}, config);
 
-		int size = 100;
+		int size = 52;
 		WoodElectricityPole[] array = new WoodElectricityPole[size];
 		for(int i = 0; i < size; i++) {
 			array[i] = new WoodElectricityPole();
@@ -30,10 +30,19 @@ public class DesktopLauncher {
 			EnergyDistributor.connectNodes(array[i-1], array[i]);
 		}
 		
+		array[42].removeFromGrid();
 		array[49].removeFromGrid();
+		array[2].removeFromGrid();
+		array[4].removeFromGrid();
+		array[7].removeFromGrid();
 
 		for(int i = 0; i < size; i++) {
-			System.out.println(i+" : "+array[i].getPowerGrid());
+			if(array[i].getPowerGrid()==null) {
+				System.out.println(i+" : null");
+				continue;
+			} else {
+				System.out.println(i+" : "+array[i].getPowerGrid().hashCode());
+			}
 		}
 
 

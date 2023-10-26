@@ -29,8 +29,7 @@ public class PowerGrid {
 				if(Objects.equals(neighbor.getPowerGrid(), this)) {
 					PowerGrid grid = new PowerGrid();
 					grid.add(neighbor);
-					//recursiveSetGrid(grid, neighbor);
-					adaptiveSetGrid(neighbor);
+					dfsSetGrid(grid, neighbor);
 					continue;
 				}
 			}
@@ -66,7 +65,6 @@ public class PowerGrid {
 		return energyDistributors.size();
 	}
 
-
 	/**
 	 * Effectively flood fills the network with the specified grid.
 	 * 
@@ -77,12 +75,18 @@ public class PowerGrid {
 	 * @param newGrid the grid to set the network to
 	 * @param distributor the distributor to start the fill from
 	 */
-	public static void recursiveSetGrid(PowerGrid newGrid, EnergyDistributor distributor) {
+	public static void dfsSetGrid(PowerGrid newGrid, EnergyDistributor distributor) {
 		Objects.requireNonNull(newGrid);
 		Objects.requireNonNull(distributor);
 		
 		Stack<EnergyDistributor> stack = new Stack<>();
-		stack.push(distributor);
+		if(Objects.equals(distributor.getPowerGrid(), newGrid)) {
+			for(EnergyDistributor neighbor : distributor.getNeighbors()) {
+				stack.push(neighbor);
+			}
+		} else {
+			stack.push(distributor);
+		}
 		
 		while(!stack.isEmpty()) {
 			EnergyDistributor current = stack.pop();
@@ -99,7 +103,7 @@ public class PowerGrid {
 	/**
 	 *
 	 * Adaptively ets the grid of the specified distributor to the largest grid of its neighbors.
-	 * Utility method for {@link #recursiveSetGrid(PowerGrid, EnergyDistributor)}
+	 * Utility method for {@link #dfsSetGrid(PowerGrid, EnergyDistributor)}
 	 * 
 	 * @param distributor the distributor to set the grid of 
 	 *
@@ -118,7 +122,7 @@ public class PowerGrid {
 		}
 
 		System.out.println("Setting grid to "+grid);
-		recursiveSetGrid(grid, distributor);
+		dfsSetGrid(grid, distributor);
 
 	}
 }
