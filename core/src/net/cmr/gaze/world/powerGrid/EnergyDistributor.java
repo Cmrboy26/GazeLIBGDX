@@ -22,10 +22,6 @@ public interface EnergyDistributor {
         }
     }
 
-    /**
-    * WARNING!!!: USE {@link #connectNodes(EnergyDistributor, EnergyDistributor)} INSTEAD, this method is only for internal use.
-    // I DONT KNOW WHAT THIS WARNING MEANS????
-    */
     public static void connectNodes(EnergyDistributor node1, EnergyDistributor node2) {
         Objects.requireNonNull(node1);
         Objects.requireNonNull(node2);

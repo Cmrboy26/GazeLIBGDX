@@ -76,34 +76,11 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     public void writeConnections(DataBuffer electricityBuffer) throws IOException {
         electricityBuffer.writeInt(worldCoordinates.x);
         electricityBuffer.writeInt(worldCoordinates.y);
-        /*electricityBuffer.writeInt(worldCoordinates.x);
-        electricityBuffer.writeInt(worldCoordinates.y);
-        electricityBuffer.writeInt(neighbors.size());
-        System.out.println("Writing "+neighbors.size()+" neighbors for pole at "+worldCoordinates.x+", "+worldCoordinates.y);
-        for(EnergyDistributor neighbor : neighbors) {
-            ElectricityPole pole = (ElectricityPole) neighbor;
-            electricityBuffer.writeInt(pole.getWorldCoordinates().x);
-            electricityBuffer.writeInt(pole.getWorldCoordinates().y);
-            System.out.println("- WROTE "+pole.getWorldCoordinates().x+", "+pole.getWorldCoordinates().y+" as a neighbor");
-        }
-        */
     }
 
     protected Color DEBUG_COLOR;
 
     public static void readConnections(DataInputStream in, World world) throws IOException {
-        /*Point worldCoordinates = new Point(in.readInt(), in.readInt());
-        // NOTE: no need to set the worldCoordinates of the pole because it will be set when the tile is read from file
-        ElectricityPole pole = (ElectricityPole) world.getTile(worldCoordinates.x, worldCoordinates.y, 1);
-        int neighborCount = in.readInt();
-        System.out.println("Reading "+neighborCount+" neighbors for pole at "+worldCoordinates.x+", "+worldCoordinates.y + ", " + pole);
-        for(int i = 0; i < neighborCount; i++) {
-            int x = in.readInt();
-            int y = in.readInt();
-            ElectricityPole neighbor = (ElectricityPole) world.getTile(x, y, 1);
-            System.out.println("- READ "+x+", "+y+" as a neighbor, "+neighbor);
-            //EnergyDistributor.connectNodes(pole, neighbor);
-        }*/
         Point worldCoordinates = new Point(in.readInt(), in.readInt());
         ElectricityPole pole = (ElectricityPole) world.getTile(worldCoordinates.x, worldCoordinates.y, 1);
         pole.connectToNetwork(world);
@@ -111,7 +88,12 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     @Override
     public void onBreak(World world, Player player, int x, int y) {
+        ArrayList<EnergyDistributor> tempNeighbors = new ArrayList<>();
         removeFromGrid();
+        for(EnergyDistributor neighbor : tempNeighbors) {
+            ElectricityPole pole = (ElectricityPole) neighbor;
+            world.onTileChange(pole.worldCoordinates.x, pole.worldCoordinates.y, 1);
+        }
     }
 
     public int getRadius() {
@@ -145,10 +127,6 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     @Override
     public void addNeighbor(EnergyDistributor neighbor) {
-        boolean contains = getNeighbors().contains(neighbor) || neighbor.equals(this);
-        if(contains) {
-            return;
-        }
         getNeighbors().add(neighbor);
     }
 
@@ -174,7 +152,6 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     @Override
     public boolean equals(Object obj) {
-        //System.out.println("Comparing "+this+" to "+obj);
         if(obj instanceof ElectricityPole) {
             ElectricityPole pole = (ElectricityPole) obj;
             return pole.worldCoordinates.equals(worldCoordinates);
