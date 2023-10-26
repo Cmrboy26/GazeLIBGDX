@@ -31,6 +31,8 @@ public interface EnergyDistributor {
         node1.addNeighbor(node2);
         node2.addNeighbor(node1);
         System.out.println("Connected nodes: "+node1+" and "+node2);
+        PowerGrid.adaptiveSetGrid(node1);
+        PowerGrid.adaptiveSetGrid(node2);
     }
 
     public static void disconnectNodes(EnergyDistributor node1, EnergyDistributor node2) {

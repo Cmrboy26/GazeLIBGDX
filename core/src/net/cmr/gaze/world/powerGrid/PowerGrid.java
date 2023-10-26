@@ -28,7 +28,9 @@ public class PowerGrid {
 				EnergyDistributor neighbor = neighbors.get(i);
 				if(Objects.equals(neighbor.getPowerGrid(), this)) {
 					PowerGrid grid = new PowerGrid();
-					recursiveSetGrid(grid, neighbor);
+					grid.add(neighbor);
+					//recursiveSetGrid(grid, neighbor);
+					adaptiveSetGrid(neighbor);
 					continue;
 				}
 			}
@@ -88,6 +90,7 @@ public class PowerGrid {
 				newGrid.add(current);
 				for(EnergyDistributor neighbor : current.getNeighbors()) {
 					stack.push(neighbor);
+					System.out.println(neighbor+" added to stack");
 				}
 			}
 		}
@@ -114,6 +117,7 @@ public class PowerGrid {
 			}
 		}
 
+		System.out.println("Setting grid to "+grid);
 		recursiveSetGrid(grid, distributor);
 
 	}

@@ -21,7 +21,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     EnergySubnet subnet;
     PowerGrid grid;
     List<EnergyDistributor> neighbors; // NOTE: These should all be ElectricityPoles or other EnergyDistributor tiles
-    Point worldCoordinates;
+    public Point worldCoordinates;
 
     public ElectricityPole(TileType type) {
         super(type);
