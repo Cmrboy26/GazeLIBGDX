@@ -221,6 +221,8 @@ public class WorldManager {
 			}
 		}
 
+		worldMap.put(worldName, world);
+
 		try {
 			
 			FileInputStream fileInput = new FileInputStream(electricityData);
@@ -238,8 +240,6 @@ public class WorldManager {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-
-		worldMap.put(worldName, world);
 	}
 	public void loadAllWorlds() {
 		File worldsFolder = server.getFile("/worlds/");

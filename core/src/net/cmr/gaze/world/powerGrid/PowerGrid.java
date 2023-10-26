@@ -11,22 +11,33 @@ public class PowerGrid {
         this.energyDistributors = new ArrayList<EnergyDistributor>();
     }
 
-    public void addEnergyDistributor(EnergyDistributor distributor) {
+	public void add(EnergyDistributor distributor) {
+		if(distributor.getPowerGrid() != null) {
+			distributor.getPowerGrid().removeEnergyDistributor(distributor);
+		}
         energyDistributors.add(distributor);
         distributor.setPowerGrid(this);
-    }
+	}
 
-    protected void removeEnergyDistributor(EnergyDistributor distributor) {
+    void removeEnergyDistributor(EnergyDistributor distributor) {
         energyDistributors.remove(distributor);
         distributor.setPowerGrid(null);
         ArrayList<EnergyDistributor> neighbors = snapBranches(distributor);
+		System.out.println(neighbors.size());
 		for(int i = 0; i < neighbors.size(); i++) {
 			EnergyDistributor neighbor = neighbors.get(i);
+
 			if(Objects.equals(neighbor.getPowerGrid(), this)) {
 				PowerGrid grid = new PowerGrid();
-				setNetworkGrid(grid, neighbor);
+				grid.add(neighbor);
+				setNetworkGrid(grid, neighbor, true);
 				continue;
 			}
+
+			//if(Objects.equals(neighbor.getPowerGrid(), this)) {
+				//setNetworkGrid(grid, neighbor, false);
+				//continue;
+			//}
 		}
     }
 
@@ -37,13 +48,12 @@ public class PowerGrid {
 	 * @return the list of the distributor's neighbors prior to snaping
 	 */
 	public static ArrayList<EnergyDistributor> snapBranches(EnergyDistributor distributor) {
-		ArrayList<EnergyDistributor> neighbors = new ArrayList<>();
-		for(EnergyDistributor neighbor : distributor.getNeighbors()) {
-			neighbors.add(neighbor);
-			neighbor.removeNeighbor(distributor);
+		ArrayList<EnergyDistributor> neighbors = new ArrayList<>(distributor.getNeighbors());
+		for(EnergyDistributor neighbor : neighbors) {
+			EnergyDistributor.disconnectNodes(neighbor, distributor);
 		}
-		distributor.clearNeighbors();
 		return neighbors;
+
 	}
 
 	public int getSize() {
@@ -60,21 +70,47 @@ public class PowerGrid {
 	 * @param grid the grid to set the network to
 	 * @param selectedDistributor the distributor to start the fill from
 	 */
-	public static void setNetworkGrid(PowerGrid grid, EnergyDistributor selectedDistributor) {
+	public static void setNetworkGrid(PowerGrid grid, EnergyDistributor selectedDistributor, boolean first) {
+		Objects.requireNonNull(grid);
 		// If its already in the grid, return
-		if(Objects.equals(grid, selectedDistributor.getPowerGrid())) {
-			return;
+		
+		System.out.println("Setting "+selectedDistributor+" to22 "+grid);
+		if(!first || !grid.equals(selectedDistributor.getPowerGrid())) { 
+			if(Objects.equals(grid, selectedDistributor.getPowerGrid())) {
+				return;
+			}
+			
+			if(selectedDistributor.getPowerGrid() != null) {
+				PowerGrid grid2 = selectedDistributor.getPowerGrid();
+				grid2.energyDistributors.remove(selectedDistributor);
+				selectedDistributor.setPowerGrid(null);
+			}
+			grid.add(selectedDistributor);
 		}
-
-		// Removes the distributor from the old grid and adds it to the new grid
-		if(selectedDistributor.getPowerGrid() != null) {
-			selectedDistributor.getPowerGrid().removeEnergyDistributor(selectedDistributor);
-		}
-		grid.addEnergyDistributor(selectedDistributor);
 
 		// Iterates through the rest of the neighbors
-		for(EnergyDistributor neighbor : selectedDistributor.getNeighbors()) {
-			setNetworkGrid(grid, neighbor);
+		ArrayList<EnergyDistributor> neighbors = new ArrayList<>(selectedDistributor.getNeighbors());
+		for(EnergyDistributor neighbor : neighbors) {
+			System.out.println("Setting "+neighbor+" to "+grid);
+			setNetworkGrid(grid, neighbor, false);
 		}
+	}
+
+	public static void adaptiveSetGrid(EnergyDistributor distributor) {
+
+		// get the largest power grid of the neighbors
+		// depth first search to set the grid of all its neighbors
+		
+		PowerGrid grid = distributor.getPowerGrid();
+		if(grid == null) {
+			grid = new PowerGrid();
+		}
+		for(EnergyDistributor neighbor : distributor.getNeighbors()) {
+			if(neighbor.getPowerGrid() != null && neighbor.getPowerGrid().getSize() > grid.getSize()) {
+				grid = neighbor.getPowerGrid();
+			}
+		}
+		setNetworkGrid(grid, distributor, true);
+
 	}
 }

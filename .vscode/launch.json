@@ -15,16 +15,14 @@
             "name": "DesktopLauncher",
             "request": "launch",
             "mainClass": "net.cmr.gaze.DesktopLauncher",
-            "projectName": "Gaze-desktop",
-            "vmArgs": "-XstartOnFirstThread"
+            "projectName": "Gaze-desktop"
         },
         {
             "type": "java",
             "name": "ServerLauncher",
             "request": "launch",
             "mainClass": "net.cmr.gaze.ServerLauncher",
-            "projectName": "Gaze-desktop",
-            "vmArgs": "-XstartOnFirstThread"
+            "projectName": "Gaze-desktop"
         }
     ]
 }

@@ -24,10 +24,23 @@ public interface EnergyDistributor {
 
     /**
     * WARNING!!!: USE {@link #connectNodes(EnergyDistributor, EnergyDistributor)} INSTEAD, this method is only for internal use.
+    // I DONT KNOW WHAT THIS WARNING MEANS????
     */
     public static void connectNodes(EnergyDistributor node1, EnergyDistributor node2) {
+        Objects.requireNonNull(node1);
+        Objects.requireNonNull(node2);
+        if(node1.getNeighbors().contains(node2) || node2.getNeighbors().contains(node1)) {
+            return;
+        }
         node1.addNeighbor(node2);
         node2.addNeighbor(node1);
+        System.out.println("Connected nodes: "+node1+" and "+node2);
+    }
+
+    public static void disconnectNodes(EnergyDistributor node1, EnergyDistributor node2) {
+        node1.removeNeighbor(node2);
+        node2.removeNeighbor(node1);
+        System.out.println("Disconnected nodes: "+node1+" and "+node2);
     }
 
     public static class DefaultEnergyDistributor implements EnergyDistributor {
@@ -63,9 +76,6 @@ public interface EnergyDistributor {
         public void addNeighbor(EnergyDistributor neighbor) {
             if(!neighbors.contains(neighbor)) {
                 neighbors.add(neighbor);
-            }
-            if(!Objects.equals(neighbor.getPowerGrid(), grid)) {
-                neighbor.setPowerGrid(grid);
             }
         }
 

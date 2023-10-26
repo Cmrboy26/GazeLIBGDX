@@ -266,7 +266,7 @@ public class World {
 									}
 								}
 								if(!doNotPlace) {
-									boolean placed = placeTile(at, x, y, player);
+									boolean placed = placeTile(tile, x, y, player);
 									if(placed) {
 										connection.questCheck(QuestCheckType.PLACEMENT, tile);
 										player.getInventory().remove(Items.getItem(held.getType(), 1), player.getHotbarSlot());

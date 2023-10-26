@@ -5,7 +5,10 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.world.entities.Player;
@@ -22,14 +25,16 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     public ElectricityPole(TileType type) {
         super(type);
-        this.subnet = new EnergySubnet();
-        this.neighbors = new ArrayList<EnergyDistributor>();
         this.worldCoordinates = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
+        this.neighbors = new ArrayList<EnergyDistributor>();
+        this.subnet = new EnergySubnet();
     }
 
     @Override
     public void onPlace(World world, int x, int y, Player player) {
         this.worldCoordinates = new Point(x, y);
+        this.neighbors = new ArrayList<EnergyDistributor>();
+        this.subnet = new EnergySubnet();
         // Add nearby poles to the neighbors list and this tile to their neighbors list (according to getRadius())
         connectToNetwork(world);
     }
@@ -40,34 +45,22 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         for(int x = this.worldCoordinates.x - getRadius(); x <= this.worldCoordinates.x + getRadius(); x++) {
             for(int y = this.worldCoordinates.y - getRadius(); y <= this.worldCoordinates.y + getRadius(); y++) {
                 Tile tile = world.getTile(x, y, 1);
-                if(tile instanceof ElectricityPole && tile != this) {
+                if(tile instanceof ElectricityPole && !(x==this.worldCoordinates.x && y==this.worldCoordinates.y)) {
                     tempNeighbors.add((ElectricityPole) tile);
                 }
             }
         }
-        // Check to see if there is a grid conflict
-        // This check will appropriately set the grid of this electric pole AND all of its neighbors
-        boolean gridConflict = false;
-        PowerGrid gridConflictGrid = null;
+
         for(EnergyDistributor neighbor : tempNeighbors) {
-            if(gridConflictGrid == null) {
-                gridConflictGrid = neighbor.getPowerGrid();
-            } else if(!gridConflict && !gridConflictGrid.equals(neighbor.getPowerGrid())) {
-                gridConflict = true;
-            }
-            if(gridConflict) {
-                // set the largest size grid to be the gridConflictGrid to reduce computation in future steps
-                if(gridConflictGrid.getSize() < neighbor.getPowerGrid().getSize()) {
-                    gridConflictGrid = neighbor.getPowerGrid();
-                }
-            }
-            addNeighbor(neighbor);
-            neighbor.addNeighbor(this);
+            EnergyDistributor.connectNodes(this, neighbor);
         }
-        if(gridConflict) {
-            PowerGrid.setNetworkGrid(gridConflictGrid, this);
-        } else {
-            setPowerGrid(gridConflictGrid);
+
+        PowerGrid.adaptiveSetGrid(this);
+
+        world.onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
+        for(EnergyDistributor neighbor : tempNeighbors) {
+            ElectricityPole pole = (ElectricityPole) neighbor;
+            world.onTileChange(pole.worldCoordinates.x, pole.worldCoordinates.y, 1);
         }
     }
 
@@ -83,24 +76,42 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     public void writeConnections(DataBuffer electricityBuffer) throws IOException {
         electricityBuffer.writeInt(worldCoordinates.x);
         electricityBuffer.writeInt(worldCoordinates.y);
+        /*electricityBuffer.writeInt(worldCoordinates.x);
+        electricityBuffer.writeInt(worldCoordinates.y);
         electricityBuffer.writeInt(neighbors.size());
+        System.out.println("Writing "+neighbors.size()+" neighbors for pole at "+worldCoordinates.x+", "+worldCoordinates.y);
         for(EnergyDistributor neighbor : neighbors) {
             ElectricityPole pole = (ElectricityPole) neighbor;
             electricityBuffer.writeInt(pole.getWorldCoordinates().x);
             electricityBuffer.writeInt(pole.getWorldCoordinates().y);
+            System.out.println("- WROTE "+pole.getWorldCoordinates().x+", "+pole.getWorldCoordinates().y+" as a neighbor");
         }
+        */
     }
 
+    protected Color DEBUG_COLOR;
+
     public static void readConnections(DataInputStream in, World world) throws IOException {
-        Point worldCoordinates = new Point(in.readInt(), in.readInt());
+        /*Point worldCoordinates = new Point(in.readInt(), in.readInt());
         // NOTE: no need to set the worldCoordinates of the pole because it will be set when the tile is read from file
         ElectricityPole pole = (ElectricityPole) world.getTile(worldCoordinates.x, worldCoordinates.y, 1);
         int neighborCount = in.readInt();
+        System.out.println("Reading "+neighborCount+" neighbors for pole at "+worldCoordinates.x+", "+worldCoordinates.y + ", " + pole);
         for(int i = 0; i < neighborCount; i++) {
             int x = in.readInt();
             int y = in.readInt();
-            pole.addNeighbor((ElectricityPole) world.getTile(x, y, 1));
-        }
+            ElectricityPole neighbor = (ElectricityPole) world.getTile(x, y, 1);
+            System.out.println("- READ "+x+", "+y+" as a neighbor, "+neighbor);
+            //EnergyDistributor.connectNodes(pole, neighbor);
+        }*/
+        Point worldCoordinates = new Point(in.readInt(), in.readInt());
+        ElectricityPole pole = (ElectricityPole) world.getTile(worldCoordinates.x, worldCoordinates.y, 1);
+        pole.connectToNetwork(world);
+    }
+
+    @Override
+    public void onBreak(World world, Player player, int x, int y) {
+        removeFromGrid();
     }
 
     public int getRadius() {
@@ -134,12 +145,16 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     @Override
     public void addNeighbor(EnergyDistributor neighbor) {
-        neighbors.add(neighbor);
+        boolean contains = getNeighbors().contains(neighbor) || neighbor.equals(this);
+        if(contains) {
+            return;
+        }
+        getNeighbors().add(neighbor);
     }
 
     @Override
     public void removeNeighbor(EnergyDistributor neighbor) {
-        neighbors.remove(neighbor);
+        getNeighbors().remove(neighbor);
     }
 
     @Override
@@ -152,13 +167,39 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         return defaultBlacklist;
     }
 
+    @Override
+    public int hashCode() {
+        return worldCoordinates.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        //System.out.println("Comparing "+this+" to "+obj);
+        if(obj instanceof ElectricityPole) {
+            ElectricityPole pole = (ElectricityPole) obj;
+            return pole.worldCoordinates.equals(worldCoordinates);
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "ElectricityPole["+worldCoordinates.x+", "+worldCoordinates.y+"]";
+    }
+
     public abstract void writePole(TileType type, DataBuffer buffer) throws IOException;
     public abstract ElectricityPole readPole(DataInputStream input, TileType type) throws IOException;
 
     @Override
     public Tile readTile(DataInputStream input, TileType type) throws IOException {
         ElectricityPole pole = readPole(input, type);
+        readBreakData(input, pole);
         pole.worldCoordinates = new Point(input.readInt(), input.readInt());
+        
+        float f1 = input.readFloat();
+        float f2 = input.readFloat();
+        float f3 = input.readFloat();
+        pole.DEBUG_COLOR = new Color(f1, f2, f3, 1f);
         return pole;
     }
     @Override
@@ -169,6 +210,18 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         writePole(tile, buffer);
         buffer.writeInt(worldCoordinates.x);
         buffer.writeInt(worldCoordinates.y);
+        // Write 3 random floats based on the hashCode of the powerGrid
+        PowerGrid grid = getPowerGrid();
+        if(grid == null) {
+            buffer.writeFloat(0);
+            buffer.writeFloat(0);
+            buffer.writeFloat(0);
+        } else {
+            Random r = new Random(grid.hashCode());
+            buffer.writeFloat(r.nextFloat());
+            buffer.writeFloat(r.nextFloat());
+            buffer.writeFloat(r.nextFloat());
+        }
     }
     
 }
