@@ -191,7 +191,7 @@ public class GameScreen implements Screen {
 	double worldTime = 0;
 	boolean showUI = true;
 	int rotation = 0;
-	boolean gammaOverride = false;
+	boolean gammaOverride = true;
 	
 	WorldGeneratorType currentWorldType;
 	

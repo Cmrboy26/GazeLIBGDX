@@ -97,7 +97,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     }
 
     public int getRadius() {
-        return 5;
+        return 3;
     }
 
     @Override
