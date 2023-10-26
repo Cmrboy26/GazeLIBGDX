@@ -18,7 +18,7 @@ public interface EnergyDistributor {
 
     public default void removeFromGrid() {
         if(getPowerGrid() != null) {
-            getPowerGrid().removeEnergyDistributor(this);
+            getPowerGrid().remove(this, true);
         }
     }
 

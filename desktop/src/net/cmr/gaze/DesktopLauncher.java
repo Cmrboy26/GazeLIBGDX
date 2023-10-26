@@ -5,6 +5,7 @@ import java.io.InvalidObjectException;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
+import net.cmr.gaze.world.ElectricityPole;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.PowerGrid;
 import net.cmr.gaze.world.tile.WoodElectricityPole;
@@ -19,7 +20,24 @@ public class DesktopLauncher {
 		config.setWindowedMode(640, 360);
 		//new Lwjgl3Application(new Gaze() {}, config);
 
-		WoodElectricityPole pole1 = new WoodElectricityPole();
+		int size = 100;
+		WoodElectricityPole[] array = new WoodElectricityPole[size];
+		for(int i = 0; i < size; i++) {
+			array[i] = new WoodElectricityPole();
+			array[i].worldCoordinates = new Point(i, i);
+		}
+		for(int i = 1; i < size; i++) {
+			EnergyDistributor.connectNodes(array[i-1], array[i]);
+		}
+		
+		array[49].removeFromGrid();
+
+		for(int i = 0; i < size; i++) {
+			System.out.println(i+" : "+array[i].getPowerGrid());
+		}
+
+
+		/*WoodElectricityPole pole1 = new WoodElectricityPole();
 		WoodElectricityPole pole2 = new WoodElectricityPole();
 		WoodElectricityPole pole3 = new WoodElectricityPole();
 		WoodElectricityPole pole4 = new WoodElectricityPole();
@@ -48,7 +66,7 @@ public class DesktopLauncher {
 		System.out.println(pole3.getPowerGrid());
 		System.out.println(pole4.getPowerGrid());
 		System.out.println(pole5.getPowerGrid());
-		System.out.println(pole6.getPowerGrid());
+		System.out.println(pole6.getPowerGrid());*/
 
 
 
