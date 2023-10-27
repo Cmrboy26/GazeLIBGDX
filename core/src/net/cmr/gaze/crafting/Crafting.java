@@ -123,6 +123,7 @@ public class Crafting {
 		initializeRecipe("Appliances", "anvil", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {6}, new ItemType[] {ItemType.ANVIL}, new int[] {1}, research("gaze:machinery.technology"));
 		initializeRecipe("Appliances", "technologyTable", CraftingStation.ANVIL, new ItemType[] {ItemType.IRON_INGOT, ItemType.COPPER_INGOT}, new int[] {10, 5}, new ItemType[] {ItemType.TECHNOLOGY_TABLE}, new int[] {1}, research("gaze:resources.forging"));
 		initializeRecipe("Appliances", "woodElectricityPole", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {3}, new ItemType[] {ItemType.WOOD_ELECTRICITY_POLE}, new int[] {1});
+		initializeRecipe("Appliances", "blastFurnace", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {3}, new ItemType[] {ItemType.BLAST_FURNACE}, new int[] {1});
 		
 		initializeRecipe("Farming", "woodWateringCan", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.WOOD_WATERING_CAN}, new int[] {1}, research("gaze:farming.watering"));
 		initializeRecipe("Farming", "bread", CraftingStation.NONE, new ItemType[] {ItemType.WHEAT}, new int[] {4}, new ItemType[] {ItemType.BREAD}, new int[] {1}, research("gaze:farming.bread"));

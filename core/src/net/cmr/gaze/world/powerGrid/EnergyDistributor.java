@@ -7,6 +7,12 @@ import java.util.Objects;
 public interface EnergyDistributor {
     
     public EnergySubnet getEnergyUsers();
+    public default void addEnergyUser(EnergyUser user) {
+        getEnergyUsers().addUser(user);
+    }
+    public default void removeEnergyUser(EnergyUser user) {
+        getEnergyUsers().removeUser(user);
+    }
 
     public void setPowerGrid(PowerGrid grid);
     public PowerGrid getPowerGrid();
@@ -44,7 +50,7 @@ public interface EnergyDistributor {
     public static class DefaultEnergyDistributor implements EnergyDistributor {
         PowerGrid grid;
         ArrayList<EnergyDistributor> neighbors = new ArrayList<>();
-        EnergySubnet subnet = new EnergySubnet();
+        EnergySubnet subnet = new EnergySubnet(this);
 
         public EnergySubnet getEnergyUsers() {
             return subnet;

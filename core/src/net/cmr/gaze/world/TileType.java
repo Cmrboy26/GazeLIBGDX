@@ -2,6 +2,7 @@ package net.cmr.gaze.world;
 
 import net.cmr.gaze.world.tile.AirTile;
 import net.cmr.gaze.world.tile.AnvilTile;
+import net.cmr.gaze.world.tile.BlastFurnace;
 import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
@@ -73,7 +74,8 @@ public enum TileType {
 	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION), 
 	TECHNOLOGY_TABLE(TechnologyTableTile.class, 1, TickType.NONE, 3),
 	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION),
-	WOOD_ELECTRICITY_POLE(WoodElectricityPole.class, 1, TickType.NONE, 3, Replaceable.NEVER);
+	WOOD_ELECTRICITY_POLE(WoodElectricityPole.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
+	BLAST_FURNACE(BlastFurnace.class, 1, TickType.NONE, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,

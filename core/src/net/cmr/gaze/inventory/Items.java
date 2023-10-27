@@ -19,6 +19,7 @@ import net.cmr.gaze.Logger;
 import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.AppleItem;
+import net.cmr.gaze.inventory.custom.BlastFurnaceItem;
 import net.cmr.gaze.inventory.custom.BreadItem;
 import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
@@ -97,6 +98,7 @@ public class Items {
 		CHEST(ChestItem.class, 4), 
 		ANVIL(AnvilItem.class, 4),
 		TECHNOLOGY_TABLE(TechnologyTableItem.class, 4),
+		BLAST_FURNACE(BlastFurnaceItem.class),
 		
 		TORCH(TorchItem.class), 
 		

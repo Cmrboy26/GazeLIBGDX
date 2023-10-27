@@ -8,8 +8,10 @@ public class EnergySubnet {
     private List<EnergyProducer> producers;
     private List<EnergyConsumer> consumers;
     private List<EnergyBatteries> batteries;
+    private final EnergyDistributor distributor;
 
-    public EnergySubnet() {
+    public EnergySubnet(EnergyDistributor distributor) {
+        this.distributor = distributor;
         this.producers = new ArrayList<>();
         this.consumers = new ArrayList<>();
         this.batteries = new ArrayList<>();

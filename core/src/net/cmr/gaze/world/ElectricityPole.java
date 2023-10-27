@@ -27,14 +27,14 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         super(type);
         this.worldCoordinates = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         this.neighbors = new ArrayList<EnergyDistributor>();
-        this.subnet = new EnergySubnet();
+        this.subnet = new EnergySubnet(this);
     }
 
     @Override
     public void onPlace(World world, int x, int y, Player player) {
         this.worldCoordinates = new Point(x, y);
         this.neighbors = new ArrayList<EnergyDistributor>();
-        this.subnet = new EnergySubnet();
+        this.subnet = new EnergySubnet(this);
         // Add nearby poles to the neighbors list and this tile to their neighbors list (according to getRadius())
         connectToNetwork(world);
     }
