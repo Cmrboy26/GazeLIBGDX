@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public interface EnergyDistributor {
     
+    public static final int MAX_RADIUS = 10;
+
     public EnergySubnet getEnergyUsers();
     public default void addEnergyUser(EnergyUser user) {
         getEnergyUsers().addUser(user);

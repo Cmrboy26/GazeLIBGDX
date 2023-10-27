@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergySubnet;
+import net.cmr.gaze.world.powerGrid.EnergyUser;
 import net.cmr.gaze.world.powerGrid.PowerGrid;
 
 public abstract class ElectricityPole extends Tile implements EnergyDistributor {
@@ -47,6 +48,28 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
                 Tile tile = world.getTile(x, y, 1);
                 if(tile instanceof ElectricityPole && !(x==this.worldCoordinates.x && y==this.worldCoordinates.y)) {
                     tempNeighbors.add((ElectricityPole) tile);
+                }
+            }
+        }
+
+        for(int x = this.worldCoordinates.x - getRadius(); x <= this.worldCoordinates.x + getRadius(); x++) {
+            for(int y = this.worldCoordinates.y - getRadius(); y <= this.worldCoordinates.y + getRadius(); y++) {
+                Tile tile = world.getTile(x, y, 1);
+                if(tile instanceof EnergyUser) {
+                    EnergyUser user = (EnergyUser) tile;
+
+                    if(user.getEnergyDistributor() != null) {
+                        // if this distributor is closer than theirs, then replace it
+                        float thisDistance = (float) Math.hypot(x - this.worldCoordinates.x, y - this.worldCoordinates.y);
+                        float theirDistance = (float) Math.hypot(x - ((ElectricityPole) user.getEnergyDistributor()).getWorldCoordinates().x, y - ((ElectricityPole) user.getEnergyDistributor()).getWorldCoordinates().y);
+                        if(thisDistance < theirDistance) {
+                            user.setEnergyDistributor(this);
+                        }
+                    }
+
+                    if(user.getEnergyDistributor() == null) {
+                        user.setEnergyDistributor(this);
+                    }
                 }
             }
         }

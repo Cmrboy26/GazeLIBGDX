@@ -51,6 +51,14 @@ public class PowerGrid {
 		return energyDistributors;
 	}
 
+	public double getNetPower() {
+		double power = 0;
+		for(EnergyDistributor dist : getDistributors()) {
+			power+=dist.getEnergyUsers().getNetEnergy();
+		}
+		return power;
+	}
+
 	/**
 	 * "Snaps" the "branches" of a specific energy distributor.
 	 * In other words, it removes all the connections between the distributor and its neighbors.
