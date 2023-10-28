@@ -54,6 +54,34 @@
 			"rewards": [
 				"XP/MINING/10"
 			]
+		},
+		{
+			"name":"Coal Power",
+			"description":"Coal is the future!\n-Unlocks Coal Generators",
+			"icon":"coal",
+			"id":"coal_generator",
+			"parent-id":"electricity",
+			"position": [10,40],
+			"requirements":[
+				"ITEM/COPPER_WIRE/10"
+			],
+			"rewards": [
+				"XP/MINING/10"
+			]
+		},
+		{
+			"name": "Solar Power",
+			"description":"The sun is the future!\n-Unlocks Solar Panels",
+			"icon":"solarPanel",
+			"id":"solar_panel",
+			"parent-id":"coal_generator",
+			"position": [10,50],
+			"requirements":[
+				"ITEM/COPPER_WIRE/10"
+			],
+			"rewards": [
+				"XP/MINING/10"
+			]
 		}
 	],
 	"addLater": [

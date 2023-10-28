@@ -45,9 +45,9 @@ public class DefaultUndergroundGenerator extends WorldGenerator {
 					// ore gen
 					if (noise > -.75d) {
 						
-						double ironNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/9, seed/1.1);
-						double copperNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/2, seed/3.1);
-						double coalNoise = SimplexNoise.noise(1, 1, 10, .5, 2, x/7f, y/7f, seed/5f, seed/2.1);
+						double ironNoise = SimplexNoise.noise(1, 1, 13, .5, 2, x/7f, y/7f, seed/9, seed/1.1);
+						double copperNoise = SimplexNoise.noise(1, 1, 13, .5, 2, x/7f, y/7f, seed/2, seed/3.1);
+						double coalNoise = SimplexNoise.noise(1, 1, 13, .5, 2, x/7f, y/7f, seed/5f, seed/2.1);
 						
 						if(ironNoise > .51) {
 							generateTile(chunk, Tiles.getTile(TileType.IRON_ORE_WALL), x, y);
@@ -79,10 +79,10 @@ public class DefaultUndergroundGenerator extends WorldGenerator {
 		for(int x = chunk.x*Chunk.CHUNK_SIZE; x < chunk.x*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; x++) {
 			for(int y = chunk.y*Chunk.CHUNK_SIZE; y < chunk.y*Chunk.CHUNK_SIZE+Chunk.CHUNK_SIZE; y++) {
 				Point world = new Point(x, y);
-				double noise = SimplexNoise.noise(1, 20, 10, .5d, 2d, x, y, seed/2, .3d/7d*seed);
+				double noise = SimplexNoise.noise(3, 50, 10, .5d, 2d, x, y, seed/2, .3d/7d*seed);
 				//System.out.println("NOISE");
 				//if(Math.abs(x)%24==0 && Math.abs(y)%24==0) {
-				if(noise > 1.05) {
+				if(noise > 3.25) {
 					System.out.println("CHEST");
 					Structure structure = new ChestStructure(world);
 					addStructure(structure);

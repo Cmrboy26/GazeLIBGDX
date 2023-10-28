@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.DataBuffer;
@@ -75,10 +76,11 @@ public class CampfireTile extends Tile implements CraftingStationTile, LightSour
 		}
 		return false;
 	}
-	
+	float deltaTime;
 	@Override
 	public void render(Gaze game, GameScreen screen, int x, int y) {
-		draw(game.batch, game.getSprite("campfire"), x, y, 1, 1);
+		deltaTime += Gdx.graphics.getDeltaTime();
+		draw(game.batch, game.getAnimation("campfire").getKeyFrame(deltaTime), x, y, 1, 1);
 		super.render(game, screen, x, y);
 	}
 	

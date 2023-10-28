@@ -90,8 +90,8 @@ public class ChuteTile extends Tile {
 			
 			if(at!=null&&at.getType()==TileType.CHUTE) {
 				player.getSender().addPacket(new AudioPacket("chute", 1f));
-				target.addPlayer(player);
-				player.getPlayer().setPositionKeepLast(x*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/4);
+				target.teleportPlayerToWorld(player, x*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/4);
+				//player.getPlayer().setPositionKeepLast(x*Tile.TILE_SIZE+Tile.TILE_SIZE/2, y*Tile.TILE_SIZE+Tile.TILE_SIZE/4);
 			}
 			
 			return true;

@@ -58,6 +58,7 @@ public abstract class Structure {
 			for(int x = 0; x < structureTiles.length; x++) {
 				for(int y = 0; y < structureTiles[0].length; y++) {
 					Tile at = structureTiles[x][y][z];
+					at = Tiles.getTile(at.getType());
 					if(at == null && z == 0) {
 						continue;
 					}
@@ -75,7 +76,7 @@ public abstract class Structure {
 							Point p = c.relativeToWorldCoordinates(new Point(endX, endY));
 							if(at != null) {
 								if(at instanceof ChestTile) {
-									generateChestLoot((ChestTile) Tiles.getTile(TileType.CHEST), endX, endY);
+									generateChestLoot((ChestTile) at, endX, endY);
 								}
 								if(at instanceof AirTile) {
 									at = null;

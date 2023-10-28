@@ -2028,7 +2028,7 @@ public class GameScreen implements Screen {
     
     public void addLevelUpNotification() {
     	String[] text = new String[] {"MINING LEVEL UP!\n2 -> 3", "New recipes unlocked!"};
-		String[] sprites = new String[] {"furnace", "chest", "chute", "anvil"};
+		String[] sprites = new String[] {};
 		addNotification(text, sprites, 3f, 5f, "intro");
     }
     
@@ -2038,14 +2038,14 @@ public class GameScreen implements Screen {
     public void addNotification(String[] text, String[] sprites, float textTime, float duration, String soundEffect) {
     	Notification notif = new Notification(game, text, sprites, textTime, Notification.getEvenlySpacedTime(sprites, duration), duration, soundEffect);
 		notif.setDirection(true);
-		notif.setPosition(640, 180);
+		notif.setPosition(640, 120);
 		
 		notificationQueue.add(notif);
     }
     public void addNotification(String[] text, String[] sprites, boolean[] animations, float textTime, float duration, String soundEffect) {
     	Notification notif = new Notification(game, text, sprites, animations, textTime, Notification.getEvenlySpacedTime(sprites, duration), duration, soundEffect);
 		notif.setDirection(true);
-		notif.setPosition(640, 180);
+		notif.setPosition(640, 120);
 		
 		notificationQueue.add(notif);
     }

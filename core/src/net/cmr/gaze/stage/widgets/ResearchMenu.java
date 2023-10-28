@@ -186,12 +186,14 @@ public class ResearchMenu extends WidgetGroup {
         if(researchTree == null) {return;}
         for(ResearchVertex vertex : researchTree.getResearchNodes().values()) {
             String icon = vertex.icon.replaceAll(">", "");
-            TextureRegion tr = game.getSprite(icon);
+            TextureRegion tr = null;
             if(!game.hasSprite(icon) || vertex.icon.contains(">")) {
                 Animation<TextureRegion> anim = game.getAnimation(icon);
                 if(anim != null) {
                      tr = anim.getKeyFrame(0f);
                 }
+            } else {
+                tr = game.getSprite(icon);
             }
             TextureRegionDrawable drawable = new TextureRegionDrawable(tr);
             drawable.setMinSize(14*2, 14*2);

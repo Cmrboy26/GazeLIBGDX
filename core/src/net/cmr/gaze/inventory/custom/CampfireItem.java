@@ -3,6 +3,7 @@ package net.cmr.gaze.inventory.custom;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.DataBuffer;
 
@@ -28,8 +29,7 @@ public class CampfireItem extends Placeable {
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		//batch.draw(game.getSprite("campfire"), x+width*(1f/6f), y+height*(1f/12f), width*(2f/3f), height);
-		batch.draw(game.getSprite("campfire"), x, y, width, height);
+		batch.draw(game.getAnimation("campfire").getKeyFrame(0), x, y, width, height);
 	}
 
 	@Override

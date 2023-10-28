@@ -52,8 +52,7 @@ public abstract class ChatProcessor {
                         try {
                             double x = Double.parseDouble(commandArgs[0]);
                             double y = Double.parseDouble(commandArgs[1]);
-                            connection.getPlayer().setPosition(x*Tile.TILE_SIZE, y*Tile.TILE_SIZE);
-                            connection.getPlayer().getWorld().sendNeededChunks(connection);
+                            connection.getPlayer().getWorld().teleportPlayerToWorld(connection.getPlayer(), x*Tile.TILE_SIZE, y*Tile.TILE_SIZE);
                             connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Teleported to " + x + ", " + y)));
                             return true;
                         } catch(NumberFormatException e) {

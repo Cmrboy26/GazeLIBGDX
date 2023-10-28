@@ -46,6 +46,13 @@
 			{}
 		]
 	},
+	"campfire": {
+		"tileX": 32,
+		"tileY": 32,
+		"animations": [
+			{}
+		]
+	},
 	"player": {
 		"tileX": 64,
 		"tileY": 64,

@@ -168,8 +168,9 @@ public class World {
 	}
 	
 	private void processConnectionsAndInteractions(double delta, HashSet<Point> loadedChunks) {
-		for(int i = 0; i < players.size(); i++) {
-			PlayerConnection connection = players.get(i);
+		ArrayList<PlayerConnection> temporaryList = new ArrayList<>(players);
+		for(int i = 0; i < temporaryList.size(); i++) {
+			PlayerConnection connection = temporaryList.get(i);
 			connection.update();
 			Player player = connection.getPlayer();
 			Point chunk = player.getChunk();
@@ -181,8 +182,12 @@ public class World {
 			
 			connection.setPlayerMovement();
 			player.update(delta, tileData);
+
+			if(player.getWorld().equals(this)) {
+				sendNeededChunks(connection);
+			}
+
 			connection.processPositionPacket();
-			sendNeededChunks(connection);
 			
 			if(connection.getInteractEvents().size()>0) {
 				for(int f = 0; f < connection.getInteractEvents().size(); f++) {
@@ -536,7 +541,7 @@ public class World {
 		if(connection==null) {
 			return;
 		}
-		if(connection.getPlayer().getWorld()==this) {
+		if(Objects.equals(connection.getPlayer().getWorld(), this)) {
 			return;
 		} else {
 			if(connection.getPlayer().getWorld()!=null) {
@@ -634,7 +639,8 @@ public class World {
 		ArrayList<Chunk> chunks = new ArrayList<>();
 		for(int x = connection.getPlayer().getChunk().x-1; x <= connection.getPlayer().getChunk().x+1; x++) {
 			for(int y = connection.getPlayer().getChunk().y-1; y <= connection.getPlayer().getChunk().y+1; y++) {
-				chunks.add(this.chunkList.get(new Point(x, y)));
+				//chunks.add(this.chunkList.get(new Point(x, y)));
+				chunks.add(getChunk(new Point(x, y)));
 			}
 		}
 		return chunks;
@@ -682,6 +688,7 @@ public class World {
 	}
 
 	public void sendLoadedChunks(PlayerConnection connection) {
+		//connection.getSender().addPacket(new WorldChangePacket(this));
 		for(Chunk chunk : getPlayerLoadedChunks(connection)) {
 			connection.getSender().addPacket(new ChunkDataPacket(chunk));
 		}
@@ -702,8 +709,11 @@ public class World {
 	public void teleportPlayerToWorld(Player player, double x, double y) {
 		PlayerConnection connection = Player.searchForPlayer(player);
 		player.setPosition(x, y);
-		addPlayer(connection);
-		sendLoadedChunks(connection);
+		if(player.getWorld().equals(this)) {
+			sendLoadedChunks(connection);
+		} else {
+			addPlayer(connection);
+		}
 	}
 
 	public void teleportPlayerToWorld(PlayerConnection connection, double x, double y) {

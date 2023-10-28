@@ -20,7 +20,6 @@
 				"RESEARCH/gaze:resources.woodTools"
 			],
 			"rewards": [
-				"XP/FARMING/5",
 				"ITEM/WHEAT_SEEDS/5"
 			]
 		},
@@ -32,6 +31,7 @@
 			"parent-id":"watering",
 			"position": [0,20],
 			"requirements":[
+				"SKILL/FARMING/2",
 				"ITEM/WHEAT/5"
 			],
 			"rewards": [

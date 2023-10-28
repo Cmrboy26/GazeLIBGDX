@@ -38,7 +38,7 @@
 		},
 		{
 			"name":"Stone Tools",
-			"description":"A great upgrade!",
+			"description":"A great upgrade! Capable of mining tougher materials",
 			"icon":"stonePickaxe",
 			"id":"stoneTools",
 			"parent-id":"woodTools",
@@ -82,16 +82,17 @@
 			]
 		},
 		{
-			"name":"Blastformation",
-			"description":"Using innovative new electric technology, steel can be easily forged!\n-Unlocks blast furnace in the tech workbench.\n-Unlocks steel.",
+			"name":"Blast-formation",
+			"description":"Using innovative electric technology, steel can be easily forged,\nand other ores can be smelted more efficiently!\n-Unlocks blast furnace in the tech workbench.\n-Unlocks steel.",
 			"icon":"blastFurnace",
 			"id":"blast_furnace",
 			"parent-id":"forging",
 			"position": [0,40],
 			"requirements":[
 				"RESEARCH/gaze:machinery.electricity",
-				"ITEM/COAL/3",
-				"ITEM/IRON_INGOT/3"
+				"SKILL/MINING/5",
+				"ITEM/COAL/5",
+				"ITEM/IRON_INGOT/5"
 			],
 			"rewards": [
 				
