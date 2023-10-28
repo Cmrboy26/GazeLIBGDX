@@ -318,8 +318,7 @@ public class Gaze extends Game {
 			Gdx.graphics.setWindowedMode(640, 360);
 		}
 	}
-	
-	
+
 	@Override
 	public void render () {
 		

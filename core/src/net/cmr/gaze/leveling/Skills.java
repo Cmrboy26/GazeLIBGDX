@@ -122,5 +122,9 @@ public class Skills {
 			buffer.writeDouble(getXP(skill));
 		}
 	}
+
+    public void setLevel(Skill skill, int level) {
+		skillXP.put(skill, getXPFromLevel(skill, level));
+    }
 	
 }

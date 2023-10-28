@@ -25,6 +25,7 @@ import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
+import net.cmr.gaze.inventory.custom.CoalGeneratorItem;
 import net.cmr.gaze.inventory.custom.CoalItem;
 import net.cmr.gaze.inventory.custom.CopperIngotItem;
 import net.cmr.gaze.inventory.custom.CopperOreItem;
@@ -36,6 +37,7 @@ import net.cmr.gaze.inventory.custom.IronGear;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOreItem;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
+import net.cmr.gaze.inventory.custom.SolarPanelItem;
 import net.cmr.gaze.inventory.custom.StoneAxe;
 import net.cmr.gaze.inventory.custom.StoneBrickCeilingItem;
 import net.cmr.gaze.inventory.custom.StoneBrickFloorItem;
@@ -98,7 +100,10 @@ public class Items {
 		CHEST(ChestItem.class, 4), 
 		ANVIL(AnvilItem.class, 4),
 		TECHNOLOGY_TABLE(TechnologyTableItem.class, 4),
-		BLAST_FURNACE(BlastFurnaceItem.class),
+
+		BLAST_FURNACE(BlastFurnaceItem.class, 4), 
+		SOLAR_PANEL(SolarPanelItem.class, 4),
+		COAL_GENERATOR(CoalGeneratorItem.class),
 		
 		TORCH(TorchItem.class), 
 		

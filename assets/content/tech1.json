@@ -43,7 +43,7 @@
 		},
 		{
 			"name":"Electricity",
-			"description":"SHOCKING!\n-Unlocks Copper Wire",
+			"description":"SHOCKING!\n-Unlocks Copper Wire\n-Unlocks Wood Electricity Poles",
 			"icon":"machinery.electricity",
 			"id":"electricity",
 			"parent-id":"gears",

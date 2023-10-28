@@ -79,6 +79,15 @@ ANVIL
 TECHNOLOGY_TABLE
 	Technology Table
 	Capable of creating advanced electronic tech.
+BLAST_FURNACE
+	Blast Furnace
+	Power Requirements: 1E, Allows for steel to be forged
+SOLAR_PANEL
+	Solar Panel
+	Power Production: 1E (during the day), Harness the power of the sun!
+COAL_GENERATOR
+	Coal Generator
+	Power Production: 2E, Coal fuels the world! Right click to add coal!
 TORCH
 	Torch
 	Can be used to light up the world.
@@ -127,3 +136,6 @@ BRICK_CEILING
 BREAD
 	Bread
 	Raw toast.
+WOOD_ELECTRICITY_POLE
+	Wood Electricity Pole
+	You have to get that power somewhere!

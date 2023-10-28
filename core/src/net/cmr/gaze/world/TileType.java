@@ -7,6 +7,7 @@ import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
 import net.cmr.gaze.world.tile.ChuteTile;
+import net.cmr.gaze.world.tile.CoalGenerator;
 import net.cmr.gaze.world.tile.CoalOreWall;
 import net.cmr.gaze.world.tile.CopperOreWall;
 import net.cmr.gaze.world.tile.DirtTile;
@@ -16,6 +17,7 @@ import net.cmr.gaze.world.tile.GrassTile;
 import net.cmr.gaze.world.tile.IronOreWall;
 import net.cmr.gaze.world.tile.LavaTile;
 import net.cmr.gaze.world.tile.SandTile;
+import net.cmr.gaze.world.tile.SolarPanel;
 import net.cmr.gaze.world.tile.StoneBrickCeilingTile;
 import net.cmr.gaze.world.tile.StoneBrickFloorTile;
 import net.cmr.gaze.world.tile.StoneBrickWallTile;
@@ -54,7 +56,7 @@ public enum TileType {
 	STONE_WALL(StoneWall.class, 1, TickType.NONE, 5, Replaceable.GENERATION), 
 	CHUTE(ChuteTile.class, 1, TickType.NONE, 3), 
 	TORCH(TorchTile.class, 1, TickType.NONE), 
-	IRON_ORE_WALL(IronOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION), 
+	IRON_ORE_WALL(IronOreWall.class, 1, TickType.NONE, 6, Replaceable.GENERATION), 
 	FURNACE(FurnaceTile.class, 1, TickType.NONE, 2),
 	FARMLAND(FarmlandTile.class, 0, TickType.CONSTANT), 
 	WHEAT(WheatTile.class, 1, TickType.NONE), 
@@ -71,11 +73,13 @@ public enum TileType {
 	WOOD_CEILING(WoodCeilingTile.class, 2, TickType.NONE, 2), 
 	STONE_BRICK_CEILING(StoneBrickCeilingTile.class, 2, TickType.NONE, 2), 
 	BRICK_CEILING(BrickCeilingTile.class, 2, TickType.NONE, 2),
-	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION), 
+	COPPER_ORE_WALL(CopperOreWall.class, 1, TickType.NONE, 6, Replaceable.GENERATION), 
 	TECHNOLOGY_TABLE(TechnologyTableTile.class, 1, TickType.NONE, 3),
-	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 8, Replaceable.GENERATION),
+	COAL_ORE_WALL(CoalOreWall.class, 1, TickType.NONE, 6, Replaceable.GENERATION),
 	WOOD_ELECTRICITY_POLE(WoodElectricityPole.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
-	BLAST_FURNACE(BlastFurnace.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
+	BLAST_FURNACE(BlastFurnace.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
+	SOLAR_PANEL(SolarPanel.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
+	COAL_GENERATOR(CoalGenerator.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,

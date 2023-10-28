@@ -65,7 +65,7 @@ public class RecipeDisplay extends ScrollPane {
 		
 		ArrayList<Recipe> validRecipes = new ArrayList<>();
 		for(Recipe recipe : category.recipes) {
-			if(recipe.station == station || recipe.station == CraftingStation.NONE) {
+			if(recipe.station == station || (recipe.station == CraftingStation.NONE && !station.onlyShowThisStation)) {
 				if(screen.getLocalPlayer()!=null && recipe.requirementsMet(screen.getLocalPlayer())) {
 					validRecipes.add(recipe);
 				}

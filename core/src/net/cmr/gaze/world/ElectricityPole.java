@@ -5,7 +5,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 import com.badlogic.gdx.graphics.Color;
@@ -114,6 +113,12 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     public void onBreak(World world, Player player, int x, int y) {
         ArrayList<EnergyDistributor> update = new ArrayList<>(getPowerGrid().getDistributors());
         removeFromGrid();
+        ArrayList<EnergyUser> subnet2 = new ArrayList<EnergyUser>(subnet.releaseEnergyUsers());
+        for(EnergyUser user : subnet2) {
+            Point coords = user.getWorldCoordinates();
+            user.removeEnergyDistributor();
+            user.connectToWorld(world, coords.x, coords.y);
+        }
         for(EnergyDistributor neighbor : update) {
             ElectricityPole pole = (ElectricityPole) neighbor;
             world.onTileChange(pole.worldCoordinates.x, pole.worldCoordinates.y, 1);

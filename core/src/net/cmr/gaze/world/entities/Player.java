@@ -351,6 +351,12 @@ public class Player extends HealthEntity implements LightSource {
 		world.getServer().sendAllPacketIf(packet, ConnectionPredicate.PLAYER_IN_BOUNDS, getChunk(), world);
 	}
 
+    public void setLevel(Skill skill, int level) {
+		skills.setLevel(skill, level);
+		SkillsPacket packet = new SkillsPacket(skills, this);
+		getWorld().getServer().sendAllPacketIf(packet, ConnectionPredicate.PLAYER_IN_BOUNDS, getChunk(), world);
+    }
+
 	public QuestData getQuestData() {
 		return questData;
 	}

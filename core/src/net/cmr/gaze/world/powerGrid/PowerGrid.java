@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 
+import net.cmr.gaze.util.CustomMath;
+
 public class PowerGrid {
 
     ArrayList<EnergyDistributor> energyDistributors;
@@ -51,13 +53,49 @@ public class PowerGrid {
 		return energyDistributors;
 	}
 
-	public double getNetPower() {
-		double power = 0;
-		for(EnergyDistributor dist : getDistributors()) {
-			power+=dist.getEnergyUsers().getNetEnergy();
+	public double getNetEnergy() {
+        return getEnergyProduced() - getEnergyConsumed();
+    }
+
+    public double getEnergyProduced() {
+        double produced = 0;
+        for(EnergyDistributor distributor : energyDistributors) {
+			produced += distributor.getEnergyUsers().getEnergyProduced();
 		}
-		return power;
-	}
+        return produced;
+    }
+
+    public double getEnergyConsumed() {
+        double consumed = 0;
+        for(EnergyDistributor distributor : energyDistributors) {
+			consumed += distributor.getEnergyUsers().getEnergyConsumed();
+		}
+        return consumed;
+    }
+
+    public double getMachineEfficiency() {
+        double loss = getEnergyConsumed();
+        double gained = getEnergyProduced();
+        
+        if(loss == 0) {
+            return 1;
+        }
+
+        double percent = (gained / loss);
+        percent = CustomMath.minMax(0, percent, 1);
+        return percent;
+    }
+    public double getGenerationEfficiency() {
+        double loss = getEnergyProduced();
+        double gained = getEnergyConsumed();
+        
+        if(gained == 0) {
+            return 1;
+        }
+        double percent = (loss / gained);
+        percent = CustomMath.minMax(0, percent, 1);
+        return percent;
+    }
 
 	/**
 	 * "Snaps" the "branches" of a specific energy distributor.
@@ -133,7 +171,7 @@ public class PowerGrid {
 			}
 		}
 
-		System.out.println("Setting grid to "+grid);
+		//System.out.println("Setting grid to "+grid);
 		dfsSetGrid(grid, distributor);
 
 	}

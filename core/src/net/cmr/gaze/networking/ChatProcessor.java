@@ -4,6 +4,7 @@ import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.world.Tile;
 
@@ -63,6 +64,32 @@ public abstract class ChatProcessor {
                         connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Usage: /tp <x> <y>")));
                         return true;
                     }
+                } else if(command.equalsIgnoreCase("skill")) {
+                    if(commandArgs.length >= 1) {
+                        Skill skill = null;
+                        try {
+                            skill = Skill.valueOf(commandArgs[0].toUpperCase());
+                        } catch(Exception e) {
+                            connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Invalid skill: " + commandArgs[0])));
+                            return true;
+                        }
+                        if(commandArgs.length == 2) {
+                            try {
+                                int level = Integer.parseInt(commandArgs[1]);
+                                connection.getPlayer().setLevel(skill, level);
+                                connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Set skill level for "+skill.name()+" to " + level)));
+                                return true;
+                            } catch(NumberFormatException e) {
+                                connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Invalid amount: " + commandArgs[1])));
+                                return true;
+                            }
+                        } else {
+                            connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Current skill level for "+skill.name()+": " + connection.getPlayer().getSkills().getLevel(skill))));
+                            return true;
+                        }
+                    }
+                    connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "Usage: /skill <skill> [level]")));
+                    return true;
                 }
                 return true;
             }

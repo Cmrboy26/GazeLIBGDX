@@ -80,6 +80,22 @@
 			"rewards": [
 				
 			]
+		},
+		{
+			"name":"Blastformation",
+			"description":"Using innovative new electric technology, steel can be easily forged!\n-Unlocks blast furnace in the tech workbench.\n-Unlocks steel.",
+			"icon":"blastFurnace",
+			"id":"blast_furnace",
+			"parent-id":"forging",
+			"position": [0,40],
+			"requirements":[
+				"RESEARCH/gaze:machinery.electricity",
+				"ITEM/COAL/3",
+				"ITEM/IRON_INGOT/3"
+			],
+			"rewards": [
+				
+			]
 		}
     ]
 }

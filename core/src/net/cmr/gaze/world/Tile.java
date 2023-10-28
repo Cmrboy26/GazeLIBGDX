@@ -195,7 +195,10 @@ public abstract class Tile implements Cloneable {
 		
 		if(this instanceof StructureTile) {
 			StructureTile struct = ((StructureTile) this);
-			return struct.getBaseTile(world, x, y).onInteract(player, world, x-struct.x, y-struct.y, clickType);
+			Tile base = struct.getBaseTile(world, x, y);
+			if(base instanceof BaseTile) {
+				return ((BaseTile)base).onInteract(player, world, x-struct.x, y-struct.y, clickType);
+			}
 		}
 		
 		boolean result = false;

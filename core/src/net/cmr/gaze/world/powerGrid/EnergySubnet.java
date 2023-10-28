@@ -3,6 +3,8 @@ package net.cmr.gaze.world.powerGrid;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.cmr.gaze.util.CustomMath;
+
 public class EnergySubnet {
     
     private List<EnergyProducer> producers;
@@ -21,14 +23,58 @@ public class EnergySubnet {
      * Returns the net energy of the subnet.
      */
     public double getNetEnergy() {
-        double loss = 0;
-        for(EnergyConsumer consumer : consumers) {
-            loss += consumer.getEnergyConsumption();
-        }
+        return getEnergyProduced() - getEnergyConsumed();
+    }
+
+    public double getEnergyProduced() {
+        double produced = 0;
         for(EnergyProducer producer : producers) {
-            loss -= producer.getEnergyProduced();
+            produced += producer.getEnergyProduced();
         }
-        return loss;
+        return produced;
+    }
+
+    public double getEnergyConsumed() {
+        double consumed = 0;
+        for(EnergyConsumer consumer : consumers) {
+            consumed += consumer.getEnergyConsumption();
+        }
+        return consumed;
+    }
+
+    public double getMachineEfficiency() {
+        double loss = getEnergyConsumed();
+        double gained = getEnergyProduced();
+        
+        if(loss == 0) {
+            return 1;
+        }
+
+        double percent = (gained / loss);
+        percent = CustomMath.minMax(0, percent, 1);
+        return percent;
+    }
+    public double getGenerationEfficiency() {
+        double loss = getEnergyProduced();
+        double gained = getEnergyConsumed();
+        
+        if(gained == 0) {
+            return 1;
+        }
+        double percent = (loss / gained);
+        percent = CustomMath.minMax(0, percent, 1);
+        return percent;
+    }
+
+    public ArrayList<EnergyUser> releaseEnergyUsers() {
+        ArrayList<EnergyUser> users = new ArrayList<>();
+        users.addAll(producers);
+        users.addAll(consumers);
+        users.addAll(batteries);
+        producers.clear();
+        consumers.clear();
+        batteries.clear();
+        return users;
     }
 
     /**
