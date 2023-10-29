@@ -36,7 +36,7 @@ public class RecipeSlot extends ImageButton {
 		this(getSlotBackground(game, filled),getSlotBackgroundChecked(game, filled));
 		this.game = game;
 		this.recipe = recipe;
-		this.displayItem = Items.getItem(recipe.results[0], 1);
+		this.displayItem = Items.getItem(recipe.results[0], recipe.resultsQuantity[0]);
 	}
 	
 	private RecipeSlot(Drawable background, Drawable checked) {

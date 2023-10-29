@@ -37,6 +37,7 @@ import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.TileType.Replaceable;
+import net.cmr.gaze.world.abstractTiles.FloorTile;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.ExcludePositionUpdates;
 import net.cmr.gaze.world.entities.HealthEntity;

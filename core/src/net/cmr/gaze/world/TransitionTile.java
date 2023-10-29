@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomTime;
+import net.cmr.gaze.world.abstractTiles.FloorTile;
 
 public abstract class TransitionTile extends Tile {
 

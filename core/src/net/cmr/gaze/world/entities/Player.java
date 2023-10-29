@@ -31,7 +31,6 @@ import net.cmr.gaze.stage.widgets.QuestData;
 import net.cmr.gaze.util.ArrayUtil;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.HealthEntityListener;
-import net.cmr.gaze.world.HousingDoor;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
@@ -39,6 +38,7 @@ import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldManager;
+import net.cmr.gaze.world.abstractTiles.HousingDoor;
 import net.cmr.gaze.world.pathfind.AStar;
 
 // TODO: Player Inventory data should only be sent when the player is within range

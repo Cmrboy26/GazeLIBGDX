@@ -9,12 +9,12 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.world.FloorTile;
-import net.cmr.gaze.world.HousingFloor;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.FloorTile;
+import net.cmr.gaze.world.abstractTiles.HousingFloor;
 import net.cmr.gaze.world.entities.Player;
 
 public class WoodFloorTile extends FloorTile implements HousingFloor {

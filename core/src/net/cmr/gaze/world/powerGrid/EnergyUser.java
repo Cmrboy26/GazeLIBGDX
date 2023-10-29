@@ -4,9 +4,9 @@ import java.awt.Point;
 
 import com.badlogic.gdx.utils.Null;
 
-import net.cmr.gaze.world.ElectricityPole;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 
 public interface EnergyUser {
     

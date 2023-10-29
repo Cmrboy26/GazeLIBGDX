@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.networking.CompressedPacket;
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
+import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
 public class WorldManager {

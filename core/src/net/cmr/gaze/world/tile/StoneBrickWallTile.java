@@ -16,11 +16,11 @@ import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
-import net.cmr.gaze.world.HousingWall;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.HousingWall;
 import net.cmr.gaze.world.entities.Player;
 
 public class StoneBrickWallTile extends Tile implements HousingWall {

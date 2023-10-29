@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.world.TileType.TickType;
+import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 

@@ -1,4 +1,4 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.abstractTiles;
 
 import java.awt.Point;
 import java.io.DataInputStream;
@@ -10,6 +10,9 @@ import java.util.Random;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
+import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergySubnet;

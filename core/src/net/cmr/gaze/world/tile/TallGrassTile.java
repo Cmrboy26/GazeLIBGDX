@@ -68,8 +68,10 @@ public class TallGrassTile extends Tile {
 		//player.addXP(world, Skill.Foraging, .1);
 		TileUtils.spawnBreakParticleOffset(world, this, x, y, 0, this);
 		Random random = new Random();
-		if(random.nextInt(4)==0) {
+		if(random.nextInt(6)==0) {
 			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.WHEAT_SEEDS, 1));
+		} else if(random.nextInt(6)==0) {
+			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.COTTON_SEEDS, 1));
 		}
 	}
 
