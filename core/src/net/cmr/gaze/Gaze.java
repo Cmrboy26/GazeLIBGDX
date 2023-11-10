@@ -472,7 +472,7 @@ public class Gaze extends Game {
 		if(sprite !=null) {
 			return sprite;
 		}
-		Thread.dumpStack();
+		//Thread.dumpStack();
 		System.out.println("COULD NOT FIND SPRITE "+name);
 		return sprites.get("logo");
 	}

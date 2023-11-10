@@ -7,7 +7,151 @@
 		"id":"resources",
 		"position": [0,0]
 	},
-    "researchNodes":[
+	"researchNodes": [
+		{
+			"name":"Wood Age",
+			"description":"The wood age is the first age of technology.\n-Unlocks wood tools, which grants access to the underground.\n-Unlocks wood tools",
+			"icon":"woodAxe",
+			"id":"woodAge",
+			"parent-id":"root",
+			"position": [0,10],
+			"requirements": [
+				"SKILL/FORAGING/2"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Stone Age",
+			"description":"Unlocks new tools capable of mining tougher materials.\n-Unlocks stone tools.\n-Unlocks the furnace",
+			"icon":"stonePickaxe",
+			"id":"stoneAge",
+			"parent-id":"woodAge",
+			"position": [0,20],
+			"requirements":[
+				"SKILL/MINING/2",
+				"ITEM/STONE/10"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Clay Processing",
+			"description":"-Unlocks the ability to process clay into bricks.\n-Unlocks the kiln",
+			"icon":"brick",
+			"id":"clayProcessing",
+			"parent-id":"stoneAge",
+			"position": [-10,20],
+			"requirements":[
+				"SKILL/FORAGING/3",
+				"ITEM/CLAY/10",
+				"ITEM/COPPER_INGOT/5"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Sand Processing",
+			"description":"-Unlocks the ability to process sand into glass.",
+			"icon":"glass",
+			"id":"sandProcessing",
+			"parent-id":"stoneAge",
+			"position": [10,20],
+			"requirements":[
+				"SKILL/FORAGING/3",
+				"ITEM/SAND/10"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Forging",
+			"description":"Forging allows you to turn ingots into tools.\n-Unlocks the anvil.\n-Unlocks iron tools.",
+			"icon":"anvil",
+			"id":"forging",
+			"parent-id":"stoneAge",
+			"position": [0,30],
+			"requirements":[
+				"SKILL/MINING/3",
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Blast-formation",
+			"description":"Using innovative electric technology, steel can be easily forged,\nand other ores can be smelted more efficiently!\n-Unlocks blast furnace in the tech workbench.\n-Unlocks steel.",
+			"icon":"blastFurnace",
+			"id":"blast_furnace",
+			"parent-id":"forging",
+			"position": [0,40],
+			"requirements":[
+				"RESEARCH/gaze:machinery.electricity",
+				"SKILL/MINING/4",
+				"ITEM/COAL/5",
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Silicon!",
+			"description":"Silicon is a very useful material, and can be used to make solar panels.",
+			"icon":"silicon",
+			"id":"siliconProcessing",
+			"parent-id":"sandProcessing",
+			"position": [10,30],
+			"requirements":[
+				"RESEARCH/gaze:machinery.smelting",
+				"SKILL/MINING/3",
+				"SKILL/FORAGING/4",
+				"ITEM/SAND/16",
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Titanium Fever",
+			"description":"Titanium is a very strong metal, and can be used to make advanced tools.\n-Unlocks smelting titanium ingots from ilmenite ore\n-Unlocks titanium tools.",
+			"icon":"titaniumIngot",
+			"id":"titanium",
+			"parent-id":"blast_furnace",
+			"position": [0,50],
+			"requirements":[
+				"SKILL/MINING/6",
+				"ITEM/ILMENITE_ORE/5"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Drills",
+			"description":"Drills are a great way to mine resources quickly\nand exploit tough ores in the ground.\n-Unlocks the steel drill.",
+			"icon":"steelDrill",
+			"id":"drills",
+			"parent-id":"blast_furnace",
+			"position": [0,60],
+			"requirements":[
+				"SKILL/MINING/5",
+				"ITEM/STEEL_INGOT/5",
+				"ITEM/IRON_GEAR/10",
+				"ITEM/BASIC_MOTOR/3"
+			],
+			"rewards": [
+				"ITEM/STEEL_DRILL/1"	
+			]
+		}
+	],
+    "oldresearchNodes":[
 		{
 			"name":"Underground",
 			"description":"Digging deeper will reveal more resources.\n-Unlocks the chute, which grants access the underground.",

@@ -9,7 +9,144 @@
 		"position": [0,0]
 	},
 	"comment2":"the parent research is ALWAYS a requirement",
-	"researchNodes":[
+	"researchNodes": [
+		{
+			"name":"Technology",
+			"description":"The basis of all industry.\n-Unlocks the technology table, which permits the \ncrafting of machine components and electronics",
+			"icon":"technologyTableItem",
+			"id":"technology",
+			"parent-id":"root",
+			"position": [0,10],
+			"requirements":[
+				"SKILL/MINING/5",
+				"ITEM/IRON_INGOT/1",
+				"ITEM/COPPER_INGOT/2",
+				"RESEARCH/gaze:resources.forging"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
+			"name":"Gears",
+			"description":"Iron gears are cool I suppose.\n-Unlocks Iron Gears",
+			"icon":"ironGear",
+			"id":"gears",
+			"parent-id":"technology",
+			"position": [0,20],
+			"requirements":[
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Electricity",
+			"description":"SHOCKING!\n-Unlocks Copper Wire\n-Unlocks Magnets\n-Unlocks Wood Electricity Poles",
+			"icon":"machinery.electricity",
+			"id":"electricity",
+			"parent-id":"gears",
+			"position": [0,30],
+			"requirements":[
+				"ITEM/IRON_GEAR/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Circuitry",
+			"description":"Circuitry is cool I suppose.\n-Unlocks Basic Circuits",
+			"icon":"basicCircuit",
+			"id":"circuits1",
+			"parent-id":"electricity",
+			"position": [0,40],
+			"requirements":[
+				"SKILL/MINING/5",
+				"ITEM/COPPER_WIRE/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Motors",
+			"description":"Motors are cool I suppose.\n-Unlocks Basic Motor",
+			"icon":"basicMotor",
+			"id":"motors1",
+			"parent-id":"electricity",
+			"position": [-10,40],
+			"requirements":[
+				"ITEM/COPPER_WIRE/5",
+				"ITEM/IRON_GEAR/10",
+				"ITEM/MAGNETS/10"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Mining Drills",
+			"description":"Mining Drills are cool I suppose.\n-Unlocks Basic Mining Drill",
+			"icon":"basicMiningDrill",
+			"id":"miningDrills1",
+			"parent-id":"motors1",
+			"position": [-10,50],
+			"requirements":[
+				"ITEM/BASIC_MOTOR/5",
+				"ITEM/IRON_GEAR/10",
+				"ITEM/MAGNETS/10"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Generators",
+			"description":"Generators are cool I suppose.\n-Unlocks Basic Generator",
+			"icon":"basicGenerator",
+			"id":"generators1",
+			"parent-id":"electricity",
+			"position": [10,40],
+			"requirements":[
+				"ITEM/MAGNETS/10",
+				"ITEM/COPPER_WIRE/10"
+			]
+		},
+		{
+			"name":"Coal Power",
+			"description":"Coal is the future!\n-Unlocks Coal Generators",
+			"icon":"coal",
+			"id":"coal_generator",
+			"parent-id":"generators1",
+			"position": [10,50],
+			"requirements":[
+				"ITEM/BASIC_GENERATOR/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name": "Solar Power",
+			"description":"The sun is the future!\n-Unlocks Solar Panels",
+			"icon":"solarPanel",
+			"id":"solar_panel",
+			"parent-id":"coal_generator",
+			"position": [10,60],
+			"requirements":[
+				"ITEM/COPPER_WIRE/10",
+				"ITEM/BASIC_GENERATOR/5",
+				"ITEM/GLASS/16",
+				"ITEM/SILICON/4"
+			],
+			"rewards": [
+
+			]
+		}
+	],
+	"oldresearchNodes":[
 		{
 			"name":"Technology",
 			"description":"The basis of all industry.\n-Unlocks the technology table, which permits the \ncrafting of machine components and electronics",
@@ -78,51 +215,6 @@
 			"position": [10,50],
 			"requirements":[
 				"ITEM/COPPER_WIRE/10"
-			],
-			"rewards": [
-				"XP/MINING/10"
-			]
-		}
-	],
-	"addLater": [
-		{
-			"name":"Lighting",
-			"description":"Let there be light!",
-			"icon":"lighting",
-			"id":"lighting",
-			"parent-id":"electricity",
-			"position": [10,40],
-			"requirements":[
-				"ITEM/COPPER_WIRE/10"
-			],
-			"rewards": [
-				"XP/MINING/10"
-			]
-		},
-		{
-			"name":"Circuitry",
-			"description":"Circuits are awesome!",
-			"icon":"wheat5",
-			"id":"circuitry",
-			"parent-id":"electricity",
-			"position": [0,40],
-			"requirements":[
-				"ITEM/COPPER_WIRE/10"
-			],
-			"rewards": [
-				"XP/MINING/10"
-			]
-		},
-		{
-			"name":"Steam Power",
-			"description":"Steam is the future!",
-			"icon":"machinery.steam",
-			"id":"steam",
-			"parent-id":"electricity",
-			"position": [-10,40],
-			"requirements":[
-				"ITEM/COPPER_WIRE/10",
-				"ITEM/IRON_GEAR/10"
 			],
 			"rewards": [
 				"XP/MINING/10"

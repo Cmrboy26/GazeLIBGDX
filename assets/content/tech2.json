@@ -24,6 +24,20 @@
 			]
 		},
 		{
+			"name":"Fertilizer",
+			"description":"Fertilizer can be used to make crops grow faster.\n-Unlocks basic fertilizer.",
+			"icon":"fertilizer",
+			"id":"fertilizer",
+			"parent-id":"watering",
+			"position": [10,20],
+			"requirements":[
+				"SKILL/FARMING/3"
+			],
+			"rewards": [
+				
+			]
+		},
+		{
 			"name":"BREAD!",
 			"description":"Wheat can be used to make bread.\n-Unlocks a bread recipe.",
 			"icon":"bread",
@@ -38,6 +52,87 @@
 				"XP/FARMING/5",
 				"ITEM/BREAD/2"
 			]
+		},
+		{
+			"name":"Cooking",
+			"description":"Stoves can be used to cook food.\n-Unlocks a basic stove.",
+			"icon":"stove",
+			"id":"stove1",
+			"parent-id":"bread",
+			"position": [0,30],
+			"requirements":[
+				"SKILL/FARMING/3",
+				"ITEM/STONE/10",
+				"ITEM/COPPER_WIRE/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Apple Pie",
+			"description":"Apples can be used to make apple pie.\n-Unlocks an apple pie recipe.",
+			"icon":"applePie",
+			"id":"applePie",
+			"parent-id":"stove1",
+			"position": [0,40],
+			"requirements":[
+				"SKILL/FARMING/3",
+				"ITEM/APPLE/3",
+				"ITEM/BREAD/3"
+			],
+			"rewards": [
+				"ITEM/APPLE_PIE/2"
+			]
+		},
+		{
+			"name":"Agriculture Table",
+			"description":"Agriculture tables can be used to make tools for farming.\n-Unlocks an agriculture table.",
+			"icon":"agricultureTableItem",
+			"id":"agricultureTable",
+			"parent-id":"watering",
+			"position": [-10,20],
+			"requirements":[
+				"SKILL/FARMING/3",
+				"ITEM/WOOD/5",
+				"ITEM/IRON_INGOT/2"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Crop Breeding",
+			"description":"Crops can be bred to produce new crops.\n-Unlocks a basic crop breeder",
+			"icon":"basicCropBreeder",
+			"id":"cropBreeder1",
+			"parent-id":"agricultureTable",
+			"position": [-10,30],
+			"requirements":[
+				"SKILL/FARMING/4",
+				"ITEM/COPPER_INGOT/5",
+				"ITEM/IRON_INGOT/5"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Modern Crop Breeding",
+			"description":"With the help of technology, crops can be bred more efficiently.\n-Unlocks a modern crop breeder",
+			"icon":"modernCropBreeder",
+			"id":"cropBreeder2",
+			"parent-id":"cropBreeder1",
+			"position": [-10,40],
+			"requirements":[
+				"SKILL/FARMING/6",
+				"ITEM/TITANIUM_INGOT/5",
+				"ITEM/MAGNET/5",
+				"ITEM/COPPER_WIRE/10"
+			], 
+			"rewards": [
+
+			]			
 		}
     ]
 }

@@ -191,6 +191,8 @@ public class ResearchMenu extends WidgetGroup {
                 Animation<TextureRegion> anim = game.getAnimation(icon);
                 if(anim != null) {
                      tr = anim.getKeyFrame(0f);
+                } else {
+                    tr = game.getSprite(icon);
                 }
             } else {
                 tr = game.getSprite(icon);
