@@ -76,14 +76,26 @@ public class Items {
 		STONE(StoneItem.class),
 		IRON_INGOT(IronIngotItem.class),
 		COPPER_INGOT(CopperIngotItem.class),
+		STEEL_INGOT(null),
+		TITANIUM_INGOT(null),
 
 		IRON_GEAR(IronGear.class),
 		COPPER_WIRE(CopperWire.class),
+		BASIC_CIRCUIT(null),
+		BASIC_MOTOR(null),
+		BASIC_GENERATOR(null),
 		
+		COAL(CoalItem.class),
 		IRON_ORE(IronOreItem.class),
 		COPPER_ORE(CopperOreItem.class),
-		COAL(CoalItem.class),
-		
+		ILEMITE_ORE(null),
+
+		SAND(null),
+		GLASS(null),
+		CLAY(null),
+		BRICK(null),
+		SILICON(null),
+
 		WOOD_AXE(WoodAxe.class, 1),
 		WOOD_PICKAXE(WoodPickaxe.class, 1),
 		WOOD_SHOVEL(WoodShovel.class, 1),
@@ -95,6 +107,9 @@ public class Items {
 		STONE_HOE(StoneHoe.class, 1),
 		IRON_PICKAXE(IronPickaxe.class), 
 		IRON_AXE(IronAxe.class),
+
+		STEEL_DRILL(null),
+		TITANIUM_DRILL(null),
 		
 		TABLE(TableItem.class, 4), 
 		CHUTE(ChuteItem.class, 4), 
@@ -103,10 +118,15 @@ public class Items {
 		CHEST(ChestItem.class, 4), 
 		ANVIL(AnvilItem.class, 4),
 		TECHNOLOGY_TABLE(TechnologyTableItem.class, 4),
+		AGRICULTURE_TABLE(null),
 
 		BLAST_FURNACE(BlastFurnaceItem.class, 4), 
 		SOLAR_PANEL(SolarPanelItem.class, 4),
-		COAL_GENERATOR(CoalGeneratorItem.class),
+		COAL_GENERATOR(CoalGeneratorItem.class, 4),
+		BASIC_MINING_DRILL(null),
+		BASIC_STOVE(null),
+		BASIC_CROP_BREEDER(null),
+		MODERN_CROP_BREEDER(null),
 		
 		TORCH(TorchItem.class), 
 		
@@ -115,9 +135,11 @@ public class Items {
 		COTTON_SEEDS(CottonSeeds.class),
 		WHEAT(WheatItem.class), 
 		COTTON(CottonItem.class), 
+		BASIC_FERTILIZER(null),
 		BREAD(BreadItem.class), 
 		ACORN(AcornItem.class),
 		APPLE(AppleItem.class),
+		APPLE_PIE(null),
 		
 		WOOD_WALL(WoodWallItem.class), 
 		WOOD_FLOOR(WoodFloorItem.class), 
