@@ -1,4 +1,4 @@
-package net.cmr.gaze.stage.widgets;
+package net.cmr.gaze.stage.menus;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Event;

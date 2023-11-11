@@ -172,15 +172,19 @@ public class ConnectingScreen implements Screen {
 		}
 		
 		if(socket != null && socket.isConnected()) {
-			try {
-				builder.build(dataIn);
-			} catch (IOException e) {
-				System.out.println("Error building: "+e.getMessage());
-				e.printStackTrace();
-			} catch(Exception e) {
-				e.printStackTrace();
+			if(dataIn!=null) {
+				try {
+					builder.build(dataIn);
+				} catch (IOException e) {
+					System.out.println("Error building: "+e.getMessage());
+					e.printStackTrace();
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
 			}
-			sender.sendAll(dataOut);
+			if(dataOut!=null) {
+				sender.sendAll(dataOut);
+			}
 		}
 		
 	}

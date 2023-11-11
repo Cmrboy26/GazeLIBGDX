@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
-import net.cmr.gaze.stage.widgets.ResearchMenu;
+import net.cmr.gaze.stage.menus.ResearchMenu;
 
 public class ResearchData {
     private HashMap<String, Boolean> techs;

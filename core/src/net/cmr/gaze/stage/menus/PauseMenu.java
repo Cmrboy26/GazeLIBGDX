@@ -1,12 +1,12 @@
-package net.cmr.gaze.stage.widgets;
+package net.cmr.gaze.stage.menus;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -14,15 +14,15 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.MainMenuScreen;
 
-public class PauseMenu extends WidgetGroup {
+public class PauseMenu extends GameMenu {
 
 	Gaze game;
 	GameScreen screen;
 	
 	public PauseMenu(Gaze game, GameScreen screen) {
+		super(MenuAlignment.CENTER);
 		this.game = game;
 		this.screen = screen;
-		setVisible(false);
 		
 		Image image = new Image(game.getSprite("pauseMenu"));
 		image.setBounds(92*2, 22*2, 136*2, 136*2);
@@ -69,6 +69,16 @@ public class PauseMenu extends WidgetGroup {
 		addActor(label);
 		addActor(exit);
 		addActor(resume);
+	}
+
+	@Override
+    public int getOpenKey() {
+        return Input.Keys.ESCAPE;
+    }
+
+	@Override
+	public boolean openFromBlankScreenOnly() {
+		return true;
 	}
 	
 }

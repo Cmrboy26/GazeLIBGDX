@@ -30,9 +30,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.PixmapIO;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -43,26 +41,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.cmr.gaze.Gaze;
-import net.cmr.gaze.crafting.CategoryButton;
-import net.cmr.gaze.crafting.CraftDisplay;
-import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.crafting.Crafting.CraftingStation;
-import net.cmr.gaze.crafting.RecipeCategory;
-import net.cmr.gaze.crafting.RecipeDisplay;
 import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.game.ChatManager;
 import net.cmr.gaze.game.ChatMessage;
@@ -100,19 +86,21 @@ import net.cmr.gaze.networking.packets.QuestDataPacket;
 import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.networking.packets.SpawnEntity;
 import net.cmr.gaze.networking.packets.TileUpdatePacket;
-import net.cmr.gaze.networking.packets.UIEventPacket;
 import net.cmr.gaze.networking.packets.WorldChangePacket;
+import net.cmr.gaze.stage.menus.ChestInventoryMenu;
+import net.cmr.gaze.stage.menus.CraftingMenu;
+import net.cmr.gaze.stage.menus.GameMenu;
+import net.cmr.gaze.stage.menus.GameMenu.MenuAlignment;
+import net.cmr.gaze.stage.menus.GameMenuIcon;
+import net.cmr.gaze.stage.menus.InventoryMenu;
+import net.cmr.gaze.stage.menus.PauseMenu;
+import net.cmr.gaze.stage.menus.ResearchMenu;
 import net.cmr.gaze.stage.widgets.BarsWidget;
 import net.cmr.gaze.stage.widgets.ChatWidget;
-import net.cmr.gaze.stage.widgets.ChestInventoryWidget;
-import net.cmr.gaze.stage.widgets.GameMenuIcon;
 import net.cmr.gaze.stage.widgets.HintMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.stage.widgets.Notification;
-import net.cmr.gaze.stage.widgets.PauseMenu;
-import net.cmr.gaze.stage.widgets.PlayerInventoryWidget;
 import net.cmr.gaze.stage.widgets.QuestBook;
-import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
@@ -162,26 +150,24 @@ public class GameScreen implements Screen {
 	HashMap<Point, Tile[][][]> tileData; // SHOULD NOT BE SET TO NULL, otherwise TileData object will be out of sync
 	public TileData tileDataObject;
 	
+	// Game Menus
+	InventoryMenu inventoryMenu;
+	ChestInventoryMenu chestInventoryMenu;
+	ResearchMenu researchMenu;
+	CraftingMenu craftingMenu;
+
 	Table hotbarTable;
-	WidgetGroup crafting;
 	
-	PlayerInventoryWidget inventory;
-	ChestInventoryWidget chestInventory;
+	//PlayerInventoryWidget inventory;
+	//ChestInventoryWidget chestInventory;
 	
 	ButtonGroup<InventorySlot> hotbarButtonGroup;
-	RecipeDisplay recipeDisplay;
-	CraftDisplay craftDisplay;
-	ScrollPane categoryScrollPane;
-	Image craftingLeft, craftingRight;
-	ButtonGroup<CategoryButton> categoryButtonGroup;
-	Table categoryTable;
 	
 	PauseMenu pauseMenu;
 	SkillDisplay skillDisplay;
 	QuestBook quests;
 	final static boolean disableQuests = true; // TODO: remove this when quests are implemented fully
 	BarsWidget barsWidget;
-	ResearchMenu tech;
 	ChatWidget chatWidget;
 
 	ConcurrentHashMap<UUID, Entity> entities;
@@ -281,12 +267,13 @@ public class GameScreen implements Screen {
 		float gmicwidth = 24;
 		float gmicspacing = 4;
 		float gmicmargin = 6;
-		float top = 260;
+		float top = 200;
 
+		// TODO: Implement automatic GameMenuIcons in {@link net.cmr.gaze.stage.menus.GameMenu}
 		GameMenuIcon gmicInventory = new GameMenuIcon(this, GameMenuIcon.INVENTORY_ICON, 640-gmicwidth-gmicmargin, top, gmicwidth) {
 			@Override
 			public void onClick() {
-				toggleMenu(MenuType.INVENTORY);
+				toggleMenu(inventoryMenu);
 			}
 		};
 		rightTopStage.addActor(gmicInventory);
@@ -294,12 +281,12 @@ public class GameScreen implements Screen {
 		GameMenuIcon gmicCrafting = new GameMenuIcon(this, GameMenuIcon.CRAFTING_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing), gmicwidth) {
 			@Override
 			public void onClick() {
-				toggleMenu(MenuType.CRAFTING);
+				toggleMenu(craftingMenu);
 			}
 		};
 		rightTopStage.addActor(gmicCrafting);
 
-		if(!disableQuests) {
+		/*if(!disableQuests) {
 			GameMenuIcon gmicQuest = new GameMenuIcon(this, GameMenuIcon.QUESTS_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
 				@Override
 				public void onClick() {
@@ -307,15 +294,15 @@ public class GameScreen implements Screen {
 				}
 			};
 			rightTopStage.addActor(gmicQuest);
-		}
+		}*/
 
-		GameMenuIcon gmicTech = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
+		GameMenuIcon gmicResearch = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
 			@Override
 			public void onClick() {
-				toggleMenu(MenuType.TECH);
+				toggleMenu(researchMenu);
 			}
 		};
-		rightTopStage.addActor(gmicTech);
+		rightTopStage.addActor(gmicResearch);
 
 		for(int i = 0; i < 7; i++) {
 			InventorySlot button = new InventorySlot(game, this, i, false);
@@ -344,77 +331,30 @@ public class GameScreen implements Screen {
 		
 		bottomStage.addActor(hotbarTable);
 		
-		inventory = new PlayerInventoryWidget(game, this);
-		chestInventory = new ChestInventoryWidget(game, this);
-		crafting = new WidgetGroup();
+		inventoryMenu = new InventoryMenu(game, this);
+		chestInventoryMenu = new ChestInventoryMenu(game, this);
+		craftingMenu = new CraftingMenu(game, this);
+		researchMenu = new ResearchMenu(game, this);
+		pauseMenu = new PauseMenu(game, this);
 		//quests = new QuestBook(game);
-		tech = new ResearchMenu(game, this);
+
+		initializeGameMenu(inventoryMenu);
+		initializeGameMenu(chestInventoryMenu);
+		initializeGameMenu(craftingMenu);
+		initializeGameMenu(researchMenu);
+		initializeGameMenu(pauseMenu);
+
 		chatWidget = new ChatWidget(game, this, chat);
-
-		craftingLeft = new Image(game.getSprite("craftingLeft"));
-		craftingLeft.setBounds(0, (360-256)/2, 80*2, 128*2);
-		crafting.addActor(craftingLeft);
 		
-		craftingRight = new Image(game.getSprite("craftingRight")) {
-			@Override
-			public void draw(Batch batch, float parentAlpha) {
-				if(recipeDisplay.getSelectedRecipe()!=null) {
-					super.draw(batch, parentAlpha);
-				}
-			}
-		};
-		craftingRight.setBounds(640-160, (360-256)/2, 80*2, 128*2);
-		crafting.addActor(craftingRight);
-
-		categoryTable = new Table();
-		categoryScrollPane = new ScrollPane(categoryTable);
-		categoryButtonGroup = new ButtonGroup<>();
-		
-		categoryButtonGroup.setMaxCheckCount(1);
-		categoryButtonGroup.setMinCheckCount(1);
-		
-		categoryScrollPane.setPosition(6+28, 319, Align.left);
-		categoryScrollPane.setWidth(22*4+2*3);
-		categoryScrollPane.setHeight(15);
-		categoryScrollPane.setSmoothScrolling(false);
-		categoryScrollPane.setOverscroll(false, false);
-		
-		for(String key : Crafting.getAllCategories().keySet()) {
-			RecipeCategory category = Crafting.getAllCategories().get(key);
-			CategoryButton button = new CategoryButton(game, category, true);
-			categoryButtonGroup.add(button);
-			categoryTable.add(button).width(15).height(15).spaceRight(2);
-		}
-		
-		ScrollPaneStyle scrollStyle = new ScrollPaneStyle();
-		recipeDisplay = new RecipeDisplay(game, this, new Table(), scrollStyle, categoryButtonGroup);
-
-		craftDisplay = new CraftDisplay(game, this, recipeDisplay);
-		
-		inventory.setVisible(false);
-		chestInventory.setVisible(false);
-		
-		crafting.setVisible(false);
-		recipeDisplay.setVisible(false);
-		categoryScrollPane.setVisible(false);
-		craftDisplay.setVisible(false);
 		skillDisplay = new SkillDisplay(game, this);
 		skillDisplay.setVisible(true);
-		pauseMenu = new PauseMenu(game, this);
 		
-		centerStage.addActor(chestInventory);
-		centerStage.addActor(inventory);
-		centerStage.addActor(crafting);
-		centerStage.addActor(recipeDisplay);
-		centerStage.addActor(categoryScrollPane);
-		centerStage.addActor(craftDisplay);
+		//centerStage.addActor(crafting);
 		
 		if(!disableQuests) {
 			centerStage.addActor(quests);
 		}
 
-		centerStage.addActor(tech);
-		centerStage.addActor(pauseMenu);
 		rightTopStage.addActor(skillDisplay);
 		leftBottomStage.addActor(chatWidget);
 		
@@ -453,7 +393,6 @@ public class GameScreen implements Screen {
 			public boolean keyDown(int character) {
 				if(character >= Input.Keys.NUM_1 && character <= Input.Keys.NUM_7) {
 					InventorySlot button = (InventorySlot) hotbarTable.getCells().get(character-Input.Keys.NUM_1).getActor();
-					//deselectAllButtons();
 					button.setChecked(true);
 					sender.addPacket(new HotbarUpdatePacket((byte) (character-Input.Keys.NUM_1)));
 					if(getLocalPlayer()!=null) {
@@ -462,43 +401,52 @@ public class GameScreen implements Screen {
 					}
 					return true;
 				}
-				if(character == Input.Keys.E) {
-					if(chestInventory.isVisible()) {
-						MenuGroup.CENTER.closeGroup(GameScreen.this);
-					} else {
-						toggleMenu(MenuType.INVENTORY);
-						openHelpMenu(HintMenuType.INVENTORY);
-						sender.addPacket(new UIEventPacket(inventory.isVisible(), 2));
-					}
-				}
-				if(character == Input.Keys.C) {
-					setCraftingStation(CraftingStation.NONE);
-					toggleMenu(MenuType.CRAFTING);
-					openHelpMenu(HintMenuType.CRAFTING);
-					sender.addPacket(new UIEventPacket(craftingMenuVisible, 1));
-				}
-				if(character == Input.Keys.F) {
-					if(!disableQuests) {
-						toggleMenu(MenuType.QUESTS);
-						sender.addPacket(new UIEventPacket(craftingMenuVisible, 3));
-					}
-				}
-				if(character == Input.Keys.ESCAPE) {
-					if(areMenuGroupsOpen()) {
-						closeMenus();
-					} else {
-						if(pauseMenu.isVisible()) {
-							pauseMenu.setVisible(false);
-						} else {
-							pauseMenu.setVisible(true);
+
+				// dismiss pop up menus.
+				boolean popUpDismissed = false;
+				for(ArrayList<GameMenu> menus : gameMenus.values()) {
+					for(GameMenu menu : menus) {
+						if(menu.getOpenKey() == character) {
+							if(menu.isPopUpMenu() && menu.getMenuVisibility()) {
+								menu.setMenuVisiblity(false);
+								popUpDismissed = true;
+							}
 						}
 					}
-					game.playSound("select", 1f);
+				}
+				if(popUpDismissed) {
+					return true;
+				}
+				// if there are no pop up menus, proceed as usual.
+				for(ArrayList<GameMenu> menus : gameMenus.values()) {
+					for(GameMenu menu : menus) {
+						if(menu.getOpenKey() == character) {
+
+							if(menu.openFromBlankScreenOnly()) {
+								if(menu.getMenuVisibility()) {
+									toggleMenu(menu);
+								} else {
+									if(!areMenuGroupsOpen(menu.getAlignment())) {
+										toggleMenu(menu);
+									} else {
+										closeMenus();
+									}
+								}
+							} else {
+								toggleMenu(menu);
+							}
+
+							return true;
+						}
+					}
+				}
+				if(character == Input.Keys.TAB) {
+					closeMenus();
 				}
 				if(character == Input.Keys.F12) {
 					gammaOverride = !gammaOverride;
 				}
-				if(character == Input.Keys.F3) {
+				if(character == Input.Keys.F2) {
 					Pixmap pixmap = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
 					ByteBuffer pixels = pixmap.getPixels();
 
@@ -514,6 +462,10 @@ public class GameScreen implements Screen {
 					PixmapIO.writePNG(external, pixmap, Deflater.DEFAULT_COMPRESSION, true);
 					System.out.println("[INFO] Took screenshot and saved to "+external.file().getPath());
 					pixmap.dispose();
+				}
+				if(character == Input.Keys.F3) {
+					game.settings.putBoolean("displayFPS", !game.settings.getBoolean("displayFPS"));
+					game.settings.flush();
 				}
 				if(character == Input.Keys.F4) {
 					Gdx.graphics.setWindowedMode(1920, 720);
@@ -577,7 +529,7 @@ public class GameScreen implements Screen {
 		processEntitiesAndPlayerMovement(delta);
 
 		Vector2 mouseScreenPosition = new Vector2(Gdx.input.getX(), Gdx.input.getY());
-		Vector2 mouseLocalPosition = inventory.screenToLocalCoordinates(mouseScreenPosition);
+		Vector2 mouseLocalPosition = inventoryMenu.screenToLocalCoordinates(mouseScreenPosition);
 		
 		processMouseInputs(delta, mouseLocalPosition);
 
@@ -588,7 +540,7 @@ public class GameScreen implements Screen {
 			showUI = !showUI;
 		}
 		
-		recipeDisplay.update();
+		craftingMenu.updateRecipeDisplay();
 		
 		// Allows the player to change the zoom of the world using the + and - keys instead of going into the settings menu
 		float zoomAmount=0;
@@ -1056,12 +1008,12 @@ public class GameScreen implements Screen {
 		if(!overMenus(mouseLocalPosition)) {
 			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 				
-				if(inventory.inventoryGroup.selectedSlot!=null) {
+				if(inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot!=null) {
 					// drop item
-					boolean selectedIsPlayerInventory = getLocalPlayer()!=null&&getLocalPlayer().getInventory().equals(inventory.inventoryGroup.selectedSlot.getInventory());
-					sender.addPacket(new InventoryClickPacket(selectedIsPlayerInventory, false, inventory.inventoryGroup.selectedSlot.slot, -1, null));
-					inventory.inventoryGroup.selectedSlot.getInventory().put(inventory.inventoryGroup.selectedSlot.slot, null);
-					inventory.inventoryGroup.selectedSlot = null;
+					boolean selectedIsPlayerInventory = getLocalPlayer()!=null&&getLocalPlayer().getInventory().equals(inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot.getInventory());
+					sender.addPacket(new InventoryClickPacket(selectedIsPlayerInventory, false, inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot.slot, -1, null));
+					inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot.getInventory().put(inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot.slot, null);
+					inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot = null;
 					
 				} else {
 					
@@ -1483,8 +1435,8 @@ public class GameScreen implements Screen {
 							break;
 						}
 					}
-					tech.setResearchData(player.getResearchData());
-					tech.refreshResearchPanel(true);
+					researchMenu.setResearchData(player.getResearchData());
+					researchMenu.refreshResearchPanel(true);
 				}
 			}
 		} else if(packet instanceof DespawnEntity) {
@@ -1603,17 +1555,16 @@ public class GameScreen implements Screen {
 		} else if(packet instanceof CraftingStationPacket) {
 			CraftingStationPacket cspack = (CraftingStationPacket) packet;
 			if(cspack.getStation()==CraftingStation.NONE) {
-				setCraftingStation(CraftingStation.NONE);
-				setMenu(MenuType.CRAFTING, false);
+				craftingMenu.setCraftingStation(CraftingStation.NONE);
+				openMenu(craftingMenu);
 			} else {
-				setCraftingStation(cspack.getStation());
-				//setCraftingVisibility(true);
-				setMenu(MenuType.CRAFTING, true);
+				craftingMenu.setCraftingStation(cspack.getStation());
+				openMenu(craftingMenu);
 			}
 			
 			//setMenu(MenuType.CRAFTING, false);
-			chestInventory.setVisible(false);
-			chestInventory.setChestInventory(0, 0);
+			closeMenu(chestInventoryMenu);
+			chestInventoryMenu.getInventoryWidget().setChestInventory(0, 0);
 		} else if(packet instanceof SkillsPacket) {
 			SkillsPacket sklz = (SkillsPacket) packet;
 			
@@ -1675,9 +1626,9 @@ public class GameScreen implements Screen {
 			}
 		} else if(packet instanceof ChestInventoryPacket) {
 			ChestInventoryPacket cip = (ChestInventoryPacket) packet;
-			chestInventory.setChestInventory(cip.getX(), cip.getY());
-			setCraftingStation(CraftingStation.NONE);
-			openMenu(MenuType.CHEST);
+			chestInventoryMenu.getInventoryWidget().setChestInventory(cip.getX(), cip.getY());
+			craftingMenu.setCraftingStation(CraftingStation.NONE);
+			openMenu(chestInventoryMenu);
 		} else if(packet instanceof QuestDataPacket) {
 			QuestDataPacket qdata = (QuestDataPacket) packet;
 			
@@ -1699,10 +1650,10 @@ public class GameScreen implements Screen {
 			ResearchPacket rpacket = (ResearchPacket) packet;
 			if(rpacket.getData()==null) {
 				//System.out.println(rpacket.getUniversalID() + " " + rpacket.isResearched());
-				tech.getData().setResearched(rpacket.getUniversalID(), rpacket.isResearched());
+				researchMenu.getData().setResearched(rpacket.getUniversalID(), rpacket.isResearched());
 				if(rpacket.isResearched()) {
 					game.playSound("trueSelect", 1f);
-					tech.refreshResearchPanel(false);
+					researchMenu.refreshResearchPanel(false);
 					addNotification(
 							new String[] {"Researched "+ResearchMenu.getVertex(rpacket.getUniversalID()).name+"!"}, 
 							new String[] {"upArrow"}, 
@@ -1712,41 +1663,10 @@ public class GameScreen implements Screen {
 					game.playSound("falseSelect", 1f);
 				}
 			} else {
-				tech.setResearchData(rpacket.getData());
-				tech.refreshResearchPanel(false);
+				researchMenu.setResearchData(rpacket.getData());
+				researchMenu.refreshResearchPanel(false);
 			}
 		}
-	}
-	
-	boolean craftingMenuVisible;
-	
-	public void setCraftingVisibility(boolean visible) {
-		craftingMenuVisible = visible;
-		crafting.setVisible(visible);
-		recipeDisplay.setVisible(visible);
-		craftDisplay.setVisible(visible);
-		categoryScrollPane.setVisible(visible);
-	}
-	public void setCraftingStation(CraftingStation station) { 
-		recipeDisplay.setCraftingStation(station);
-		
-		Sprite left = game.getSprite(station.leftDisplayName);
-		Drawable leftDraw;
-		if(left != null) {
-			leftDraw = new TextureRegionDrawable(left);
-		} else {
-			leftDraw = new TextureRegionDrawable(game.getSprite("craftingLeft"));
-		}
-		craftingLeft.setDrawable(leftDraw);
-		
-		Sprite right = game.getSprite(station.rightDisplayName);
-		Drawable rightDraw;
-		if(right != null) {
-			rightDraw = new TextureRegionDrawable(right);
-		} else {
-			rightDraw = new TextureRegionDrawable(game.getSprite("craftingRight"));
-		}
-		craftingRight.setDrawable(rightDraw);
 	}
 	
 	UUID localPlayerUUID;
@@ -1777,15 +1697,17 @@ public class GameScreen implements Screen {
 	public boolean overMenus(Vector2 mouseLocalPosition) {
 		boolean end = false;
 		
-		end = end || inventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
-		end = end || crafting.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		end = end || hotbarTable.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
-		end = end || pauseMenu.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
-		end = end || chestInventory.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+
+		for(ArrayList<GameMenu> gameMenu : gameMenus.values()) {
+			for(GameMenu menu : gameMenu) {
+				end = end || menu.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+			}
+		}
+
 		if(!disableQuests) {
 			end = end || quests.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		}
-		end = end || tech.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 		
 		return end;
 	}
@@ -1870,9 +1792,9 @@ public class GameScreen implements Screen {
 					&&getLocalPlayer().getHeldItem() instanceof Placeable
 					&&Tiles.getTile(((Placeable)getLocalPlayer().getHeldItem()).getTileToPlace()) instanceof Rotatable) {
 				type = HintMenuType.ROTATION;
-			} else if(crafting.isVisible()) {
+			} else if(craftingMenu.getMenuVisibility()) {
 				type = HintMenuType.CRAFTING;
-			} else if(inventory.isVisible()) {
+			} else if(inventoryMenu.getMenuVisibility()) {
 				type = HintMenuType.INVENTORY;
 			} else if(getLocalPlayer()!=null&&getLocalPlayer().getSkills().getLevel(Skill.FORAGING)>1) {
 				type = HintMenuType.LEVEL_UP;
@@ -1916,161 +1838,64 @@ public class GameScreen implements Screen {
 		openHelpMenu(type, true);
 	}
 	
-	/*public void closeCentralMenu() {
-		for(MenuType type : MenuType.values()) {
-			type.setVisible(this, false);
+	public HashMap<MenuAlignment, ArrayList<GameMenu>> gameMenus = new HashMap<>();
+
+	public void initializeGameMenu(GameMenu menu) {
+		// Add the menu to the gameMenus map
+		ArrayList<GameMenu> menus = gameMenus.get(menu.getAlignment());
+		if (menus == null) {
+			menus = new ArrayList<GameMenu>();
+			gameMenus.put(menu.getAlignment(), menus);
 		}
-	}*/
+		menus.add(menu);
+		menu.setMenuVisiblity(false);
 
-	static enum MenuGroup {
-		CENTER {
-
-		},
-		SIDES {
-
-		};
-
-		public void closeGroup(GameScreen screen) {
-			for(MenuType type : MenuType.values()) {
-				if(type.group == this) {
-					type.setVisible(screen, false);
-				}
-			}
-		}
-		public boolean isGroupOpen(GameScreen screen) {
-			for(MenuType type : MenuType.values()) {
-				if(type.group == this) {
-					if(type.isVisible(screen)) {
-						return true;
-					}
-				}
-			}
-			return false;
+		// Add the menu to their respective stage (based on their MenuAlignment)
+		switch (menu.getAlignment()) {
+			case CENTER:
+				centerStage.addActor(menu);
+				break;
+			default:
+				break;
 		}
 	}
 
-	public static enum MenuType {
-		INVENTORY(MenuGroup.CENTER) {
-			@Override
-			public void setVisible(GameScreen screen, boolean visible) {
-				screen.inventory.setVisible(visible);
-				screen.inventory.inventoryGroup.uncheckAll();
-				screen.inventory.inventoryGroup.selectedSlot = null;
+	public void openMenu(GameMenu menu) {
+		// Close all other menus in the same alignment
+		for (GameMenu m : gameMenus.get(menu.getAlignment())) {
+			if (m != menu) {
+				m.setMenuVisiblity(false);
 			}
-			@Override
-			public boolean isVisible(GameScreen screen) {
-				return screen.inventory.isVisible();
-			}
-		},
-		CRAFTING(MenuGroup.CENTER) {
-			@Override
-			public void setVisible(GameScreen screen, boolean visible) {
-				screen.setCraftingVisibility(visible);
-			}
-			@Override
-			public boolean isVisible(GameScreen screen) {
-				return screen.craftingMenuVisible;
-			}
-		},
-		QUESTS(MenuGroup.CENTER) {
-			@Override
-			public void setVisible(GameScreen screen, boolean visible) {
-				if(!GameScreen.disableQuests) {
-					screen.quests.setVisible(visible);
-				}
-			}
-			@Override
-			public boolean isVisible(GameScreen screen) {
-				if(!GameScreen.disableQuests) {
-					return screen.quests.isVisible();
-				}
-				return false;
-			}
-		},
-		CHEST(MenuGroup.CENTER) {
-			@Override
-			public void setVisible(GameScreen screen, boolean visible) {
-				screen.chestInventory.setVisible(visible);
-			}
-			@Override
-			public boolean isVisible(GameScreen screen) {
-				return screen.chestInventory.isVisible();
-			}
-		}, 
-		TECH(MenuGroup.CENTER) {
-			@Override
-			public void setVisible(GameScreen screen, boolean visible) {
-				screen.tech.setVisible(visible);
-			}
-			@Override
-			public boolean isVisible(GameScreen screen) {
-				return screen.tech.isVisible();
-			}
-		};
-
-		MenuGroup group;
-		MenuType(MenuGroup group) {
-			this.group = group;
 		}
-
-		public abstract void setVisible(GameScreen screen, boolean visible);
-		public abstract boolean isVisible(GameScreen screen);
+		// Open the menu
+		menu.setMenuVisiblity(true);
 	}
 
-	public void toggleMenu(MenuType type) {
-		boolean visible = false;
-		switch(type) {
-		case INVENTORY:
-			visible = inventory.isVisible();
-			break;
-		case CRAFTING:
-			visible = crafting.isVisible();
-			break;
-		case QUESTS:
-			if(!disableQuests) {
-				visible = quests.isVisible();
-			} else {
-				visible = false;
+	public void toggleMenu(GameMenu menu) {
+		if (menu.getMenuVisibility()) {
+			menu.setMenuVisiblity(false);
+		} else {
+			openMenu(menu);
+		}
+	}
+
+	public void closeMenu(GameMenu menu) {
+		menu.setMenuVisiblity(false);
+	}
+	public void closeMenus() {
+		for (MenuAlignment alignment : gameMenus.keySet()) {
+			for (GameMenu menu : gameMenus.get(alignment)) {
+				menu.setMenuVisiblity(false);
 			}
-			break;
-		case CHEST:
-			visible = chestInventory.isVisible();
-			break;
-		case TECH:
-			visible = tech.isVisible();
-			break;
-		default:
-			break;
 		}
-		type.group.closeGroup(this);
-		type.setVisible(this, !visible);
 	}
-
-	public void openMenu(MenuType type) {
-		type.group.closeGroup(this);
-		type.setVisible(this, true);
-	}
-	public void setMenu(MenuType type, boolean state) {
-		if(state) {
-			type.group.closeGroup(this);
-		}
-		type.setVisible(this, state);
-	}
-	public boolean isMenuGroupOpen(MenuGroup type) {
-		return type.isGroupOpen(this);
-	}
-	public boolean areMenuGroupsOpen() {
-		for(MenuGroup group : MenuGroup.values()) {
-			if(isMenuGroupOpen(group)) {
+	public boolean areMenuGroupsOpen(MenuAlignment alignment) {
+		for (GameMenu menu : gameMenus.get(alignment)) {
+			if (menu.getMenuVisibility()) {
 				return true;
 			}
 		}
 		return false;
-	}
-	public void closeMenus() {
-		for(MenuType type : MenuType.values()) {
-			type.setVisible(this, false);
-		}
 	}
 
 	public RenderRule currentRenderRule;
@@ -2114,7 +1939,7 @@ public class GameScreen implements Screen {
     public void addNotification(String[] text, String[] sprites, boolean[] animations, float textTime, float duration, String soundEffect) {
     	Notification notif = new Notification(game, text, sprites, animations, textTime, Notification.getEvenlySpacedTime(sprites, duration), duration, soundEffect);
 		notif.setDirection(true);
-		notif.setPosition(640, 120);
+		notif.setPosition(640, 240);
 		
 		notificationQueue.add(notif);
     }

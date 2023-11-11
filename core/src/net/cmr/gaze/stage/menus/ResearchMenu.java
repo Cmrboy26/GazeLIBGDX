@@ -1,10 +1,11 @@
-package net.cmr.gaze.stage.widgets;
+package net.cmr.gaze.stage.menus;
 
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -29,12 +30,12 @@ import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.research.ResearchData;
 import net.cmr.gaze.research.ResearchTree;
 import net.cmr.gaze.research.ResearchVertex;
+import net.cmr.gaze.research.ResearchVertex.RequirementWidget;
 import net.cmr.gaze.research.ResearchVertex.ResearchRequirement;
 import net.cmr.gaze.research.ResearchVertex.ResearchRequirement.ResearchRequirementType;
-import net.cmr.gaze.research.ResearchVertex.RequirementWidget;
 import net.cmr.gaze.stage.GameScreen;
 
-public class ResearchMenu extends WidgetGroup {
+public class ResearchMenu extends GameMenu {
     
     Gaze game;
     GameScreen screen;
@@ -85,7 +86,13 @@ public class ResearchMenu extends WidgetGroup {
         return null;
     }
 
+    @Override
+    public int getOpenKey() {
+        return Input.Keys.G;
+    }
+
     public ResearchMenu(Gaze game, GameScreen screen) {
+        super(MenuAlignment.CENTER);
         this.game = game;
         this.screen = screen;
         this.data = new ResearchData();
