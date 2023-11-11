@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Item;
-import net.cmr.gaze.inventory.Items;
 
 public class CategoryButton extends ImageButton {
 

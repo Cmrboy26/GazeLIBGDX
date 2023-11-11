@@ -1,7 +1,5 @@
 package net.cmr.gaze.debug;
 
-import java.util.Arrays;
-
 public class RateCalculator {
 
 	double totalCount;

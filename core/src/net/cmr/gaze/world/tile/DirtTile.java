@@ -5,6 +5,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.DataBuffer;
 
@@ -20,10 +22,13 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Entity;
+import net.cmr.gaze.world.entities.Particle;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class DirtTile extends TransitionTile {
 
@@ -99,6 +104,8 @@ public class DirtTile extends TransitionTile {
 					if(held != null && held instanceof Tool && ((Tool)held).toolType()==ToolType.HOE) {
 						player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 						world.addTile(Tiles.getTile(TileType.FARMLAND), x, y);
+						world.playSound("dirt", .8f, x, y);
+						TileUtils.spawnParticleOffset(world, ParticleEffectType.HOE, this, x, y+2, -2, Color.valueOf("#836539"));
 						return true;
 					}
 				}

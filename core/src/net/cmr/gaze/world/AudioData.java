@@ -21,7 +21,13 @@ public class AudioData {
         this.audioPanX = audioPanX;
         this.audioPanY = audioPanY;
     }
+    public AudioData(String audio, float audioVolume, float audioPitch) {
+        this(audio, audioVolume, audioPitch, 0, 0);
+    }
 
+    public String getAudio() {
+        return audio;
+    }
     public float getVolume() {
         return audioVolume;
     }

@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
@@ -17,9 +18,11 @@ import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class FarmlandTile extends TransitionTile {
 
@@ -106,6 +109,8 @@ public class FarmlandTile extends TransitionTile {
 				if(held != null && held instanceof Tool && ((Tool)held).toolType()==ToolType.SHOVEL) {
 					player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 					world.addTile(Tiles.getTile(TileType.DIRT), x, y);
+					world.playSound("dirt", .8f, x, y);
+						TileUtils.spawnParticleOffset(world, ParticleEffectType.HOE, this, x, y+2, -2, Color.valueOf("#836539"));
 					return true;
 				}
 			}
@@ -121,6 +126,8 @@ public class FarmlandTile extends TransitionTile {
 			}*/
 			if(player.getPlayer().getHeldItem() instanceof Tool && ((Tool)player.getPlayer().getHeldItem()).toolType()==ToolType.WATERING_CAN) {
 				setMoisture(1, world, x, y);
+				world.playSound("water", .8f, x, y);
+				TileUtils.spawnParticleOffset(world, ParticleEffectType.WATER, this, x, y+2, -2);
 				return true;
 			}
 		}

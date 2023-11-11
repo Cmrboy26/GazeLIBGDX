@@ -5,6 +5,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
@@ -21,6 +22,7 @@ import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class GrassTile extends TransitionTile {
 
@@ -68,6 +70,8 @@ public class GrassTile extends TransitionTile {
 				if(held != null && held instanceof Tool && ((Tool)held).toolType()==ToolType.SHOVEL) {
 					player.getPlayer().lastBreakInteraction = System.currentTimeMillis();
 					world.addTile(Tiles.getTile(TileType.DIRT), x, y);
+					world.playSound("dirt", .8f, x, y);
+					TileUtils.spawnParticleOffset(world, ParticleEffectType.HOE, this, x, y+2, -2, Color.valueOf("#836539"));
 					if(Math.random()<0.05) {
 						TileUtils.dropItem(world, x, y, Items.getItem(ItemType.GRASS_SEEDS, 2));
 					}

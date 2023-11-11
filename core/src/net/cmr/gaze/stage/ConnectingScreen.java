@@ -8,6 +8,12 @@ import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.Logger;
@@ -17,6 +23,7 @@ import net.cmr.gaze.networking.Packet;
 import net.cmr.gaze.networking.PacketBuilder;
 import net.cmr.gaze.networking.PacketSender;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
+import net.cmr.gaze.util.Normalize;
 
 public class ConnectingScreen implements Screen {
 
@@ -33,6 +40,13 @@ public class ConnectingScreen implements Screen {
 	PacketBuilder builder;
 	PacketSender sender;
 	boolean joining = false;
+
+	TextButton back;
+	Stage centerStage;
+
+	Thread connectionThread;
+	final int TIMEOUT_TIME = 10;
+	float connectionTime = 0;
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username, GameServer server) {
 		this.game = game;
@@ -40,6 +54,23 @@ public class ConnectingScreen implements Screen {
 		this.port = port;
 		this.username = username;
 		this.server = server;
+
+		this.centerStage = new Stage();
+		centerStage.setViewport(game.viewport);
+		Gdx.input.setInputProcessor(centerStage);
+		back = new TextButton("Back", game.getSkin(), "button");
+		back.setPosition(20f, 30, Align.left);
+		back.setWidth(200f);
+		back.setHeight(50f);
+		back.addListener(new ClickListener(){
+		    @Override
+		    public void clicked(InputEvent event, float x, float y)
+		    {
+				game.playSound("falseSelect", 1f);
+		    	game.setScreen(new MainMenuScreen(game));
+		    }
+		});
+		centerStage.addActor(back);
 	}
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username) {
@@ -47,6 +78,23 @@ public class ConnectingScreen implements Screen {
 		this.ip = ip;
 		this.port = port;
 		this.username = username;
+
+		this.centerStage = new Stage();
+		centerStage.setViewport(game.viewport);
+		Gdx.input.setInputProcessor(centerStage);
+		back = new TextButton("Back", game.getSkin(), "button");
+		back.setPosition(20f, 30, Align.left);
+		back.setWidth(200f);
+		back.setHeight(50f);
+		back.addListener(new ClickListener(){
+		    @Override
+		    public void clicked(InputEvent event, float x, float y)
+		    {
+				game.playSound("falseSelect", 1f);
+		    	game.setScreen(new MultiplayerSelectScreen(game));
+		    }
+		});
+		centerStage.addActor(back);
 	}
 	
 	public void join() {
@@ -57,17 +105,19 @@ public class ConnectingScreen implements Screen {
 			}
 		};
 		this.sender = new PacketSender();
-		
-		try {
-			Logger.log("INFO", "Attempting connection with IP: "+ip+", PORT: "+port+"...");
-			socket = new Socket(ip, port);
-			dataOut = new DataOutputStream(socket.getOutputStream());
-			dataIn = new DataInputStream(socket.getInputStream());
-			//sender.addPacket(new AuthenticationPacket(username, Gaze.version));
-		} catch (IOException e) {
-			//e.printStackTrace();
-			//game.setScreen(new MessageScreen(game, e.getMessage()));
-		}
+		connectionThread = new Thread() {
+			public void run() {
+				try {
+					Logger.log("INFO", "Attempting connection with IP: "+ip+", PORT: "+port+"...");
+					socket = new Socket(ip, port);
+					dataOut = new DataOutputStream(socket.getOutputStream());
+					dataIn = new DataInputStream(socket.getInputStream());
+				} catch (IOException e) {
+
+				}
+			}
+		};
+		connectionThread.start();
 	}
 	
 	private void processIncomingPacket(Packet packet) {
@@ -91,11 +141,24 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		
+		connectionTime += delta;
+		game.viewport.apply();
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		game.batch.begin();
-		game.getFont(20).draw(game.batch, "Connecting...", 360/2f, 640/2f);
+		String additionalPeriods = ".";
+		for(int i = 0; i < (int)(connectionTime/1f); i++) {
+			additionalPeriods += ".";
+		}
+		String displayString = "Connecting"+additionalPeriods;
+		String displayString2 ="\nTime remaining: "+Normalize.truncateDouble(Math.abs((TIMEOUT_TIME-connectionTime)), 1)+"s";
+		GlyphLayout layout = new GlyphLayout(game.getFont(20), displayString);
+		GlyphLayout layout2 = new GlyphLayout(game.getFont(20), displayString2);
+		game.getFont(20).draw(game.batch, displayString, (640-layout.width)/2f, 360/1.25f);
+		game.getFont(20).draw(game.batch, displayString2, (640-layout2.width)/2f, 360/1.25f-20);
 		game.batch.end();
+		
+		centerStage.act(delta);
+		centerStage.draw();
 		if(!joining) {
 			if(server != null) {
 				server.startServer();
@@ -103,7 +166,7 @@ public class ConnectingScreen implements Screen {
 			join();
 			joining = true;
 		}
-		if(socket == null) {
+		if(socket == null && connectionTime > TIMEOUT_TIME) {
 			game.setScreen(new MessageScreen(game, "Could not connect."));
 			return;
 		}
@@ -124,8 +187,7 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
-		
+		centerStage.getViewport().update(width, height);
 	}
 
 	@Override
@@ -148,6 +210,8 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void dispose() {
+		centerStage.dispose();
+		connectionThread.interrupt();
 		try {
 			if(game.getScreen() instanceof GameScreen) {
 				return;

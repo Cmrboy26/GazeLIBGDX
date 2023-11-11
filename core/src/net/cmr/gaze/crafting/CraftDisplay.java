@@ -15,10 +15,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.networking.packets.CraftPacket;
-import net.cmr.gaze.networking.packets.PositionPacket;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.util.Vector2Double;
-import net.cmr.gaze.world.Tile;
 
 public class CraftDisplay extends WidgetGroup {
 

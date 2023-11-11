@@ -8,6 +8,7 @@ import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
 import net.cmr.gaze.world.tile.ChuteTile;
+import net.cmr.gaze.world.tile.ClayTile;
 import net.cmr.gaze.world.tile.CoalGenerator;
 import net.cmr.gaze.world.tile.CoalOreWall;
 import net.cmr.gaze.world.tile.CopperOreWall;
@@ -19,6 +20,7 @@ import net.cmr.gaze.world.tile.GrassTile;
 import net.cmr.gaze.world.tile.IronOreWall;
 import net.cmr.gaze.world.tile.LavaTile;
 import net.cmr.gaze.world.tile.SandTile;
+import net.cmr.gaze.world.tile.SandstoneTile;
 import net.cmr.gaze.world.tile.SolarPanel;
 import net.cmr.gaze.world.tile.StoneBrickCeilingTile;
 import net.cmr.gaze.world.tile.StoneBrickFloorTile;
@@ -83,7 +85,9 @@ public enum TileType {
 	SOLAR_PANEL(SolarPanel.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	COAL_GENERATOR(CoalGenerator.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	BED(BedTile.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
-	COTTON(CottonTile.class, 1, TickType.NONE);
+	COTTON(CottonTile.class, 1, TickType.NONE), 
+	SANDSTONE(SandstoneTile.class, 0, TickType.NEARBY), 
+	CLAY(ClayTile.class, 0, TickType.NONE);
 	
 	public enum TickType {
 		CONSTANT,

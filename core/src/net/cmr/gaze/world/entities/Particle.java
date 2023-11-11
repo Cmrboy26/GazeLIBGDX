@@ -7,11 +7,13 @@ import java.util.Random;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomMath;
+import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
@@ -60,6 +62,8 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 	
 	public enum ParticleEffectType {
 		BREAK(.8f),
+		HOE(1f),
+		WATER(.8f),
 		LEAVES(5f);
 		
 		
@@ -130,6 +134,93 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 			}
 			game.batch.setColor(Color.WHITE);
 			
+			break;
+		case WATER:
+			color = Color.BLUE;
+			if(!effectStarted) {
+				particleList = new LinkedList<>();
+				
+				if(color == null) {
+					effectStarted = true;
+					return;
+				}
+				
+				Random random = new Random();
+				for(int i = 0; i < 20; i++) {
+					ParticleData data = new ParticleData((random.nextFloat()-.5f)/2f+.5f, (random.nextFloat()-.5f)/2f+.5f, (random.nextFloat()-.5f)/1.5f, (random.nextFloat()/2f));
+					data.setAcceleration(0, -1.2f);
+					particleList.add(data);
+				}
+				
+				effectStarted = true;
+			}
+			
+			delta = Gdx.graphics.getDeltaTime()*4;
+			
+			if(color == null) {
+				return;
+			}
+
+			alpha = (float) CustomMath.minMax(0f, particleLife*10f, 1f);
+			
+			game.batch.setColor(color.r, color.g, color.b, alpha);
+			for(ParticleData data : particleList) {
+				data.update(delta);
+				if(data.vy < -1.2f-(offsetY/2f/Tile.TILE_SIZE)) {
+					data.vx = 0;
+					data.vy = 0;
+					data.setAcceleration(0, 0);
+				}
+				
+				game.batch.draw(game.getSprite("particle"), (float) getX()+data.x*Tile.TILE_SIZE, (float) getY()+data.y*Tile.TILE_SIZE+offsetY, Tile.TILE_SIZE/10f, Tile.TILE_SIZE/10f);
+				
+			}
+			game.batch.setColor(Color.WHITE);
+			break;
+		case HOE:
+			color = ((Color)data[0]);
+			if(!effectStarted) {
+				particleList = new LinkedList<>();
+				
+				if(color == null) {
+					effectStarted = true;
+					return;
+				}
+				
+				Random random = new Random();
+				for(int i = 0; i < 20; i++) {
+					ParticleData data = new ParticleData((random.nextFloat()-.5f)/2f+.5f, (random.nextFloat()-.5f)/2f+.5f, (random.nextFloat()-.5f), (random.nextFloat()-.5f));
+					particleList.add(data);
+				}
+				
+				effectStarted = true;
+			}
+			
+			delta = Gdx.graphics.getDeltaTime()*4;
+			
+			if(color == null) {
+				return;
+			}
+
+			alpha = (float) CustomMath.minMax(0f, particleLife*10f, 1f);
+			
+			game.batch.setColor(color.r, color.g, color.b, alpha);
+			for(ParticleData data : particleList) {
+				data.update(delta);
+
+				data.vx = data.vx-(((float)Normalize.norm(delta))*data.vx)*delta*1.6f;
+				data.vy = data.vy-(((float)Normalize.norm(delta))*data.vy)*delta*1.6f;
+
+				if(data.vy < -1.2f-(offsetY/2f/Tile.TILE_SIZE)) {
+					data.vx = 0;
+					data.vy = 0;
+					data.setAcceleration(0, 0);
+				}
+				
+				game.batch.draw(game.getSprite("particle"), (float) getX()+data.x*Tile.TILE_SIZE, (float) getY()+data.y*Tile.TILE_SIZE+offsetY, Tile.TILE_SIZE/10f, Tile.TILE_SIZE/10f);
+				
+			}
+			game.batch.setColor(Color.WHITE);
 			break;
 		case LEAVES: {
 			color = Color.GREEN;
@@ -207,16 +298,24 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 		buffer.writeFloat(particleLifeSpan);
 		buffer.writeInt(offsetY);
 		switch(type) {
-		case BREAK:
+		case BREAK: {
 			Tile.writeOutgoingTile((Tile)data[0], buffer);
 			break;
+		}
 		case LEAVES: {
 			buffer.writeInt((Integer)data[0]);
 			break;
 		}
-		default:
+		case HOE: {
+			buffer.writeInt(Color.argb8888((Color)data[0]));
 			break;
-		
+		}
+		case WATER: {
+			break;
+		}
+		default: {
+			break;
+		}
 		}
 	}
 	
@@ -235,6 +334,12 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 		case LEAVES:
 			particle.data = new Object[1];
 			particle.data[0] = input.readInt();
+			break;
+		case HOE:
+			particle.data = new Object[1];
+			particle.data[0] = new Color(input.readInt());
+			break;
+		case WATER:
 			break;
 		default:
 			break;

@@ -17,7 +17,7 @@
 			"position": [0,10],
 			"requirements":[
 				"ITEM/WOOD/5",
-				"RESEARCH/gaze:resources.woodTools"
+				"RESEARCH/gaze:resources.woodAge"
 			],
 			"rewards": [
 				"ITEM/WHEAT_SEEDS/5"

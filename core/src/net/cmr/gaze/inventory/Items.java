@@ -18,50 +18,58 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.Logger;
 import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
-import net.cmr.gaze.inventory.custom.AppleItem;
+import net.cmr.gaze.inventory.custom.Apple;
 import net.cmr.gaze.inventory.custom.BedItem;
 import net.cmr.gaze.inventory.custom.BlastFurnaceItem;
-import net.cmr.gaze.inventory.custom.BreadItem;
+import net.cmr.gaze.inventory.custom.Bread;
 import net.cmr.gaze.inventory.custom.BrickCeilingItem;
+import net.cmr.gaze.inventory.custom.BrickItem;
 import net.cmr.gaze.inventory.custom.CampfireItem;
 import net.cmr.gaze.inventory.custom.ChestItem;
 import net.cmr.gaze.inventory.custom.ChuteItem;
+import net.cmr.gaze.inventory.custom.ClayItem;
 import net.cmr.gaze.inventory.custom.CoalGeneratorItem;
 import net.cmr.gaze.inventory.custom.CoalItem;
-import net.cmr.gaze.inventory.custom.CopperIngotItem;
+import net.cmr.gaze.inventory.custom.CopperIngot;
 import net.cmr.gaze.inventory.custom.CopperOreItem;
 import net.cmr.gaze.inventory.custom.CopperWire;
-import net.cmr.gaze.inventory.custom.CottonItem;
+import net.cmr.gaze.inventory.custom.Cotton;
 import net.cmr.gaze.inventory.custom.CottonSeeds;
 import net.cmr.gaze.inventory.custom.FurnaceItem;
+import net.cmr.gaze.inventory.custom.Glass;
 import net.cmr.gaze.inventory.custom.GrassSeeds;
+import net.cmr.gaze.inventory.custom.IlmeniteOre;
 import net.cmr.gaze.inventory.custom.IronAxe;
 import net.cmr.gaze.inventory.custom.IronGear;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
-import net.cmr.gaze.inventory.custom.IronOreItem;
+import net.cmr.gaze.inventory.custom.IronOre;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
+import net.cmr.gaze.inventory.custom.SandItem;
+import net.cmr.gaze.inventory.custom.Silicon;
 import net.cmr.gaze.inventory.custom.SolarPanelItem;
+import net.cmr.gaze.inventory.custom.SteelIngot;
+import net.cmr.gaze.inventory.custom.Stone;
 import net.cmr.gaze.inventory.custom.StoneAxe;
 import net.cmr.gaze.inventory.custom.StoneBrickCeilingItem;
 import net.cmr.gaze.inventory.custom.StoneBrickFloorItem;
 import net.cmr.gaze.inventory.custom.StoneBrickWallItem;
 import net.cmr.gaze.inventory.custom.StoneHoe;
-import net.cmr.gaze.inventory.custom.StoneItem;
 import net.cmr.gaze.inventory.custom.StonePathFloorItem;
 import net.cmr.gaze.inventory.custom.StonePickaxe;
 import net.cmr.gaze.inventory.custom.StoneShovel;
 import net.cmr.gaze.inventory.custom.TableItem;
 import net.cmr.gaze.inventory.custom.TechnologyTableItem;
+import net.cmr.gaze.inventory.custom.TitaniumIngot;
 import net.cmr.gaze.inventory.custom.TorchItem;
-import net.cmr.gaze.inventory.custom.WheatItem;
+import net.cmr.gaze.inventory.custom.Wheat;
 import net.cmr.gaze.inventory.custom.WheatSeeds;
+import net.cmr.gaze.inventory.custom.Wood;
 import net.cmr.gaze.inventory.custom.WoodAxe;
 import net.cmr.gaze.inventory.custom.WoodCeilingItem;
 import net.cmr.gaze.inventory.custom.WoodDoorItem;
 import net.cmr.gaze.inventory.custom.WoodElectricityPoleItem;
 import net.cmr.gaze.inventory.custom.WoodFloorItem;
 import net.cmr.gaze.inventory.custom.WoodHoe;
-import net.cmr.gaze.inventory.custom.WoodItem;
 import net.cmr.gaze.inventory.custom.WoodPickaxe;
 import net.cmr.gaze.inventory.custom.WoodShovel;
 import net.cmr.gaze.inventory.custom.WoodWallItem;
@@ -72,12 +80,12 @@ public class Items {
 	private static HashMap<Integer, ItemType> identifierStorage = new HashMap<>();
 	
 	public enum ItemType {
-		WOOD(WoodItem.class),
-		STONE(StoneItem.class),
+		WOOD(Wood.class),
+		STONE(Stone.class),
 		IRON_INGOT(IronIngotItem.class),
-		COPPER_INGOT(CopperIngotItem.class),
-		STEEL_INGOT(null),
-		TITANIUM_INGOT(null),
+		COPPER_INGOT(CopperIngot.class),
+		STEEL_INGOT(SteelIngot.class),
+		TITANIUM_INGOT(TitaniumIngot.class),
 
 		IRON_GEAR(IronGear.class),
 		COPPER_WIRE(CopperWire.class),
@@ -86,15 +94,15 @@ public class Items {
 		BASIC_GENERATOR(null),
 		
 		COAL(CoalItem.class),
-		IRON_ORE(IronOreItem.class),
+		IRON_ORE(IronOre.class),
 		COPPER_ORE(CopperOreItem.class),
-		ILEMITE_ORE(null),
+		ILEMITE_ORE(IlmeniteOre.class),
 
-		SAND(null),
-		GLASS(null),
-		CLAY(null),
-		BRICK(null),
-		SILICON(null),
+		SAND(SandItem.class),
+		GLASS(Glass.class),
+		CLAY(ClayItem.class),
+		BRICK(BrickItem.class),
+		SILICON(Silicon.class),
 
 		WOOD_AXE(WoodAxe.class, 1),
 		WOOD_PICKAXE(WoodPickaxe.class, 1),
@@ -133,12 +141,12 @@ public class Items {
 		GRASS_SEEDS(GrassSeeds.class), 
 		WHEAT_SEEDS(WheatSeeds.class), 
 		COTTON_SEEDS(CottonSeeds.class),
-		WHEAT(WheatItem.class), 
-		COTTON(CottonItem.class), 
+		WHEAT(Wheat.class), 
+		COTTON(Cotton.class), 
 		BASIC_FERTILIZER(null),
-		BREAD(BreadItem.class), 
+		BREAD(Bread.class), 
 		ACORN(AcornItem.class),
-		APPLE(AppleItem.class),
+		APPLE(Apple.class),
 		APPLE_PIE(null),
 		
 		WOOD_WALL(WoodWallItem.class), 
@@ -253,7 +261,7 @@ public class Items {
 		for(ItemType type : ItemType.values()) {
 			if(!map.containsKey(type)) {
 				Logger.error("DEVELOPMENT", "Items singleton does not contain an entry for ItemType "+type);
-				Gdx.app.exit();
+				//Gdx.app.exit();
 			}
 		}
 		

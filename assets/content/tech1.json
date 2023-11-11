@@ -64,7 +64,8 @@
 			"position": [0,40],
 			"requirements":[
 				"SKILL/MINING/5",
-				"ITEM/COPPER_WIRE/5"
+				"ITEM/COPPER_WIRE/5",
+				"ITEM/SILICON/4"
 			],
 			"rewards": [
 

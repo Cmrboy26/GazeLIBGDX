@@ -156,6 +156,7 @@ public class Gaze extends Game {
 		initSound("stoneHit");
 		initSound("stoneBreak");
 		initSound("grassBreak");
+		initSound("dirt");
 		initSound("pickup");
 		initSound("forestAmbience0");
 		initSound("forestAmbience1");

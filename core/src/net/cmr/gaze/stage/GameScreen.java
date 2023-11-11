@@ -116,7 +116,9 @@ import net.cmr.gaze.stage.widgets.ResearchMenu;
 import net.cmr.gaze.util.ClosestValueMap;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
+import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
+import net.cmr.gaze.world.AudioData;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.CeilingTile;
 import net.cmr.gaze.world.Chunk;
@@ -191,7 +193,7 @@ public class GameScreen implements Screen {
 	double worldTime = 0;
 	boolean showUI = true;
 	int rotation = 0;
-	boolean gammaOverride = true;
+	boolean gammaOverride = false;
 	
 	WorldGeneratorType currentWorldType;
 	
@@ -482,7 +484,15 @@ public class GameScreen implements Screen {
 					}
 				}
 				if(character == Input.Keys.ESCAPE) {
-					pauseMenu.setVisible(!pauseMenu.isVisible());
+					if(areMenuGroupsOpen()) {
+						closeMenus();
+					} else {
+						if(pauseMenu.isVisible()) {
+							pauseMenu.setVisible(false);
+						} else {
+							pauseMenu.setVisible(true);
+						}
+					}
 					game.playSound("select", 1f);
 				}
 				if(character == Input.Keys.F12) {
@@ -940,14 +950,7 @@ public class GameScreen implements Screen {
 				if(pair.getSecond().getAmbientNoise(this)!=null) {
 					if(soundChance <= 0 || r.nextInt(soundChance)==1) {
 						soundChance = 600;
-						double distance = getLocalPlayer().getDistanceToTile(pair.getFirst(), y);
-						double pow = 1.2;
-						
-						float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
-						
-						game.playSoundCooldown(pair.getSecond().getAmbientNoise(this), 
-								volume*pair.getSecond().getAmbientNoiseVolume()*game.settings.getFloat("ambientVolume"),
-								pair.getSecond().getAmbientNoisePitch(), 7f);
+						playWorldSound(new AudioData(pair.getSecond().getAmbientNoise(this), pair.getSecond().getAmbientNoiseVolume(), pair.getSecond().getAmbientNoisePitch()), pair.getFirst(), y);
 						attemptSound = false;
 					}
 				}
@@ -1568,8 +1571,11 @@ public class GameScreen implements Screen {
 			}
 		} else if(packet instanceof AudioPacket) {
 			AudioPacket audio = (AudioPacket) packet;
-			game.playSound(audio.getAudio(), audio.getVolume());
-			//System.out.println(audio.getAudio()+":"+audio.getVolume());
+			if(!audio.isPositional()) {
+				game.playSound(audio.getAudio(), audio.getVolume(), audio.getPitch());
+			} else {
+				playWorldSound(new AudioData(audio.getAudio(), audio.getVolume(), audio.getPitch()), audio.getX(), audio.getY());
+			}
 		} else if(packet instanceof InventoryUpdatePacket) {
 			InventoryUpdatePacket inv = (InventoryUpdatePacket) packet;
 			Player target = (Player) entities.get(inv.getUUID());
@@ -1820,6 +1826,19 @@ public class GameScreen implements Screen {
     	}
     	return value;
     }
+
+	public void playWorldSound(AudioData data, int x, int y) {
+		double distance = getLocalPlayer().getDistanceToTile(x, y);
+		double pow = 1.2;
+						
+		float volume = (float) CustomMath.minMax(0, ((-1d/Math.pow(Chunk.CHUNK_SIZE*1.5d, pow))*Math.pow(distance, pow))+1d, 1);
+		double pitchX = getLocalPlayer().getX()-x;
+		pitchX = Normalize.norm(pitchX);
+		//System.out.println(distance+","+volume);
+		game.playSoundCooldown(data.getAudio(), 
+			volume*data.getVolume()*game.settings.getFloat("ambientVolume"),
+			data.getPitch(), 7f);
+	}
     
     public float calculateAmbience(float min, float max, float rate, float duration, float time) {
     	float transitionTime = (max-min)/rate;
@@ -1918,6 +1937,16 @@ public class GameScreen implements Screen {
 				}
 			}
 		}
+		public boolean isGroupOpen(GameScreen screen) {
+			for(MenuType type : MenuType.values()) {
+				if(type.group == this) {
+					if(type.isVisible(screen)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 	}
 
 	public static enum MenuType {
@@ -1928,11 +1957,19 @@ public class GameScreen implements Screen {
 				screen.inventory.inventoryGroup.uncheckAll();
 				screen.inventory.inventoryGroup.selectedSlot = null;
 			}
+			@Override
+			public boolean isVisible(GameScreen screen) {
+				return screen.inventory.isVisible();
+			}
 		},
 		CRAFTING(MenuGroup.CENTER) {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.setCraftingVisibility(visible);
+			}
+			@Override
+			public boolean isVisible(GameScreen screen) {
+				return screen.craftingMenuVisible;
 			}
 		},
 		QUESTS(MenuGroup.CENTER) {
@@ -1942,17 +1979,32 @@ public class GameScreen implements Screen {
 					screen.quests.setVisible(visible);
 				}
 			}
+			@Override
+			public boolean isVisible(GameScreen screen) {
+				if(!GameScreen.disableQuests) {
+					return screen.quests.isVisible();
+				}
+				return false;
+			}
 		},
 		CHEST(MenuGroup.CENTER) {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.chestInventory.setVisible(visible);
 			}
+			@Override
+			public boolean isVisible(GameScreen screen) {
+				return screen.chestInventory.isVisible();
+			}
 		}, 
 		TECH(MenuGroup.CENTER) {
 			@Override
 			public void setVisible(GameScreen screen, boolean visible) {
 				screen.tech.setVisible(visible);
+			}
+			@Override
+			public boolean isVisible(GameScreen screen) {
+				return screen.tech.isVisible();
 			}
 		};
 
@@ -1962,6 +2014,7 @@ public class GameScreen implements Screen {
 		}
 
 		public abstract void setVisible(GameScreen screen, boolean visible);
+		public abstract boolean isVisible(GameScreen screen);
 	}
 
 	public void toggleMenu(MenuType type) {
@@ -2002,6 +2055,22 @@ public class GameScreen implements Screen {
 			type.group.closeGroup(this);
 		}
 		type.setVisible(this, state);
+	}
+	public boolean isMenuGroupOpen(MenuGroup type) {
+		return type.isGroupOpen(this);
+	}
+	public boolean areMenuGroupsOpen() {
+		for(MenuGroup group : MenuGroup.values()) {
+			if(isMenuGroupOpen(group)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public void closeMenus() {
+		for(MenuType type : MenuType.values()) {
+			type.setVisible(this, false);
+		}
 	}
 
 	public RenderRule currentRenderRule;

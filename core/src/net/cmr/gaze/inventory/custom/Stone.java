@@ -11,15 +11,14 @@ import net.cmr.gaze.inventory.BasicItem;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items.ItemType;
 
-public class CopperOreItem extends BasicItem {
+public class Stone extends BasicItem {
 
-	public CopperOreItem(int size) {
-		super(ItemType.COPPER_ORE, size, "copperOre");
+	public Stone(int size) {
+		super(ItemType.STONE, size, "stone");
 	}
 
 	@Override
 	public Item getItem(int size) {
-		return new CopperOreItem(size);
+		return new Stone(size);
 	}
-
 }

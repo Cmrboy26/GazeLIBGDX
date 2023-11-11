@@ -28,7 +28,7 @@ public class StoneHoe extends Tool {
 	}
 	@Override
 	public double breakSpeed() {
-		return .75;
+		return 1;
 	}
 
 	@Override

@@ -623,8 +623,11 @@ public class World {
 		
 	}
 	
+	public void playSound(String noise, float volume, float pitch, int x, int y) {
+		server.sendAllPacketIf(new AudioPacket(noise, volume, pitch, x, y), ConnectionPredicate.PLAYER_IN_BOUNDS, Chunk.getChunk(x, y), this);
+	}
 	public void playSound(String noise, float volume, int x, int y) {
-		server.sendAllPacketIf(new AudioPacket(noise, 1f), ConnectionPredicate.PLAYER_IN_BOUNDS, Chunk.getChunk(x, y), this);
+		server.sendAllPacketIf(new AudioPacket(noise, volume, 1f, x, y), ConnectionPredicate.PLAYER_IN_BOUNDS, Chunk.getChunk(x, y), this);
 	}
 	
 	public void addEntity(Entity entity) {
