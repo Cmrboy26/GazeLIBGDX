@@ -24,9 +24,8 @@ import net.cmr.gaze.stage.widgets.HintMenu;
 
 public class MainMenuScreen implements Screen {
 
-	Viewport leftViewport;
 	Gaze game; 
-	Stage stage;
+	Stages stages;
 
 	
 	final float topDistance = 140;
@@ -39,21 +38,7 @@ public class MainMenuScreen implements Screen {
 	public MainMenuScreen(final Gaze game) {
 		this.game = game;
 		Preferences prefs = SettingScreen.initializePreferences();
-		this.stage = new Stage() {
-			@Override
-			public boolean mouseMoved(int screenX, int screenY) {
-				boolean end = super.mouseMoved(screenX, screenY);
-				return end;
-			}
-		};
-		
-		this.leftViewport = new FitViewport(640f, 360f);
-		game.viewport.getCamera().position.set(640f/2f, 360f/2f, 0);
-		//((OrthographicCamera)game.viewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		leftViewport.getCamera().position.set(640f/2f, 360f/2f, 0);
-		
-		stage.setViewport(this.leftViewport);
-		//((OrthographicCamera)leftViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
+		this.stages = new Stages();
 		
 		play = new TextButton("Play", game.getSkin(), "button");
 		play.setPosition(20f, 360f-topDistance, Align.left);
@@ -68,7 +53,7 @@ public class MainMenuScreen implements Screen {
 				//GameLoader.startSingleplayer(game);
 		    }
 		});
-		stage.addActor(play);
+		stages.get(Align.left).addActor(play);
 		playMultiplayer = new TextButton("Multiplayer", game.getSkin(), "button");
 		playMultiplayer.setPosition(20f, 360f-topDistance-spacing, Align.left);
 		playMultiplayer.setWidth(height*4);
@@ -89,7 +74,7 @@ public class MainMenuScreen implements Screen {
 				*/
 		    }
 		});
-		stage.addActor(playMultiplayer);
+		stages.get(Align.left).addActor(playMultiplayer);
 		settings = new TextButton("Settings", game.getSkin(), "button");
 		settings.setPosition(20f, 360f-topDistance-spacing-spacing, Align.left);
 		settings.setWidth(height*4);
@@ -102,7 +87,7 @@ public class MainMenuScreen implements Screen {
 		    	game.setScreen(new SettingScreen(game));
 		    }
 		});
-		stage.addActor(settings);
+		stages.get(Align.left).addActor(settings);
 		exit = new TextButton("Exit", game.getSkin(), "button");
 		exit.setPosition(20f, 360f-topDistance-spacing-spacing-spacing, Align.left);
 		exit.setWidth(height*4);
@@ -115,7 +100,7 @@ public class MainMenuScreen implements Screen {
 		    	Gdx.app.exit();
 		    }
 		});
-		stage.addActor(exit);
+		stages.get(Align.left).addActor(exit);
 		
 		//stage.addActor(new NavigationMenu(game));
 		
@@ -158,14 +143,7 @@ public class MainMenuScreen implements Screen {
 		otherThing.setSize(300, 50);
 		stage.addActor(otherThing);*/
 		
-		stage.getRoot().addCaptureListener(new InputListener() {
-		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		        if (!(event.getTarget() instanceof TextField)) stage.setKeyboardFocus(null);
-		        return false;
-		    }
-		});
-
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 	}
 	
 	@Override
@@ -181,21 +159,13 @@ public class MainMenuScreen implements Screen {
 		Background.draw(game.batch, game.backgroundViewport);
 		game.batch.end();
 		
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		stages.get(Align.topLeft).getViewport().apply(false);
+		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
 		game.batch.begin();
-		game.viewport.apply();
-		//game.getFont(50).draw(game.batch, "Gaze", pos.x, pos.y);
-		game.batch.end();
-		
-		
-		
-		game.batch.setProjectionMatrix(leftViewport.getCamera().combined);
-		game.batch.begin();
-		leftViewport.apply();
 		
 		game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
-		stage.draw();
-		stage.act(delta);
+		stages.act(delta);
+		stages.render(game.batch, false);
 		game.batch.end();
 	}
 	
@@ -208,15 +178,7 @@ public class MainMenuScreen implements Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		//fitViewport.update(width, height);
-		stage.getViewport().update(width, height);
-		//backgroundStage.getViewport().update(width, height);
-		leftViewport.setScreenX(0);
-		//leftViewport.update(width, height);
-		//System.out.println(fitViewport.getLeftGutterWidth());
-		//play.setPosition(0f, 360f-topDistance, Align.left);
-		//settings.setPosition(0f, 360f-topDistance-spacing, Align.left);
-		//exit.setPosition(0f, 360f-topDistance-spacing-spacing, Align.left);
+		stages.resize(width, height);
 	}
 	
 	@Override
@@ -238,7 +200,7 @@ public class MainMenuScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		stages.dispose();
 		//backgroundStage.dispose();
 	}
 

@@ -30,7 +30,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.Hinting;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
@@ -44,6 +46,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.cmr.gaze.crafting.Crafting;
 import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.stage.AlignmentScreen;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.IntroScreen;
 import net.cmr.gaze.stage.SettingScreen;
@@ -175,13 +178,8 @@ public class Gaze extends Game {
 		
 		initializeGameContent();
 		
-		/*Preferences login = Gdx.app.getPreferences("LoginData");
-		if(login.getString("credentials", null) == null) {
-			this.setScreen(new SetupScreen(this));
-		} else {
-			this.setScreen(new StartupScreen(this));
-		}*/
 		this.setScreen(new IntroScreen(this));
+		//this.setScreen(new AlignmentScreen(this));
 		
 		FileHandle handle = Gdx.files.external("/Gaze/");
 		handle.file().mkdir();
@@ -712,6 +710,11 @@ public class Gaze extends Game {
 		textFieldLargeStyle.fontColor = Color.WHITE;
 		
 		defaultSkin.add("textFieldLarge", textFieldLargeStyle);
+
+		LabelStyle labelStyle = new LabelStyle();
+		labelStyle.font = getFont(25);
+		labelStyle.fontColor = Color.WHITE;
+		defaultSkin.add("default", labelStyle);
 		
 		return defaultSkin;
 	}

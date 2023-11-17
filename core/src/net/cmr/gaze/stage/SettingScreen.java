@@ -28,7 +28,7 @@ public class SettingScreen implements Screen {
 	public static final String settingsPreferences = "GazeSettings.xml";
 	
 	final Gaze game;
-	Stage stage;
+	Stages stages;
 	TextButton back;
 	Slider masterVolume, musicVolume, sfxVolume, ambientVolume, worldZoom, uiZoom, fpsSlider;
 	final Label masterLabel, musicLabel, sfxLabel, ambientLabel, worldLabel, uiLabel, fpsLabel;
@@ -91,8 +91,7 @@ public class SettingScreen implements Screen {
 	
 	public SettingScreen(final Gaze game) {
 		this.game = game;
-        stage = new Stage();
-        stage.setViewport(game.viewport);
+        stages = new Stages();
         
         prefs = initializePreferences();
         this.displayPlayer = new Player(prefs.getInteger("playerType"), null);
@@ -502,11 +501,11 @@ public class SettingScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		stage.addActor(back);
+		stages.get(Align.bottomLeft).addActor(back);
 		
 		
 		
-		stage.addActor(contentTable);
+		stages.get(Align.center).addActor(contentTable);
 		
 		/*TextField input = new TextField(null, game.getSkin(), "textFieldLarge");
 		input.setPosition(640/2, 360/2, Align.center);
@@ -520,7 +519,7 @@ public class SettingScreen implements Screen {
 		*/
 
 
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 	}
 	
 	private String getFPSString(int value) {
@@ -556,18 +555,17 @@ public class SettingScreen implements Screen {
 		if(v == 3) {vX = -1; vY = 0;}
 		displayPlayer.setVelocity(vX, vY);
 		
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
-		game.batch.begin();
+		stages.act(delta);
+		stages.render(game.batch, false);
+		stages.get(Align.topLeft).getViewport().apply(false);
+		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getViewport().getCamera().combined);
 		game.getFont(45).draw(game.batch, "Settings", 30, 360-30);
-		stage.act();
-		stage.draw();
 		game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -587,7 +585,7 @@ public class SettingScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		stages.dispose();
 	}
 
 }
