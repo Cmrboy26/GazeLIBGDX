@@ -1245,7 +1245,7 @@ public class GameScreen implements Screen {
 		worldViewport.update(width, height);
 		topStage.getViewport().update(width, height);
 		topViewport.setScreenY(Gdx.graphics.getHeight()-topViewport.getScreenHeight());
-
+		
 		rightTopViewport.update(width, height);
 		rightTopViewport.setScreenY(Gdx.graphics.getHeight()-rightTopViewport.getScreenHeight());
 		rightTopViewport.setScreenX(Gdx.graphics.getWidth()-rightTopViewport.getScreenWidth());
