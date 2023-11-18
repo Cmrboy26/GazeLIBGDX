@@ -107,7 +107,7 @@ public class MainMenuScreen implements Screen {
 
 		LabelStyle labelStyle = new LabelStyle(game.getFont(50), Color.WHITE);
 		Label title = new Label("Gaze", labelStyle);
-		title.setPosition(30, 360-30);
+		title.setPosition(30, 360-30-50);
 		stages.get(Align.topLeft).addActor(title);
 		
 		//stage.addActor(new NavigationMenu(game));
