@@ -8,9 +8,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter;
@@ -165,6 +168,11 @@ public class SaveAddScreen implements Screen {
 		worldSeed.setSize(41*6, 41);
 		stages.get(Align.center).addActor(worldSeed);
 		
+		LabelStyle labelStyle = new LabelStyle(game.getFont(40), Color.WHITE);
+		Label title = new Label("Create Save", labelStyle);
+		title.setPosition(320, 360-30-40);
+		title.setAlignment(Align.bottom);
+		stages.get(Align.top).addActor(title);
 		
 		Gdx.input.setInputProcessor(multi);
 	}
@@ -177,14 +185,7 @@ public class SaveAddScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		stages.get(Align.topLeft).getViewport().apply();
-		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
 		game.batch.begin();
-		String title = "Create Save";
-		int size = 40;
-		float xOffset = (-new GlyphLayout(game.getFont(size), title).width)/2;
-		float yOffset = (-new GlyphLayout(game.getFont(size), title).height)/2;
-		game.getFont(size).draw(game.batch, title, 640/2+xOffset, 360-30+yOffset);
 		stages.act(delta);
 		stages.render(game.batch, false);
 		

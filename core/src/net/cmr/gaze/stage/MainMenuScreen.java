@@ -107,8 +107,7 @@ public class MainMenuScreen implements Screen {
 
 		LabelStyle labelStyle = new LabelStyle(game.getFont(50), Color.WHITE);
 		Label title = new Label("Gaze", labelStyle);
-		title.setPosition(30, 360-30);
-		title.setAlignment(Align.topLeft);
+		title.setPosition(30, 360-30-50);
 		stages.get(Align.topLeft).addActor(title);
 		
 		//stage.addActor(new NavigationMenu(game));
@@ -167,10 +166,6 @@ public class MainMenuScreen implements Screen {
 		game.batch.begin();
 		Background.draw(game.batch, game.backgroundViewport);
 		
-		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
-		stages.get(Align.topLeft).getViewport().apply();
-		
-		game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
 		stages.act(delta);
 		stages.render(game.batch, false);
 		game.batch.end();
