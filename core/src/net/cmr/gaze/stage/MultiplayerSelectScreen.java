@@ -135,7 +135,7 @@ public class MultiplayerSelectScreen implements Screen {
 	public MultiplayerSelectScreen(final Gaze game) {
 		this.game = game;
 		serverList = new HashMap<>();
-		stages = new Stages();
+		this.stages = new Stages();
 		
 		multiInput = stages.getInputMultiplexer();
 		
@@ -312,7 +312,7 @@ public class MultiplayerSelectScreen implements Screen {
 		game.batch.end();
 		
 		stages.act(delta);
-		stages.render(null, true);
+		stages.render(game.batch, true);
 	}
 
 	@Override
