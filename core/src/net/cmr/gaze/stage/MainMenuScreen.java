@@ -157,11 +157,9 @@ public class MainMenuScreen implements Screen {
 		game.batch.setProjectionMatrix(game.backgroundViewport.getCamera().combined);
 		game.batch.begin();
 		Background.draw(game.batch, game.backgroundViewport);
-		game.batch.end();
 		
-		stages.get(Align.topLeft).getViewport().apply(false);
 		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
-		game.batch.begin();
+		stages.get(Align.topLeft).getViewport().apply();
 		
 		game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
 		stages.act(delta);

@@ -177,10 +177,9 @@ public class SaveAddScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		stages.get(Align.topLeft).getViewport().apply();
+		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
 		game.batch.begin();
-		game.viewport.apply();
 		String title = "Create Save";
 		int size = 40;
 		float xOffset = (-new GlyphLayout(game.getFont(size), title).width)/2;
