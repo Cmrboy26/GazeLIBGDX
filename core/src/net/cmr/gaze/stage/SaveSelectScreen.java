@@ -169,11 +169,6 @@ public class SaveSelectScreen implements Screen {
 		game.batch.begin();
 		Background.draw(game.batch, game.backgroundViewport);
 		game.batch.end();
-		
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(stages.get(Align.top).getCamera().combined);
-		game.batch.begin();
-		game.getFont(40).draw(game.batch, "Select Save", 30, 360-30);
 		stages.act(delta);
 		stages.render(game.batch, false);
 		

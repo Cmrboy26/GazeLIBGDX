@@ -41,6 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
@@ -298,9 +299,11 @@ public class GameScreen implements Screen {
 			
 			hotbarTable.add(button).width(width).height(width).spaceRight(spacing);
 		}
-
 		hotbarTable.setBounds(320-totalWidth/2, 26.5f*(8/10f), totalWidth, width);
 		
+		Image hotbar = new Image(game.getSprite("hotbar"));
+		hotbar.setBounds(320-320/2f, 4, 320, 320/5f);
+		stages.get(Align.bottom).addActor(hotbar);
 		stages.get(Align.bottom).addActor(hotbarTable);
 		
 		inventoryMenu = new InventoryMenu(game, this);
@@ -329,7 +332,7 @@ public class GameScreen implements Screen {
 
 		stages.get(Align.topRight).addActor(skillDisplay);
 		stages.get(Align.bottomLeft).addActor(chatWidget);
-		
+
 		openHelpMenu(HintMenuType.FIRST_JOIN);
 		
 		multiInput.addProcessor(stages.getInputMultiplexer());
@@ -574,14 +577,6 @@ public class GameScreen implements Screen {
 			Notification notification = notificationQueue.poll();
 			activeNotification = notification;
 			stages.get(Align.topRight).addActor(activeNotification);
-		}
-		
-		game.batch.setProjectionMatrix(stages.get(Align.bottom).getCamera().combined);
-		stages.get(Align.bottom).getViewport().apply();
-
-		if(showUI) {
-			int width = 320;
-			game.batch.draw(game.getSprite("hotbar"), 320-width/2f, 4, width, width/5f);
 		}
 
 		if(showUI) {
