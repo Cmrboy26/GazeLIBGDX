@@ -592,7 +592,6 @@ public class GameScreen implements Screen {
 		
 		if(GameScreen.hoveredItemViewport!=null) {
 			game.batch.setProjectionMatrix(GameScreen.hoveredItemViewport.getCamera().combined);
-			game.batch.begin();
 			GameScreen.hoveredItemViewport.apply();
 			
 			BitmapFont font = game.getFont(5f);
