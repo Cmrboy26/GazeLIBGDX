@@ -2,9 +2,12 @@ package net.cmr.gaze.stage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -39,6 +42,12 @@ public class MessageScreen implements Screen {
 		    }
 		});
 		stages.get(Align.center).addActor(back);
+
+		LabelStyle labelStyle = new LabelStyle(game.getFont(40), Color.WHITE);
+		Label title = new Label("Message", labelStyle);
+		title.setBounds(0, 360-30-40, 640, 40);
+		title.setAlignment(Align.center, Align.center);
+		stages.get(Align.top).addActor(title);
 	}
 	
 	@Override
@@ -49,16 +58,8 @@ public class MessageScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
-		game.batch.begin();
-		game.getFont(50).draw(game.batch, "Message", 30, 360-30);
-		float xOffset = (-new GlyphLayout(game.getFont(10), message).width)/2;
-		float yOffset = (-new GlyphLayout(game.getFont(10), message).height)/2;
-		game.getFont(10).draw(game.batch, message, 640/2+xOffset, 360/2+yOffset);
 		stages.act(delta);
-		stages.render(game.batch, false);
-		game.batch.end();
+		stages.render(game.batch, true);
 	}
 
 	@Override
