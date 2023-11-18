@@ -55,7 +55,7 @@ public class ConnectingScreen implements Screen {
 		this.username = username;
 		this.server = server;
 
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
@@ -78,7 +78,7 @@ public class ConnectingScreen implements Screen {
 		this.port = port;
 		this.username = username;
 
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);

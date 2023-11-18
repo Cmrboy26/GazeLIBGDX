@@ -35,7 +35,7 @@ public class SaveAddScreen implements Screen {
 	public SaveAddScreen(final Gaze game, CreationType creationType) {
 		this.game = game;
 		this.creationType = creationType;
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		multi = stages.getInputMultiplexer();
 		
 		back = new TextButton("Back", game.getSkin(), "button");

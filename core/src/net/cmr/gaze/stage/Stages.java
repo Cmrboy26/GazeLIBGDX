@@ -14,6 +14,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import net.cmr.gaze.Gaze;
+
 /**
  * The Stages class manages multiple stages for a game or application. 
  * Each stage is associated with an alignment value from libGDX's Align class. 
@@ -28,6 +30,13 @@ public class Stages implements Disposable {
      * Constructs a new Stages object with 9 stages, one for each alignment value in libGDX's Align class.
      */
     public Stages() {
+        this(1f);
+    }
+
+    /**
+     * Constructs a new Stages object with 9 stages, one for each alignment value in libGDX's Align class.
+     */
+    public Stages(float zoom) {
         // sets the number of stages to 9, the number of Align values in libGDX's Align class
         stages = new HashMap<Integer, Stage>(9);
         initializeStage(Align.topLeft);
@@ -39,7 +48,11 @@ public class Stages implements Disposable {
         initializeStage(Align.bottomLeft);
         initializeStage(Align.bottom);
         initializeStage(Align.bottomRight);
-        setStageZoom(1f);
+        setStageZoom(zoom);
+    }
+
+    public Stages(Gaze game) {
+        this(game.settings.getFloat("uiZoom"));
     }
 
     /**

@@ -135,7 +135,7 @@ public class MultiplayerSelectScreen implements Screen {
 	public MultiplayerSelectScreen(final Gaze game) {
 		this.game = game;
 		serverList = new HashMap<>();
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		
 		multiInput = stages.getInputMultiplexer();
 		

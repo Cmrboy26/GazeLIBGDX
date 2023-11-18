@@ -35,7 +35,7 @@ public class SaveSelectScreen implements Screen {
 	public SaveSelectScreen(final Gaze game, CreationType creationType) {
 		this.game = game;
 		this.creationType = creationType;
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		
@@ -51,7 +51,7 @@ public class SaveSelectScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		stages.get(Align.center).addActor(back);
+		stages.get(Align.bottom).addActor(back);
 
 		play = new TextButton("Play", game.getSkin(), "buttonLarge");
 		play.setPosition(20f+220f, 30, Align.left);
@@ -73,7 +73,7 @@ public class SaveSelectScreen implements Screen {
 		    	}
 		    }
 		});
-		stages.get(Align.center).addActor(play);
+		stages.get(Align.bottom).addActor(play);
 		
 		ImageButtonStyle style = new ImageButtonStyle();
 		style.over = new TextureRegionDrawable(game.getSprite("plusButtonSelected"));
@@ -95,7 +95,7 @@ public class SaveSelectScreen implements Screen {
 			}
 		});
 		
-		stages.get(Align.center).addActor(addServer);
+		stages.get(Align.bottom).addActor(addServer);
 		
 		ImageButtonStyle style2 = new ImageButtonStyle();
 		style2.over = new TextureRegionDrawable(game.getSprite("minusButtonSelected"));
@@ -126,7 +126,7 @@ public class SaveSelectScreen implements Screen {
 				return false;
 			}
 		});
-		stages.get(Align.center).addActor(removeServer);
+		stages.get(Align.bottom).addActor(removeServer);
 		
 		
 		Table table = new Table();
@@ -162,7 +162,7 @@ public class SaveSelectScreen implements Screen {
 		game.batch.end();
 		
 		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		game.batch.setProjectionMatrix(stages.get(Align.top).getCamera().combined);
 		game.batch.begin();
 		game.getFont(40).draw(game.batch, "Select Save", 30, 360-30);
 		stages.act(delta);

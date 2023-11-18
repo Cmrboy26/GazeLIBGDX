@@ -196,8 +196,7 @@ public class GameScreen implements Screen {
 		Preferences prefs = SettingScreen.initializePreferences();
 		lights = new Lights(game);
 		chat = new ChatManager();
-		this.stages = new Stages();
-		this.stages.setStageZoom(prefs.getFloat("uiZoom"));
+		this.stages = new Stages(game);
 		this.worldViewport = new ExtendViewport(64, 36);
 		this.worldViewport.getCamera().position.set(64f/2f, 36f/2f, 0);
 		((OrthographicCamera)worldViewport.getCamera()).zoom = prefs.getFloat("worldZoom");
@@ -577,8 +576,8 @@ public class GameScreen implements Screen {
 			stages.get(Align.topRight).addActor(activeNotification);
 		}
 		
-		game.batch.setProjectionMatrix(stages.get(Align.topRight).getCamera().combined);
-		stages.get(Align.topRight).getViewport().apply();
+		game.batch.setProjectionMatrix(stages.get(Align.bottom).getCamera().combined);
+		stages.get(Align.bottom).getViewport().apply();
 
 		if(showUI) {
 			int width = 320;

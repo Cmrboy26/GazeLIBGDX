@@ -91,7 +91,7 @@ public class SettingScreen implements Screen {
 	
 	public SettingScreen(final Gaze game) {
 		this.game = game;
-        stages = new Stages();
+        stages = new Stages(game);
         
         prefs = initializePreferences();
         this.displayPlayer = new Player(prefs.getInteger("playerType"), null);

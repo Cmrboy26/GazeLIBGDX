@@ -18,15 +18,14 @@ public class MessageScreen implements Screen {
 	final Gaze game;
 	final String message;
 	TextButton back;
-	Stage centerStage;
+	Stages stages;
 	
 	public MessageScreen(final Gaze game, String message) {
 		this.game = game;
 		this.message = message;
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
+		this.stages = new Stages(game);
 		
-		Gdx.input.setInputProcessor(centerStage);
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
 		back.setWidth(200f);
@@ -39,7 +38,7 @@ public class MessageScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		centerStage.addActor(back);
+		stages.get(Align.center).addActor(back);
 	}
 	
 	@Override
@@ -51,43 +50,40 @@ public class MessageScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		game.batch.setProjectionMatrix(stages.get(Align.topLeft).getCamera().combined);
 		game.batch.begin();
 		game.getFont(50).draw(game.batch, "Message", 30, 360-30);
 		float xOffset = (-new GlyphLayout(game.getFont(10), message).width)/2;
 		float yOffset = (-new GlyphLayout(game.getFont(10), message).height)/2;
 		game.getFont(10).draw(game.batch, message, 640/2+xOffset, 360/2+yOffset);
-		centerStage.act(delta);
-		centerStage.draw();
+		stages.act(delta);
+		stages.render(game.batch, false);
 		game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
+		stages.resize(width, height);
 	}
 
 	@Override
 	public void pause() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void resume() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void hide() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void dispose() {
-		centerStage.dispose();
+		stages.dispose();
 	}
 
 }

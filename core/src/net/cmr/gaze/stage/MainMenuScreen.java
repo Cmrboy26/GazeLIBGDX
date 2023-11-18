@@ -38,7 +38,7 @@ public class MainMenuScreen implements Screen {
 	public MainMenuScreen(final Gaze game) {
 		this.game = game;
 		Preferences prefs = SettingScreen.initializePreferences();
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		
 		play = new TextButton("Play", game.getSkin(), "button");
 		play.setPosition(20f, 360f-topDistance, Align.left);

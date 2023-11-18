@@ -29,7 +29,7 @@ public class MultiplayerAddScreen implements Screen {
 	
 	public MultiplayerAddScreen(final Gaze game) {
 		this.game = game;
-		this.stages = new Stages();
+		this.stages = new Stages(game);
 		
 		multi = stages.getInputMultiplexer();
 		
