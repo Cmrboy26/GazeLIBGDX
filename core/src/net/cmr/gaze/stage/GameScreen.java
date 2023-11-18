@@ -568,9 +568,8 @@ public class GameScreen implements Screen {
 
 	private void renderUI(float delta, Vector2 mouseLocalPosition) {
 		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
-		game.batch.begin();
-		
 		game.batch.setProjectionMatrix(stages.get(Align.topRight).getCamera().combined);
+		game.batch.begin();
 		
 		if((activeNotification==null || activeNotification.finished()) && notificationQueue.size()>0) {
 			Notification notification = notificationQueue.poll();
@@ -603,9 +602,9 @@ public class GameScreen implements Screen {
 			
 			Item item = hoveredItem;
 			font.draw(game.batch, Item.getName(item)+"\n"+Item.getDescription(item), x, mouseLocalPosition.y);
-			
-			game.batch.end();
 		}
+			
+		game.batch.end();
 		GameScreen.hoveredItemViewport = null;
 		GameScreen.hoveredItem = null;
 		GameScreen.hoveredItemLocalViewportCoordinates = null;
