@@ -6,6 +6,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -23,20 +24,21 @@ import net.cmr.gaze.Gaze;
 
 public class SetupScreen implements Screen {
 
-	Stage stage;
+	Stages stages;
 	Gaze game;
 	TextField password, passwordConfirm, pin, pinConfirm, username;
 	TextButton create;
+	InputMultiplexer multi;
 	
 	String errorMessage = "";
 	
 	public SetupScreen(final Gaze game) {
 		this.game = game;
-		this.stage = new Stage();
-		stage.setViewport(game.viewport);
-		stage.getRoot().addCaptureListener(new InputListener() {
+		this.stages = new Stages();
+		multi = stages.getInputMultiplexer();
+		stages.get(Align.center).getRoot().addCaptureListener(new InputListener() {
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		        if (!(event.getTarget() instanceof TextField)) stage.setKeyboardFocus(null);
+		        if (!(event.getTarget() instanceof TextField)) stages.get(Align.center).setKeyboardFocus(null);
 		        return false;
 		    }
 		});
@@ -69,7 +71,7 @@ public class SetupScreen implements Screen {
 			}
 			
 		});
-		stage.addActor(username);
+		stages.get(Align.center).addActor(username);
 		
 		password = new TextField("", game.getSkin(), "textFieldLarge");
 		password.setMessageText("Password");
@@ -78,7 +80,7 @@ public class SetupScreen implements Screen {
 		password.setBounds(320-height*3, 360-top-spacing, height*6, height);
 		password.setPasswordMode(true);
 		password.setPasswordCharacter('*');
-		stage.addActor(password);
+		stages.get(Align.center).addActor(password);
 		
 		passwordConfirm = new TextField("", game.getSkin(), "textFieldLarge");
 		passwordConfirm.setMessageText("Confirm Password");
@@ -87,7 +89,7 @@ public class SetupScreen implements Screen {
 		passwordConfirm.setBounds(320-height*3, 360-top-spacing-spacing, height*6, height);
 		passwordConfirm.setPasswordMode(true);
 		passwordConfirm.setPasswordCharacter('*');
-		stage.addActor(passwordConfirm);
+		stages.get(Align.center).addActor(passwordConfirm);
 		
 		pin = new TextField("", game.getSkin(), "textField");
 		pin.setMaxLength(8);
@@ -97,7 +99,7 @@ public class SetupScreen implements Screen {
 		pin.setBounds(320-height*2, 360-top-spacing-spacing-spacing, height*4, height);
 		pin.setPasswordMode(true);
 		pin.setPasswordCharacter('*');
-		stage.addActor(pin);
+		stages.get(Align.center).addActor(pin);
 		
 		pinConfirm = new TextField("", game.getSkin(), "textField");
 		pinConfirm.setMaxLength(8);
@@ -107,7 +109,7 @@ public class SetupScreen implements Screen {
 		pinConfirm.setBounds(320-height*2, 360-top-spacing-spacing-spacing-spacing, height*4, height);
 		pinConfirm.setPasswordMode(true);
 		pinConfirm.setPasswordCharacter('*');
-		stage.addActor(pinConfirm);
+		stages.get(Align.center).addActor(pinConfirm);
 		
 		create = new TextButton("Create", game.getSkin(), "button");
 		create.setBounds(320-45*2, 10, 45*4, 45);
@@ -126,9 +128,9 @@ public class SetupScreen implements Screen {
 		    	//game.setScreen(new GameScreen(game));
 		    }
 		});
-		stage.addActor(create);
+		stages.get(Align.center).addActor(create);
 		
-		Gdx.input.setInputProcessor(stage);
+		Gdx.input.setInputProcessor(multi);
 	}
 	
 	@Override
@@ -138,13 +140,11 @@ public class SetupScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		stage.act(delta);
 		
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		game.batch.begin();
 		
 		game.viewport.apply();
-		stage.draw();
 		
 		GlyphLayout layout = new GlyphLayout(game.getFont(40), "Account Setup");
 		float fontX = 320 - layout.width/2;
@@ -157,13 +157,16 @@ public class SetupScreen implements Screen {
 		fontY = 35+30 - layout.height/2;
 		
 		game.getFont(16).draw(game.batch, errorMessage, fontX, 360-fontY);
+
+		stages.act(delta);
+		stages.render(game.batch, false);
 		
 		game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		stage.getViewport().update(width, height);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -183,7 +186,7 @@ public class SetupScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		stage.dispose();
+		stages.dispose();
 	}
 	
 	public boolean createLogin() {

@@ -23,21 +23,15 @@ public class MultiplayerAddScreen implements Screen {
 	final Gaze game;
 	TextButton back, add;
 	Viewport bottomViewport;
-	Stage centerStage, bottomStage;
+	Stages stages;
 	InputMultiplexer multi;
 	TextField serverName, serverIP, serverPort;
 	
 	public MultiplayerAddScreen(final Gaze game) {
 		this.game = game;
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
+		this.stages = new Stages();
 		
-		bottomViewport = new FitViewport(640, 360);
-		bottomViewport.getCamera().position.set(320, 180, 0);
-		bottomStage = new Stage();
-		bottomStage.setViewport(bottomViewport);
-		
-		multi = new InputMultiplexer(centerStage, bottomStage);
+		multi = stages.getInputMultiplexer();
 		
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
@@ -50,7 +44,7 @@ public class MultiplayerAddScreen implements Screen {
 		    	game.setScreen(new MultiplayerSelectScreen(game));
 		    }
 		});
-		bottomStage.addActor(back);
+		stages.get(Align.bottom).addActor(back);
 		
 		add = new TextButton("Add", game.getSkin(), "button");
 		add.setPosition(640-20-200, 30, Align.left);
@@ -84,7 +78,7 @@ public class MultiplayerAddScreen implements Screen {
 		    	game.setScreen(screen);
 		    }
 		});
-		bottomStage.addActor(add);
+		stages.get(Align.bottom).addActor(add);
 		
 		
 		serverName = new TextField("", game.getSkin(), "textFieldLarge");
@@ -115,7 +109,7 @@ public class MultiplayerAddScreen implements Screen {
 			
 		});
 		serverName.setSize(41*6, 41);
-		centerStage.addActor(serverName);
+		stages.get(Align.center).addActor(serverName);
 		
 		serverIP = new TextField("", game.getSkin(), "textFieldLarge");
 		serverIP.setBounds(320-41*3, 360-41-100-50, 82*3, 82);
@@ -139,7 +133,7 @@ public class MultiplayerAddScreen implements Screen {
 			
 		});
 		serverIP.setSize(41*6, 41);
-		centerStage.addActor(serverIP);
+		stages.get(Align.center).addActor(serverIP);
 		
 		serverPort = new TextField("", game.getSkin(), "textFieldLarge");
 		serverPort.setBounds(320-41*3, 360-41-100-50-50, 82*3, 82);
@@ -160,7 +154,7 @@ public class MultiplayerAddScreen implements Screen {
 			
 		});
 		serverPort.setSize(41*6, 41);
-		centerStage.addActor(serverPort);
+		stages.get(Align.center).addActor(serverPort);
 		
 		
 		Gdx.input.setInputProcessor(multi);
@@ -174,31 +168,22 @@ public class MultiplayerAddScreen implements Screen {
 
 	@Override
 	public void render(float delta) {
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+
+		stages.get(Align.top).getViewport().apply();
+		game.batch.setProjectionMatrix(stages.get(Align.top).getCamera().combined);
 		game.batch.begin();
-		game.viewport.apply();
 		String title = "Add Server";
 		int size = 40;
 		float xOffset = (-new GlyphLayout(game.getFont(size), title).width)/2;
 		float yOffset = (-new GlyphLayout(game.getFont(size), title).height)/2;
 		game.getFont(size).draw(game.batch, title, 640/2+xOffset, 360-30+yOffset);
-		centerStage.act(delta);
-		centerStage.draw();
-		
-		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
-		bottomViewport.apply();
-		bottomStage.act(delta);
-		bottomStage.draw();
-		
-		game.batch.end();
+		stages.act(delta);
+		stages.render(game.batch, true);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
-		bottomStage.getViewport().update(width, height);
-		bottomViewport.setScreenY(0);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -221,8 +206,7 @@ public class MultiplayerAddScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		centerStage.dispose();
-		bottomStage.dispose();
+		stages.dispose();
 	}
 
 }

@@ -42,7 +42,7 @@ public class ConnectingScreen implements Screen {
 	boolean joining = false;
 
 	TextButton back;
-	Stage centerStage;
+	Stages stages;
 
 	Thread connectionThread;
 	final int TIMEOUT_TIME = 10;
@@ -55,9 +55,8 @@ public class ConnectingScreen implements Screen {
 		this.username = username;
 		this.server = server;
 
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
-		Gdx.input.setInputProcessor(centerStage);
+		this.stages = new Stages();
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
 		back.setWidth(200f);
@@ -70,7 +69,7 @@ public class ConnectingScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		centerStage.addActor(back);
+		stages.get(Align.center).addActor(back);
 	}
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username) {
@@ -79,9 +78,8 @@ public class ConnectingScreen implements Screen {
 		this.port = port;
 		this.username = username;
 
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
-		Gdx.input.setInputProcessor(centerStage);
+		this.stages = new Stages();
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
 		back.setWidth(200f);
@@ -94,7 +92,7 @@ public class ConnectingScreen implements Screen {
 		    	game.setScreen(new MultiplayerSelectScreen(game));
 		    }
 		});
-		centerStage.addActor(back);
+		stages.get(Align.center).addActor(back);
 	}
 	
 	public void join() {
@@ -157,8 +155,8 @@ public class ConnectingScreen implements Screen {
 		game.getFont(20).draw(game.batch, displayString2, (640-layout2.width)/2f, 360/1.25f-20);
 		game.batch.end();
 		
-		centerStage.act(delta);
-		centerStage.draw();
+		stages.act(delta);
+		stages.render(game.batch, true);
 		if(!joining) {
 			if(server != null) {
 				server.startServer();
@@ -191,7 +189,7 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -214,7 +212,7 @@ public class ConnectingScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		centerStage.dispose();
+		stages.dispose();
 		connectionThread.interrupt();
 		try {
 			if(game.getScreen() instanceof GameScreen) {

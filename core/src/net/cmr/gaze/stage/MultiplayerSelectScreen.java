@@ -36,7 +36,7 @@ import net.cmr.gaze.util.GameLoader;
 public class MultiplayerSelectScreen implements Screen {
 
 	final Gaze game;
-	Stage leftstage, centerstage, bottomstage, rightstage, topstage;
+	Stages stages;
 	
 	
 	TextButton host, join, back;
@@ -46,8 +46,6 @@ public class MultiplayerSelectScreen implements Screen {
 	HashMap<TextButton, ServerContents> serverList;
 	
 	ScrollPane serverScroll;
-	
-	Viewport leftViewport, centerViewport, rightViewport, bottomViewport, topViewport;
 	InputMultiplexer multiInput;
 	
 	public class ServerContents {
@@ -137,29 +135,9 @@ public class MultiplayerSelectScreen implements Screen {
 	public MultiplayerSelectScreen(final Gaze game) {
 		this.game = game;
 		serverList = new HashMap<>();
-		leftstage = new Stage();
-		centerstage = new Stage();
-		rightstage = new Stage();
-		bottomstage = new Stage();
-		topstage = new Stage();
+		stages = new Stages();
 		
-		multiInput = new InputMultiplexer(leftstage, centerstage, rightstage, bottomstage, topstage);
-		
-		leftViewport = new FitViewport(640, 360);
-		leftViewport.getCamera().position.set(320, 180, 0);
-		centerViewport = new FitViewport(640, 360);
-		centerViewport.getCamera().position.set(320, 180, 0);
-		rightViewport = new FitViewport(640, 360);
-		rightViewport.getCamera().position.set(320, 180, 0);
-		bottomViewport = new FitViewport(640, 360);
-		bottomViewport.getCamera().position.set(320, 180, 0);
-		topViewport = new FitViewport(640, 360);
-		topViewport.getCamera().position.set(320, 180, 0);
-		leftstage.setViewport(leftViewport);
-		rightstage.setViewport(rightViewport);
-		centerstage.setViewport(centerViewport);
-		bottomstage.setViewport(bottomViewport);
-		topstage.setViewport(topViewport);
+		multiInput = stages.getInputMultiplexer();
 		
 		host = new TextButton("Host", game.getSkin(), "buttonLarge");
 		host.setBounds(320+75+5, 10, 150, 37.5f);
@@ -176,7 +154,7 @@ public class MultiplayerSelectScreen implements Screen {
 		    }
 		});
 		
-		bottomstage.addActor(host);
+		stages.get(Align.bottom).addActor(host);
 		join = new TextButton("Join", game.getSkin(), "buttonLarge");
 		join.setBounds(320-75, 10, 150, 37.5f);
 		join.align(Align.center);
@@ -190,7 +168,7 @@ public class MultiplayerSelectScreen implements Screen {
 		    }
 		});
 		
-		bottomstage.addActor(join);
+		stages.get(Align.bottom).addActor(join);
 		
 		back = new TextButton("Back", game.getSkin(), "buttonLarge");
 		back.setBounds(320-150-75-5, 10, 150, 37.5f);
@@ -205,7 +183,7 @@ public class MultiplayerSelectScreen implements Screen {
 		    }
 		});
 		
-		bottomstage.addActor(back);
+		stages.get(Align.bottom).addActor(back);
 		
 		ImageButtonStyle style = new ImageButtonStyle();
 		style.over = new TextureRegionDrawable(game.getSprite("plusButtonSelected"));
@@ -226,7 +204,7 @@ public class MultiplayerSelectScreen implements Screen {
 			}
 		});
 		
-		bottomstage.addActor(addServer);
+		stages.get(Align.bottom).addActor(addServer);
 		
 		ImageButtonStyle style2 = new ImageButtonStyle();
 		style2.over = new TextureRegionDrawable(game.getSprite("minusButtonSelected"));
@@ -255,7 +233,7 @@ public class MultiplayerSelectScreen implements Screen {
 			}
 		});
 		
-		bottomstage.addActor(removeServer);
+		stages.get(Align.bottom).addActor(removeServer);
 		
 		
 		usernameTextField = new TextField(Gdx.app.getPreferences("LoginData").getString("username"), game.getSkin(), "textFieldLarge");
@@ -288,7 +266,7 @@ public class MultiplayerSelectScreen implements Screen {
 				return super.keyTyped(event, character);
 			}
 		});
-		topstage.addActor(usernameTextField);
+		stages.get(Align.top).addActor(usernameTextField);
 
 		VerticalGroup table = new VerticalGroup();
 		ScrollPaneStyle scrollStyle = new ScrollPaneStyle();
@@ -308,11 +286,11 @@ public class MultiplayerSelectScreen implements Screen {
 		readSavedServers();
 		
 		
-		centerstage.addActor(serverScroll);
+		stages.get(Align.center).addActor(serverScroll);
 		
-		topstage.getRoot().addCaptureListener(new InputListener() {
+		stages.get(Align.top).getRoot().addCaptureListener(new InputListener() {
 		    public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		        if (!(event.getTarget() instanceof TextField)) topstage.setKeyboardFocus(null);
+		        if (!(event.getTarget() instanceof TextField)) stages.get(Align.top).setKeyboardFocus(null);
 		        return false;
 		    }
 		});
@@ -333,63 +311,13 @@ public class MultiplayerSelectScreen implements Screen {
 		Background.draw(game.batch, game.backgroundViewport);
 		game.batch.end();
 		
-		game.batch.setProjectionMatrix(leftViewport.getCamera().combined);
-		game.batch.begin();
-		leftViewport.apply();
-		leftstage.act();
-		leftstage.draw();
-		
-		//leftViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		//leftViewport.setScreenX(0);
-		
-		game.batch.end();
-		
-		game.batch.setProjectionMatrix(centerViewport.getCamera().combined);
-		game.batch.begin();
-		centerViewport.apply();
-		//game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
-		centerstage.act();
-		centerstage.draw();
-		game.batch.end();
-		
-		game.batch.setProjectionMatrix(rightViewport.getCamera().combined);
-		game.batch.begin();
-		rightViewport.apply();
-		rightstage.act();
-		rightstage.draw();
-		game.batch.end();
-		
-		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
-		game.batch.begin();
-		bottomViewport.apply();
-		//game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
-		bottomstage.act();
-		bottomstage.draw();
-		game.batch.end();
-		
-		game.batch.setProjectionMatrix(topViewport.getCamera().combined);
-		game.batch.begin();
-		topViewport.apply();
-		//game.getFont(50).draw(game.batch, "Gaze", 30, 360-30);
-		topstage.act();
-		topstage.draw();
-		game.batch.end();
-		
+		stages.act(delta);
+		stages.render(null, true);
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		leftstage.getViewport().update(width, height, false);
-		leftViewport.setScreenX(0);
-		leftViewport.setScreenY(0);
-		rightstage.getViewport().update(width, height);
-		rightViewport.setScreenX(Gdx.graphics.getWidth()-rightViewport.getScreenWidth());
-		rightViewport.setScreenY(0);
-		centerstage.getViewport().update(width, height);
-		bottomstage.getViewport().update(width, height);
-		bottomViewport.setScreenY(0);
-		topstage.getViewport().update(width, height);
-		topViewport.setScreenY(Gdx.graphics.getHeight()-rightViewport.getScreenHeight());
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -412,11 +340,7 @@ public class MultiplayerSelectScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		leftstage.dispose();
-		centerstage.dispose();
-		rightstage.dispose();
-		bottomstage.dispose();
-		topstage.dispose();
+		stages.dispose();
 	}
 	
 	public void addServer(String servername, String IP, int port) {

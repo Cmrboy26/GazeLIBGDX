@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
+import com.badlogic.gdx.utils.Align;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.util.CustomMath;
@@ -14,19 +15,18 @@ import net.cmr.gaze.util.CustomMath;
 public class IntroScreen implements Screen {
 
     final Gaze game;
-    Stage centerStage;
+    Stages stages;
     float elapsedTime = 0;
     Label label;
 
     public IntroScreen(final Gaze game) {
 		this.game = game;
-        this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
+        stages = new Stages();
         LabelStyle style = new LabelStyle();
         style.font = game.getFont(40);
         label = new Label("Cmrboy26", style);
         label.setPosition(360-label.getWidth()/2, 360/2-label.getHeight()/2);
-        centerStage.addActor(label);
+        stages.get(Align.center).addActor(label);
     }
 
     @Override
@@ -44,12 +44,12 @@ public class IntroScreen implements Screen {
         alpha = CustomMath.minMax(0, alpha, 1);
 
         game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		game.batch.begin();
         game.batch.setColor(Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, alpha);
         label.setColor(Color.WHITE.r, Color.WHITE.g, Color.WHITE.b, alpha);
-        centerStage.act(delta);
-		centerStage.draw();
+        stages.act(delta);
+        stages.render(game.batch, false);
+		game.batch.setProjectionMatrix(stages.get(Align.center).getCamera().combined);
         game.batch.draw(game.getSprite("cmrboy26"), 130, 130, 100, 100);
 		game.batch.end();
 
@@ -66,7 +66,7 @@ public class IntroScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
+		stages.resize(width, height);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class IntroScreen implements Screen {
 
     @Override
     public void dispose() {
-		centerStage.dispose();
+        stages.dispose();
     }
     
 }

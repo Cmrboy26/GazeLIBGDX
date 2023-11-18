@@ -28,17 +28,16 @@ public class SaveSelectScreen implements Screen {
 	
 	TextButton back, play;
 	ImageButton addServer, removeServer;
-	Stage centerStage;
+	Stages stages;
 	ScrollPane worldPanel;
 	WorldWidgetGroup wwg;
 	
 	public SaveSelectScreen(final Gaze game, CreationType creationType) {
 		this.game = game;
 		this.creationType = creationType;
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
+		this.stages = new Stages();
 		
-		Gdx.input.setInputProcessor(centerStage);
+		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		
 		back = new TextButton("Back", game.getSkin(), "buttonLarge");
 		back.setPosition(20f, 30, Align.left);
@@ -52,7 +51,7 @@ public class SaveSelectScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		centerStage.addActor(back);
+		stages.get(Align.center).addActor(back);
 
 		play = new TextButton("Play", game.getSkin(), "buttonLarge");
 		play.setPosition(20f+220f, 30, Align.left);
@@ -74,7 +73,7 @@ public class SaveSelectScreen implements Screen {
 		    	}
 		    }
 		});
-		centerStage.addActor(play);
+		stages.get(Align.center).addActor(play);
 		
 		ImageButtonStyle style = new ImageButtonStyle();
 		style.over = new TextureRegionDrawable(game.getSprite("plusButtonSelected"));
@@ -96,7 +95,7 @@ public class SaveSelectScreen implements Screen {
 			}
 		});
 		
-		centerStage.addActor(addServer);
+		stages.get(Align.center).addActor(addServer);
 		
 		ImageButtonStyle style2 = new ImageButtonStyle();
 		style2.over = new TextureRegionDrawable(game.getSprite("minusButtonSelected"));
@@ -127,7 +126,7 @@ public class SaveSelectScreen implements Screen {
 				return false;
 			}
 		});
-		centerStage.addActor(removeServer);
+		stages.get(Align.center).addActor(removeServer);
 		
 		
 		Table table = new Table();
@@ -136,7 +135,7 @@ public class SaveSelectScreen implements Screen {
 		worldPanel.setScrollbarsVisible(true);
 		worldPanel.setBounds(640/2-200, 360/2-100, 400, 200);
 		
-		centerStage.addActor(worldPanel);
+		stages.get(Align.center).addActor(worldPanel);
 		
 		wwg = WorldWidget.createWorldWidgets(game, this);
 		for(WorldWidget world : wwg.getWidgets()) {
@@ -166,8 +165,8 @@ public class SaveSelectScreen implements Screen {
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
 		game.batch.begin();
 		game.getFont(40).draw(game.batch, "Select Save", 30, 360-30);
-		centerStage.act(delta);
-		centerStage.draw();
+		stages.act(delta);
+		stages.render(game.batch, false);
 		
 		if(removeServer.isChecked() && wwg.getSelectedWidget()!=null) {
 			wwg.getSelectedWidget().attemptDelete();
@@ -178,7 +177,7 @@ public class SaveSelectScreen implements Screen {
 
 	@Override
 	public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -198,7 +197,7 @@ public class SaveSelectScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		
+		stages.dispose();
 	}
 
 }

@@ -28,23 +28,15 @@ public class SaveAddScreen implements Screen {
 	final Gaze game;
 	final CreationType creationType;
 	TextButton back, add;
-	Viewport bottomViewport;
-	Stage centerStage, bottomStage;
+	Stages stages;
 	InputMultiplexer multi;
 	TextField worldName, worldSeed;
 	
 	public SaveAddScreen(final Gaze game, CreationType creationType) {
 		this.game = game;
 		this.creationType = creationType;
-		this.centerStage = new Stage();
-		centerStage.setViewport(game.viewport);
-		
-		bottomViewport = new FitViewport(640, 360);
-		bottomViewport.getCamera().position.set(320, 180, 0);
-		bottomStage = new Stage();
-		bottomStage.setViewport(bottomViewport);
-		
-		multi = new InputMultiplexer(centerStage, bottomStage);
+		this.stages = new Stages();
+		multi = stages.getInputMultiplexer();
 		
 		back = new TextButton("Back", game.getSkin(), "button");
 		back.setPosition(20f, 30, Align.left);
@@ -57,7 +49,7 @@ public class SaveAddScreen implements Screen {
 		    	game.setScreen(new SaveSelectScreen(game, creationType));
 		    }
 		});
-		bottomStage.addActor(back);
+		stages.get(Align.bottom).addActor(back);
 		
 		add = new TextButton("Add", game.getSkin(), "button");
 		add.setPosition(640-20-200, 30, Align.left);
@@ -113,7 +105,7 @@ public class SaveAddScreen implements Screen {
 		    	game.setScreen(new SaveSelectScreen(game, creationType));
 		    }
 		});
-		bottomStage.addActor(add);
+		stages.get(Align.bottom).addActor(add);
 		
 		
 		worldName = new TextField("", game.getSkin(), "textFieldLarge");
@@ -144,7 +136,7 @@ public class SaveAddScreen implements Screen {
 			
 		});
 		worldName.setSize(41*6, 41);
-		centerStage.addActor(worldName);
+		stages.get(Align.center).addActor(worldName);
 		
 		worldSeed = new TextField("", game.getSkin(), "textFieldLarge");
 		worldSeed.setBounds(320-41*3, 360-41-100-41-5, 82*3, 82);
@@ -171,7 +163,7 @@ public class SaveAddScreen implements Screen {
 			
 		});
 		worldSeed.setSize(41*6, 41);
-		centerStage.addActor(worldSeed);
+		stages.get(Align.center).addActor(worldSeed);
 		
 		
 		Gdx.input.setInputProcessor(multi);
@@ -194,22 +186,15 @@ public class SaveAddScreen implements Screen {
 		float xOffset = (-new GlyphLayout(game.getFont(size), title).width)/2;
 		float yOffset = (-new GlyphLayout(game.getFont(size), title).height)/2;
 		game.getFont(size).draw(game.batch, title, 640/2+xOffset, 360-30+yOffset);
-		centerStage.act(delta);
-		centerStage.draw();
-		
-		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
-		bottomViewport.apply();
-		bottomStage.act(delta);
-		bottomStage.draw();
+		stages.act(delta);
+		stages.render(game.batch, false);
 		
 		game.batch.end();
 	}
 
 	@Override
 	public void resize(int width, int height) {
-		centerStage.getViewport().update(width, height);
-		bottomStage.getViewport().update(width, height);
-		bottomViewport.setScreenY(0);
+		stages.resize(width, height);
 	}
 
 	@Override
@@ -232,8 +217,7 @@ public class SaveAddScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		centerStage.dispose();
-		bottomStage.dispose();
+		stages.dispose();
 	}
 
 }
