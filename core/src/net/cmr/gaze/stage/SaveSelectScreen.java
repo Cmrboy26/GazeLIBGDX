@@ -2,11 +2,14 @@ package net.cmr.gaze.stage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -141,6 +144,12 @@ public class SaveSelectScreen implements Screen {
 		for(WorldWidget world : wwg.getWidgets()) {
 			table.add(world).width(360).height(60).pad(5).row();
 		}
+
+		LabelStyle labelStyle = new LabelStyle(game.getFont(40), Color.WHITE);
+		Label title = new Label("Select Save", labelStyle);
+		title.setBounds(0, 360-30-40, 640, 40);
+		title.setAlignment(Align.center, Align.center);
+		stages.get(Align.top).addActor(title);
 		
 		//table.add(new WorldWidget(game, "WORLD")).width(360).height(60).pad(5).row();
 		//table.add(new WorldWidget(game, "AmoetwWEr")).width(360).height(60).pad(5).row();

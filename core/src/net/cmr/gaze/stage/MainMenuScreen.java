@@ -165,6 +165,7 @@ public class MainMenuScreen implements Screen {
 		game.batch.setProjectionMatrix(game.backgroundViewport.getCamera().combined);
 		game.batch.begin();
 		Background.draw(game.batch, game.backgroundViewport);
+		game.batch.end();
 		
 		stages.act(delta);
 		stages.render(game.batch, false);
