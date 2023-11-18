@@ -43,6 +43,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -131,8 +132,8 @@ import net.cmr.gaze.world.entities.Player;
 public class GameScreen implements Screen {
 
 	public final Gaze game;
-	Viewport uiViewport, topViewport, bottomViewport, worldViewport, rightTopViewport, leftTopViewport, leftBottomViewport;
-	Stage bottomStage, centerStage, topStage, rightTopStage, leftTopStage, leftBottomStage;
+	Viewport worldViewport;
+	Stages stages;
 	
 	ShapeRenderer shapeRenderer;
 	GameServer server;
@@ -195,29 +196,8 @@ public class GameScreen implements Screen {
 		Preferences prefs = SettingScreen.initializePreferences();
 		lights = new Lights(game);
 		chat = new ChatManager();
-		
-		this.uiViewport = new FitViewport(640, 360);
-		this.uiViewport.getCamera().position.set(640f/2f, 360f/2f, 0);
-		((OrthographicCamera)uiViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		
-		this.bottomViewport = new FitViewport(640, 360);
-		((OrthographicCamera)bottomViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		
-		topViewport = new FitViewport(640, 360);
-		topViewport.getCamera().position.set(320, 180, 0);
-		
-		rightTopViewport = new FitViewport(640, 360);
-		//((OrthographicCamera)rightTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		rightTopViewport.getCamera().position.set(320, 180, 0);
-		
-		leftTopViewport = new FitViewport(640, 360);
-		//((OrthographicCamera)leftTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		leftTopViewport.getCamera().position.set(320, 180, 0);
-
-		leftBottomViewport = new FitViewport(640, 360);
-		//((OrthographicCamera)leftTopViewport.getCamera()).zoom = prefs.getFloat("uiZoom");
-		leftBottomViewport.getCamera().position.set(320, 180, 0);
-
+		this.stages = new Stages();
+		this.stages.setStageZoom(prefs.getFloat("uiZoom"));
 		this.worldViewport = new ExtendViewport(64, 36);
 		this.worldViewport.getCamera().position.set(64f/2f, 36f/2f, 0);
 		((OrthographicCamera)worldViewport.getCamera()).zoom = prefs.getFloat("worldZoom");
@@ -242,15 +222,8 @@ public class GameScreen implements Screen {
 		
 		InputMultiplexer multiInput = new InputMultiplexer();
 		
-		bottomStage = new Stage(bottomViewport);
-		centerStage = new Stage(uiViewport);
-		topStage = new Stage(topViewport);
-		rightTopStage = new Stage(rightTopViewport);
-		leftTopStage = new Stage(leftTopViewport);
-		leftBottomStage = new Stage(leftBottomViewport);
-		
 		barsWidget = new BarsWidget(game);
-		leftTopStage.addActor(barsWidget);
+		stages.get(Align.topLeft).addActor(barsWidget);
 
 		int width = 30;
 		int spacing = 10;
@@ -276,7 +249,7 @@ public class GameScreen implements Screen {
 				toggleMenu(inventoryMenu);
 			}
 		};
-		rightTopStage.addActor(gmicInventory);
+		stages.get(Align.topRight).addActor(gmicInventory);
 
 		GameMenuIcon gmicCrafting = new GameMenuIcon(this, GameMenuIcon.CRAFTING_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing), gmicwidth) {
 			@Override
@@ -284,7 +257,7 @@ public class GameScreen implements Screen {
 				toggleMenu(craftingMenu);
 			}
 		};
-		rightTopStage.addActor(gmicCrafting);
+		stages.get(Align.topRight).addActor(gmicCrafting);
 
 		/*if(!disableQuests) {
 			GameMenuIcon gmicQuest = new GameMenuIcon(this, GameMenuIcon.QUESTS_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
@@ -293,7 +266,7 @@ public class GameScreen implements Screen {
 					toggleMenu(MenuType.QUESTS);
 				}
 			};
-			rightTopStage.addActor(gmicQuest);
+			stages.get(Align.topRight).addActor(gmicQuest);
 		}*/
 
 		GameMenuIcon gmicResearch = new GameMenuIcon(this, GameMenuIcon.TECH_ICON, 640-gmicwidth-gmicmargin, top-(gmicwidth+gmicspacing)*2, gmicwidth) {
@@ -302,7 +275,7 @@ public class GameScreen implements Screen {
 				toggleMenu(researchMenu);
 			}
 		};
-		rightTopStage.addActor(gmicResearch);
+		stages.get(Align.topRight).addActor(gmicResearch);
 
 		for(int i = 0; i < 7; i++) {
 			InventorySlot button = new InventorySlot(game, this, i, false);
@@ -329,7 +302,7 @@ public class GameScreen implements Screen {
 
 		hotbarTable.setBounds(320-totalWidth/2, 26.5f*(8/10f), totalWidth, width);
 		
-		bottomStage.addActor(hotbarTable);
+		stages.get(Align.bottom).addActor(hotbarTable);
 		
 		inventoryMenu = new InventoryMenu(game, this);
 		chestInventoryMenu = new ChestInventoryMenu(game, this);
@@ -349,23 +322,18 @@ public class GameScreen implements Screen {
 		skillDisplay = new SkillDisplay(game, this);
 		skillDisplay.setVisible(true);
 		
-		//centerStage.addActor(crafting);
+		//stages.get(Align.center).addActor(crafting);
 		
 		if(!disableQuests) {
-			centerStage.addActor(quests);
+			stages.get(Align.center).addActor(quests);
 		}
 
-		rightTopStage.addActor(skillDisplay);
-		leftBottomStage.addActor(chatWidget);
+		stages.get(Align.topRight).addActor(skillDisplay);
+		stages.get(Align.bottomLeft).addActor(chatWidget);
 		
 		openHelpMenu(HintMenuType.FIRST_JOIN);
 		
-		multiInput.addProcessor(bottomStage);
-		multiInput.addProcessor(centerStage);
-		multiInput.addProcessor(topStage);
-		multiInput.addProcessor(rightTopStage);
-		multiInput.addProcessor(leftTopStage);
-		multiInput.addProcessor(leftBottomStage);
+		multiInput.addProcessor(stages.getInputMultiplexer());
 		multiInput.addProcessor(new InputAdapter() {
 			@Override
 			public boolean scrolled(float amountX, float amountY) {
@@ -602,71 +570,25 @@ public class GameScreen implements Screen {
 		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
 		game.batch.begin();
 		
-		game.batch.setProjectionMatrix(topViewport.getCamera().combined);
-		
-		topViewport.apply();
-
-		if(showUI) {
-			topStage.act(delta);
-			topStage.draw();
-		}
-		
-		game.batch.setProjectionMatrix(rightTopViewport.getCamera().combined);
+		game.batch.setProjectionMatrix(stages.get(Align.topRight).getCamera().combined);
 		
 		if((activeNotification==null || activeNotification.finished()) && notificationQueue.size()>0) {
 			Notification notification = notificationQueue.poll();
 			activeNotification = notification;
-			rightTopStage.addActor(activeNotification);
+			stages.get(Align.topRight).addActor(activeNotification);
 		}
 		
-		rightTopViewport.apply();
-		if(showUI) {
-			rightTopStage.act(delta);
-			rightTopStage.draw();
-		}
-		
-		game.batch.setProjectionMatrix(leftTopViewport.getCamera().combined);
-
-		leftTopViewport.apply();
-		if(showUI) {
-			leftTopStage.act(delta);
-			leftTopStage.draw();
-		}
-		
-		game.batch.setProjectionMatrix(bottomViewport.getCamera().combined);
-
-		bottomViewport.apply();
-		
+		game.batch.setProjectionMatrix(stages.get(Align.topRight).getCamera().combined);
+		stages.get(Align.topRight).getViewport().apply();
 
 		if(showUI) {
 			int width = 320;
 			game.batch.draw(game.getSprite("hotbar"), 320-width/2f, 4, width, width/5f);
 		}
-		
-		game.batch.end();
-		game.batch.begin();
-		if(showUI) {
-			bottomStage.act();
-			bottomStage.draw();
-		}
-		game.batch.end();
-
-		game.batch.setProjectionMatrix(leftBottomViewport.getCamera().combined);
-		game.batch.begin();
-		leftBottomViewport.apply();
-		if(showUI) {
-			leftBottomStage.act();
-			leftBottomStage.draw();
-		}
-		game.batch.end();
-
-		game.batch.setProjectionMatrix(uiViewport.getCamera().combined);
-		
-		uiViewport.apply();
 
 		if(showUI) {
-			centerStage.act(delta);
-			centerStage.draw();
+			stages.act(delta);
+			stages.render(game.batch, false);
 		}
 		
 		if(GameScreen.hoveredItemViewport!=null) {
@@ -1238,25 +1160,8 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		uiViewport.update(width, height);
-		bottomViewport.update(width, height);
-		bottomViewport.setScreenY(0);
-		bottomViewport.getCamera().position.set(640f/2f, 360f/2f*((OrthographicCamera)bottomViewport.getCamera()).zoom, 0);
 		worldViewport.update(width, height);
-		topStage.getViewport().update(width, height);
-		topViewport.setScreenY(Gdx.graphics.getHeight()-topViewport.getScreenHeight());
-		
-		rightTopViewport.update(width, height);
-		rightTopViewport.setScreenY(Gdx.graphics.getHeight()-rightTopViewport.getScreenHeight());
-		rightTopViewport.setScreenX(Gdx.graphics.getWidth()-rightTopViewport.getScreenWidth());
-
-		leftTopViewport.update(width, height);
-		leftTopViewport.setScreenX(0);
-		leftTopViewport.setScreenY(Gdx.graphics.getHeight()-leftTopViewport.getScreenHeight());
-
-		leftBottomViewport.update(width, height);
-		leftBottomViewport.setScreenX(0);
-		leftBottomViewport.setScreenY(0);
+		stages.resize(width, height);
 		
 		if (frameBuffer != null && (frameBuffer.getWidth() != width || frameBuffer.getHeight() != height)) {
 			frameBuffer.dispose();
@@ -1297,11 +1202,7 @@ public class GameScreen implements Screen {
 		closeNetworkFeatures();
 		HintMenuType.saveViewedHints();
 		shapeRenderer.dispose();
-		bottomStage.dispose();
-		centerStage.dispose();
-		topStage.dispose();
-		rightTopStage.dispose();
-		leftTopStage.dispose();
+		stages.dispose();
 		frameBuffer.dispose();
 	}
 
@@ -1815,19 +1716,19 @@ public class GameScreen implements Screen {
 		
 		switch(type) {
 		case FIRST_JOIN:
-			centerStage.addActor(new HintMenu(game, type, 10f, 360-10-100, 230, 100, 8f));
+			stages.get(Align.center).addActor(new HintMenu(game, type, 10f, 360-10-100, 230, 100, 8f));
 			break;
 		case INVENTORY:
-			centerStage.addActor(new HintMenu(game, type, 10f, 360-10-120, 250, 120, 8f));
+			stages.get(Align.center).addActor(new HintMenu(game, type, 10f, 360-10-120, 250, 120, 8f));
 			break;
 		case CRAFTING:
-			centerStage.addActor(new HintMenu(game, type, (640-270f)/2f, 360-10-120, 270, 120, 8f));
+			stages.get(Align.center).addActor(new HintMenu(game, type, (640-270f)/2f, 360-10-120, 270, 120, 8f));
 			break;
 		case LEVEL_UP:
-			centerStage.addActor(new HintMenu(game, type, (640-270f)/2f, (360-200)/2f, 270, 200, 8f));
+			stages.get(Align.center).addActor(new HintMenu(game, type, (640-270f)/2f, (360-200)/2f, 270, 200, 8f));
 			break;
 		case ROTATION:
-			centerStage.addActor(new HintMenu(game, type, 10f, 360-10-100, 230, 100, 8f));
+			stages.get(Align.center).addActor(new HintMenu(game, type, 10f, 360-10-100, 230, 100, 8f));
 			break;
 		default:
 			break;
@@ -1853,7 +1754,7 @@ public class GameScreen implements Screen {
 		// Add the menu to their respective stage (based on their MenuAlignment)
 		switch (menu.getAlignment()) {
 			case CENTER:
-				centerStage.addActor(menu);
+				stages.get(Align.center).addActor(menu);
 				break;
 			default:
 				break;

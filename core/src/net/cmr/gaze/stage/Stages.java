@@ -1,6 +1,7 @@
 package net.cmr.gaze.stage;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
@@ -115,6 +116,7 @@ public class Stages implements Disposable {
      * @param endBatch whether or not to end the batch after rendering
      */
     public void render(Batch batch, boolean endBatch) {
+        Objects.requireNonNull(batch);
         if(!batch.isDrawing()) batch.begin();
         for(int align : stages.keySet()) {
             Stage stage = stages.get(align);
