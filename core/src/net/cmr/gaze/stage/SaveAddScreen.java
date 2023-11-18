@@ -170,7 +170,7 @@ public class SaveAddScreen implements Screen {
 		
 		LabelStyle labelStyle = new LabelStyle(game.getFont(40), Color.WHITE);
 		Label title = new Label("Create Save", labelStyle);
-		title.setPosition(320, 360-30-40);
+		title.setBounds(0, 360-30-40, 640, 40);
 		title.setAlignment(Align.center, Align.center);
 		stages.get(Align.top).addActor(title);
 		
