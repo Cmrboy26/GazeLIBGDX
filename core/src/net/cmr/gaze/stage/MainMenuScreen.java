@@ -3,14 +3,17 @@ package net.cmr.gaze.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
@@ -101,6 +104,11 @@ public class MainMenuScreen implements Screen {
 		    }
 		});
 		stages.get(Align.left).addActor(exit);
+
+		LabelStyle labelStyle = new LabelStyle(game.getFont(50), Color.WHITE);
+		Label title = new Label("Gaze", labelStyle);
+		title.setPosition(30, 360-30);
+		stages.get(Align.center).addActor(title);
 		
 		//stage.addActor(new NavigationMenu(game));
 		
