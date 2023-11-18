@@ -108,7 +108,7 @@
 			"parent-id":"sandProcessing",
 			"position": [10,30],
 			"requirements":[
-				"RESEARCH/gaze:machinery.smelting",
+				"RESEARCH/gaze:resources.stoneAge",
 				"SKILL/MINING/3",
 				"SKILL/FORAGING/4",
 				"ITEM/SAND/16",

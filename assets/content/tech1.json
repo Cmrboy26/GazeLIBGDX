@@ -58,7 +58,7 @@
 		{
 			"name":"Circuitry",
 			"description":"Circuitry is cool I suppose.\n-Unlocks Basic Circuits",
-			"icon":"basicCircuit",
+			"icon":"basicCircuitBoard",
 			"id":"circuits1",
 			"parent-id":"electricity",
 			"position": [0,40],
@@ -81,7 +81,7 @@
 			"requirements":[
 				"ITEM/COPPER_WIRE/5",
 				"ITEM/IRON_GEAR/10",
-				"ITEM/MAGNETS/10"
+				"ITEM/MAGNET/10"
 			],
 			"rewards": [
 
@@ -97,7 +97,7 @@
 			"requirements":[
 				"ITEM/BASIC_MOTOR/5",
 				"ITEM/IRON_GEAR/10",
-				"ITEM/MAGNETS/10"
+				"ITEM/MAGNET/10"
 			],
 			"rewards": [
 
@@ -111,8 +111,11 @@
 			"parent-id":"electricity",
 			"position": [10,40],
 			"requirements":[
-				"ITEM/MAGNETS/10",
+				"ITEM/MAGNET/10",
 				"ITEM/COPPER_WIRE/10"
+			],
+			"rewards": [
+
 			]
 		},
 		{

@@ -23,12 +23,12 @@ public class IronAxe extends Tool {
 
 	@Override
 	public double breakStrength() {
-		return 1.25;
+		return 1.2;
 	}
 	
 	@Override
 	public double breakSpeed() {
-		return 1.25;
+		return 1.15;
 	}
 
 	@Override

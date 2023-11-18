@@ -30,7 +30,7 @@ public class MessageScreen implements Screen {
 		
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
-		back.setPosition(20f, 30, Align.left);
+		back.setPosition((640-200)/2, 30, Align.left);
 		back.setWidth(200f);
 		back.setHeight(50f);
 		back.addListener(new ClickListener(){
@@ -41,13 +41,19 @@ public class MessageScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		stages.get(Align.center).addActor(back);
+		stages.get(Align.bottom).addActor(back);
 
 		LabelStyle labelStyle = new LabelStyle(game.getFont(40), Color.WHITE);
 		Label title = new Label("Message", labelStyle);
 		title.setBounds(0, 360-30-40, 640, 40);
 		title.setAlignment(Align.center, Align.center);
 		stages.get(Align.top).addActor(title);
+
+		LabelStyle messageLabelStyle = new LabelStyle(game.getFont(20), Color.WHITE);
+		Label messageLabel = new Label(message, messageLabelStyle);
+		messageLabel.setBounds(0, 360/4, 640, 360/2);
+		messageLabel.setAlignment(Align.center, Align.center);
+		stages.get(Align.center).addActor(messageLabel);
 	}
 	
 	@Override

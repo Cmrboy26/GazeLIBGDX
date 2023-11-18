@@ -28,11 +28,14 @@ import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyConsumer;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
+import net.cmr.gaze.world.powerGrid.PowerGrid;
 
 public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingStationTile, LightSource {
 
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;
+    boolean lastDisplayMachineFunctioning = false;
+    PowerGrid lastPowerGrid = null;
 
     public BlastFurnace() {
         super(TileType.BLAST_FURNACE, 2, 1);
@@ -41,17 +44,20 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
 
     @Override
 	public void render(Gaze game, GameScreen screen, int x, int y) {
-		game.batch.draw(game.getSprite("blastFurnace"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2);
+		game.batch.draw(game.getSprite("blastFurnace"+(!lastDisplayMachineFunctioning?"Off":"")), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*2);
 		super.render(game, screen, x, y);
 	}
-
-    //
 
     @Override
     public void update(TileData data, Point worldCoordinates) {
         if(data.isServer()) {
-            if(getPowerGrid()!=null) {
-                //System.out.println("POWER GRID POWER: "+getPowerGrid().getMachineEfficiency()+" | "+getPowerGrid().getGenerationEfficiency());
+            boolean machineCurrentlyFunctioning = isMachineFunctioning();
+            // If the machine has changed state from WORKING <-> NOT WORKING, update the visual of the tile on the client side
+            if(machineCurrentlyFunctioning != lastDisplayMachineFunctioning || getPowerGrid()!=lastPowerGrid) {
+                // Sets the value of the lastDisplayMachineFunctioning variable to the current state of the machine so it can be checked later
+                lastDisplayMachineFunctioning = machineCurrentlyFunctioning;
+                lastPowerGrid = getPowerGrid();
+                data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
             }
         }
     }
@@ -69,7 +75,7 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
 
     @Override
     protected boolean overrideOnInteract(PlayerConnection player, World world, int x, int y, int clickType) {
-        if(clickType == 2 && getPowerGrid() != null && getPowerGrid().getMachineEfficiency() > MIN_EFFICIENCY) {
+        if(clickType == 2 && getPowerGrid() != null && isMachineFunctioning()) {
 			player.setCraftingStation(this, x, y);
 			return true;
 		}
@@ -123,6 +129,8 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
         Tile.readBreakData(input, furnace);
         furnace.distributorPoint = new Point(input.readInt(), input.readInt());
         furnace.worldCoordinates = new Point(input.readInt(), input.readInt());
+        // This boolean is used in rendering the correct sprite on the client side
+        furnace.lastDisplayMachineFunctioning = input.readBoolean();
         return furnace;
     }
 
@@ -135,6 +143,8 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
         buffer.writeInt(distributorPoint.y);
         buffer.writeInt(worldCoordinates.x);
         buffer.writeInt(worldCoordinates.y);
+        // This boolean is used in rendering the correct sprite on the client side
+        buffer.writeBoolean(isMachineFunctioning());
     }
     @Override
     public Point getWorldCoordinates() {
@@ -145,8 +155,6 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
     public void setWorldCoordinates(Point point) {
         this.worldCoordinates = point;
     }
-
-    // 
     
     @Override
 	public String getHitNoise() {
@@ -178,7 +186,7 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
 
 	@Override
 	public float getIntensity() {
-		return 6+TorchItem.getTorchPulse(this);
+		return (6+TorchItem.getTorchPulse(this))*(lastDisplayMachineFunctioning?1:0);
 	}
 	@Override
 	public Color getColor() {

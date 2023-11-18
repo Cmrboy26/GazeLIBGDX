@@ -19,6 +19,9 @@ import net.cmr.gaze.Logger;
 import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.Apple;
+import net.cmr.gaze.inventory.custom.BasicCircuit;
+import net.cmr.gaze.inventory.custom.BasicGenerator;
+import net.cmr.gaze.inventory.custom.BasicMotor;
 import net.cmr.gaze.inventory.custom.BedItem;
 import net.cmr.gaze.inventory.custom.BlastFurnaceItem;
 import net.cmr.gaze.inventory.custom.Bread;
@@ -44,6 +47,7 @@ import net.cmr.gaze.inventory.custom.IronGear;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOre;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
+import net.cmr.gaze.inventory.custom.Magnet;
 import net.cmr.gaze.inventory.custom.SandItem;
 import net.cmr.gaze.inventory.custom.Silicon;
 import net.cmr.gaze.inventory.custom.SolarPanelItem;
@@ -89,9 +93,10 @@ public class Items {
 
 		IRON_GEAR(IronGear.class),
 		COPPER_WIRE(CopperWire.class),
-		BASIC_CIRCUIT(null),
-		BASIC_MOTOR(null),
-		BASIC_GENERATOR(null),
+		MAGNET(Magnet.class),
+		BASIC_CIRCUIT(BasicCircuit.class),
+		BASIC_MOTOR(BasicMotor.class),
+		BASIC_GENERATOR(BasicGenerator.class),
 		
 		COAL(CoalItem.class),
 		IRON_ORE(IronOre.class),

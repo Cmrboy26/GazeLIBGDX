@@ -58,7 +58,7 @@ public class ConnectingScreen implements Screen {
 		this.stages = new Stages(game);
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
-		back.setPosition(20f, 30, Align.left);
+		back.setPosition((640-200)/2, 30, Align.left);
 		back.setWidth(200f);
 		back.setHeight(50f);
 		back.addListener(new ClickListener(){
@@ -69,7 +69,7 @@ public class ConnectingScreen implements Screen {
 		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		stages.get(Align.center).addActor(back);
+		stages.get(Align.bottom).addActor(back);
 	}
 	
 	public ConnectingScreen(final Gaze game, String ip, int port, String username) {
@@ -81,7 +81,7 @@ public class ConnectingScreen implements Screen {
 		this.stages = new Stages(game);
 		Gdx.input.setInputProcessor(stages.getInputMultiplexer());
 		back = new TextButton("Back", game.getSkin(), "button");
-		back.setPosition(20f, 30, Align.left);
+		back.setPosition((640-200)/2, 30, Align.left);
 		back.setWidth(200f);
 		back.setHeight(50f);
 		back.addListener(new ClickListener(){
@@ -89,10 +89,10 @@ public class ConnectingScreen implements Screen {
 		    public void clicked(InputEvent event, float x, float y)
 		    {
 				game.playSound("falseSelect", 1f);
-		    	game.setScreen(new MultiplayerSelectScreen(game));
+		    	game.setScreen(new MainMenuScreen(game));
 		    }
 		});
-		stages.get(Align.center).addActor(back);
+		stages.get(Align.bottom).addActor(back);
 	}
 	
 	public void join() {
@@ -140,8 +140,8 @@ public class ConnectingScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		connectionTime += delta;
-		game.viewport.apply();
-		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);
+		stages.get(Align.center).getViewport().apply();
+		game.batch.setProjectionMatrix(stages.get(Align.center).getCamera().combined);
 		game.batch.begin();
 		String additionalPeriods = ".";
 		for(int i = 0; i < (int)(connectionTime/1f); i++) {

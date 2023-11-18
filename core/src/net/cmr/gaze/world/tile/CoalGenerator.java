@@ -27,15 +27,17 @@ import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergyProducer;
+import net.cmr.gaze.world.powerGrid.PowerGrid;
 
 public class CoalGenerator extends BaseTile implements EnergyProducer, LightSource {
     
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;
+    boolean lastDisplayMachineProducing = false;
     float itemDelta;
     int coalCount;
     final int MAX_COAL = 20;
-    final float COAL_TIME = 5;
+    final float COAL_TIME = 60;
 
     public CoalGenerator() {
         super(TileType.COAL_GENERATOR, 2, 1);
@@ -44,11 +46,9 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
 
     @Override
 	public void render(Gaze game, GameScreen screen, int x, int y) {
-		game.batch.draw(game.getSprite("coalGenerator"), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*3);
+		game.batch.draw(game.getSprite("coalGenerator"+(!lastDisplayMachineProducing?"Off":"")), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*3);
 		super.render(game, screen, x, y);
 	}
-
-    //
 
     @Override
     public void update(TileData data, Point worldCoordinates) {
@@ -62,6 +62,13 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
                         data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
                     }
                 }
+            }
+            boolean machineCurrentlyProducing = isMachineProducing();
+            // If the machine has changed state from WORKING <-> NOT WORKING, update the visual of the tile on the client side
+            if(machineCurrentlyProducing != lastDisplayMachineProducing) {
+                // Sets the value of the lastDisplayMachineFunctioning variable to the current state of the machine so it can be checked later
+                lastDisplayMachineProducing = machineCurrentlyProducing;
+                data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
             }
         }
     }
@@ -149,6 +156,7 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
         coalGenerator.worldCoordinates = new Point(input.readInt(), input.readInt());
         coalGenerator.coalCount = input.readInt();
         coalGenerator.itemDelta = input.readFloat();
+        coalGenerator.lastDisplayMachineProducing = input.readBoolean();
         return coalGenerator;
     }
 
@@ -163,7 +171,9 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
         buffer.writeInt(worldCoordinates.y);
         buffer.writeInt(coalCount);
         buffer.writeFloat(itemDelta);
+        buffer.writeBoolean(lastDisplayMachineProducing);
     }
+
     @Override
     public Point getWorldCoordinates() {
         return worldCoordinates;
@@ -173,8 +183,6 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
     public void setWorldCoordinates(Point point) {
         this.worldCoordinates = point;
     }
-
-    // 
     
     @Override
 	public String getHitNoise() {
@@ -201,9 +209,14 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
 
 	@Override
 	public float getIntensity() {
-        if(coalCount == 0) return 0;
-		return 6+TorchItem.getTorchPulse(this);
+		return (6f+TorchItem.getTorchPulse(this))*(Math.min(1f, (2f*coalCount/(coalCount+5f))));
 	}
+    
+    @Override
+    public float offsetX() {
+        return .5f;
+    }
+
 	@Override
 	public Color getColor() {
 		return TorchTile.TORCH_COLOR;

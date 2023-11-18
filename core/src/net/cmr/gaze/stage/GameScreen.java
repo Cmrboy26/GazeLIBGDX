@@ -129,7 +129,6 @@ import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Player;
 
-@SuppressWarnings("deprecation")
 public class GameScreen implements Screen {
 
 	public final Gaze game;
@@ -740,7 +739,7 @@ public class GameScreen implements Screen {
 
 		while(tileLights.size() > 0) {
 			LightSource light = tileLights.get(0);
-			lights.addLight(tileLightsCoordinates.get(0).x, tileLightsCoordinates.get(0).y, light.getIntensity()*Tile.TILE_SIZE, light.getColor());
+			lights.addLight(tileLightsCoordinates.get(0).x+light.offsetX()*Tile.TILE_SIZE, tileLightsCoordinates.get(0).y+light.offsetY()*Tile.TILE_SIZE, light.getIntensity()*Tile.TILE_SIZE, light.getColor());
 			tileLights.remove(0);
 			tileLightsCoordinates.remove(0);
 		}
