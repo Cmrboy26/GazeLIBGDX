@@ -9,6 +9,16 @@
 			}
 		]
 	},
+	"smoke": {
+		"tileX": 32,
+		"tileY": 32,
+		"animations": [
+			{
+				"time": .2,
+				"w": 15
+			}
+		]
+	},
 	"upArrow": {
 		"tileX": 16,
 		"tileY": 16,

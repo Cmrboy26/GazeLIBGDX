@@ -28,7 +28,7 @@ public class StoneShovel extends Tool {
 	}
 	@Override
 	public double breakSpeed() {
-		return 1;
+		return 1.5;
 	}
 
 	@Override

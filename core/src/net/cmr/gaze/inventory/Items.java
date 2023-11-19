@@ -44,9 +44,11 @@ import net.cmr.gaze.inventory.custom.GrassSeeds;
 import net.cmr.gaze.inventory.custom.IlmeniteOre;
 import net.cmr.gaze.inventory.custom.IronAxe;
 import net.cmr.gaze.inventory.custom.IronGear;
+import net.cmr.gaze.inventory.custom.IronHoe;
 import net.cmr.gaze.inventory.custom.IronIngotItem;
 import net.cmr.gaze.inventory.custom.IronOre;
 import net.cmr.gaze.inventory.custom.IronPickaxe;
+import net.cmr.gaze.inventory.custom.IronShovel;
 import net.cmr.gaze.inventory.custom.Magnet;
 import net.cmr.gaze.inventory.custom.SandItem;
 import net.cmr.gaze.inventory.custom.Silicon;
@@ -120,6 +122,8 @@ public class Items {
 		STONE_HOE(StoneHoe.class, 1),
 		IRON_PICKAXE(IronPickaxe.class), 
 		IRON_AXE(IronAxe.class),
+		IRON_HOE(IronHoe.class),
+		IRON_SHOVEL(IronShovel.class),
 
 		STEEL_DRILL(null),
 		TITANIUM_DRILL(null),

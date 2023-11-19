@@ -22,8 +22,10 @@ import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 
 public class CampfireTile extends Tile implements CraftingStationTile, LightSource {
@@ -68,6 +70,19 @@ public class CampfireTile extends Tile implements CraftingStationTile, LightSour
 		return CraftingStation.CAMPFIRE;
 	}
 	
+	float campfireParticleDelta = 0;
+
+	@Override
+	public void update(TileData data, Point worldCoordinates) {
+		if(data.isServer()) {
+			campfireParticleDelta+=Tile.DELTA_TIME*Math.random()*2;
+			if(campfireParticleDelta > 2) {
+				campfireParticleDelta-=1;
+                TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.SMOKE, this, worldCoordinates.x, worldCoordinates.y, 0.5f, 4);
+			}
+		}
+	}
+
 	@Override
 	protected boolean overrideOnInteract(PlayerConnection player, World world, int x, int y, int clickType) {
 		if(clickType == 2) {

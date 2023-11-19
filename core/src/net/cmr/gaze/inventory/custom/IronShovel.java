@@ -11,24 +11,24 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.inventory.Tool;
 
-public class WoodAxe extends Tool {
+public class IronShovel extends Tool {
 
-	public WoodAxe() {
-		super(ItemType.WOOD_AXE);
+	public IronShovel() {
+		super(ItemType.IRON_SHOVEL);
 	}
 
 	@Override
 	public int breakLevel() {
-		return 1;
+		return 3;
 	}
 
 	@Override
 	public double breakStrength() {
-		return 1;
+		return 1.2;
 	}
 	@Override
 	public double breakSpeed() {
-		return 1.13;
+		return 1.35;
 	}
 
 	@Override
@@ -37,17 +37,17 @@ public class WoodAxe extends Tool {
 	}
 	@Override
 	public ToolType toolType() {
-		return ToolType.AXE;
+		return ToolType.SHOVEL;
 	}
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		batch.draw(game.getSprite("woodAxe"), x, y, width, height);
+		batch.draw(game.getSprite("ironShovel"), x, y, width, height);
 	}
 	
 	@Override
 	public Item readItem(DataInputStream input, ItemType type, int size) throws IOException {
-		return new WoodAxe();
+		return new IronShovel();
 	}
 
 }

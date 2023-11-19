@@ -23,7 +23,11 @@ public class WoodPickaxe extends Tool {
 
 	@Override
 	public double breakStrength() {
-		return 1.2;
+		return 1;
+	}
+
+	public double breakSpeed() {
+		return 1.15;
 	}
 
 	@Override

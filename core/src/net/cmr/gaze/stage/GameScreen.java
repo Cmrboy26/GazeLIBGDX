@@ -1446,9 +1446,9 @@ public class GameScreen implements Screen {
 			
 		} else if(packet instanceof CraftingStationPacket) {
 			CraftingStationPacket cspack = (CraftingStationPacket) packet;
+			System.out.println("CRAFTING STATION PACKET: "+cspack.getStation());
 			if(cspack.getStation()==CraftingStation.NONE) {
 				craftingMenu.setCraftingStation(CraftingStation.NONE);
-				openMenu(craftingMenu);
 			} else {
 				craftingMenu.setCraftingStation(cspack.getStation());
 				openMenu(craftingMenu);

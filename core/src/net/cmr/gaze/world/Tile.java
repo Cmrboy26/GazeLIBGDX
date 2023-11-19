@@ -29,7 +29,7 @@ public abstract class Tile implements Cloneable {
 	public static float tileRenderDelta = 0;
 	
 	private TileType tileType;
-	private int breakAmount;
+	private float breakAmount;
 	
 	/**
 	 * NOTE: When using the constructor for an object, do NOT use random values here!
@@ -116,7 +116,7 @@ public abstract class Tile implements Cloneable {
 		} else {
 			buffer.writeInt(tile.getType().getID());
 			if(tile.isBreakable()) {
-				buffer.writeInt(tile.breakAmount);
+				buffer.writeFloat(tile.breakAmount);
 			}
 			tile.writeTile(tile.tileType, buffer);
 		}
@@ -159,7 +159,7 @@ public abstract class Tile implements Cloneable {
 	public boolean isBreakable() {
 		return isInstantBreak() || tileType.breakAmount != 0;
 	}
-	public int getBreakAmount() {
+	public float getBreakAmount() {
 		return breakAmount;
 	}
 	public Material getMaterial() {

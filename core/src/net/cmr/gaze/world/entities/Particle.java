@@ -64,7 +64,8 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 		BREAK(.8f),
 		HOE(1f),
 		WATER(.8f),
-		LEAVES(5f);
+		LEAVES(5f),
+		SMOKE(5f);
 		
 		
 		public float lifeSpan;
@@ -268,6 +269,50 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 			
 			break;
 		}
+		case SMOKE: {
+			color = Color.WHITE;
+			float scale = 1f;
+			if(data != null && data.length > 0) {
+				scale = (float) data[0];
+			}
+
+
+			if(!effectStarted) {
+				particleList = new LinkedList<>();
+				
+				if(color == null) {
+					effectStarted = true;
+					return;
+				}
+				
+				Random random = new Random();
+				for(int i = 0; i < 1; i++) {
+					ParticleData data = new ParticleData(0, 0, (random.nextFloat())/6f, .2f-(random.nextFloat()/8f));
+					particleList.add(data);
+				}
+				
+				effectStarted = true;
+			}
+			
+			delta = Gdx.graphics.getDeltaTime()*2;
+
+			alpha = (float) CustomMath.minMax(0f, particleLife*2f, 1f);
+			float fadeInScale = CustomMath.minMax(0, getElapsedTime()*3f, 1f);
+			alpha = alpha*fadeInScale*.75f;
+			
+			game.batch.setColor(color.r, color.g, color.b, alpha);
+			for(ParticleData data : particleList) {
+				data.update(delta);
+				//System.out.println(data.y+","+data.vy);
+				float frameTime = getElapsedTime()+Math.abs((data.vx+data.vy)*10f);
+				
+				game.batch.draw(game.getAnimation("smoke").getKeyFrame(frameTime), (float) getX()+data.x*Tile.TILE_SIZE, (float) getY()+data.y*Tile.TILE_SIZE+offsetY, Tile.TILE_SIZE/scale, Tile.TILE_SIZE/scale);
+				
+			}
+			game.batch.setColor(Color.WHITE);
+			
+			break;
+		}
 		default:
 			break;
 		}
@@ -310,6 +355,15 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 			buffer.writeInt(Color.argb8888((Color)data[0]));
 			break;
 		}
+		case SMOKE: {
+			if(data != null && data.length > 0) {
+				float value = Float.parseFloat(data[0].toString());
+				buffer.writeFloat(value);
+			} else {
+				buffer.writeFloat(1f);
+			}
+			break;
+		}
 		case WATER: {
 			break;
 		}
@@ -338,6 +392,10 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 		case HOE:
 			particle.data = new Object[1];
 			particle.data[0] = new Color(input.readInt());
+			break;
+		case SMOKE: 
+			particle.data = new Object[1];
+			particle.data[0] = input.readFloat();
 			break;
 		case WATER:
 			break;

@@ -19,7 +19,7 @@ public class StoneHoe extends Tool {
 
 	@Override
 	public int breakLevel() {
-		return 1;
+		return 2;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class StoneHoe extends Tool {
 	}
 	@Override
 	public double breakSpeed() {
-		return 1;
+		return 1.15;
 	}
 
 	@Override

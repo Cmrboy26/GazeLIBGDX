@@ -3,6 +3,7 @@ package net.cmr.gaze.inventory.custom;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.DataBuffer;
@@ -14,6 +15,7 @@ import net.cmr.gaze.inventory.Placeable;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.tile.TorchTile;
 
 public class TorchItem extends Placeable implements LightSource {
 
@@ -46,6 +48,10 @@ public class TorchItem extends Placeable implements LightSource {
 	@Override
 	public float getIntensity() {
 		return 6f+TorchItem.getTorchPulse(this);
+	}
+
+	public Color getColor() {
+		return TorchTile.TORCH_COLOR;
 	}
 
 	public static float getTorchPulse(Object object) {

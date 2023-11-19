@@ -64,7 +64,7 @@ public enum TileType {
 	FURNACE(FurnaceTile.class, 1, TickType.NONE, 2),
 	FARMLAND(FarmlandTile.class, 0, TickType.CONSTANT), 
 	WHEAT(WheatTile.class, 1, TickType.NONE), 
-	CAMPFIRE(CampfireTile.class, 1, TickType.NONE, 3),
+	CAMPFIRE(CampfireTile.class, 1, TickType.NEARBY, 3),
 	CHEST(ChestTile.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
 	WOOD_WALL(WoodWallTile.class, 1, TickType.NONE, 3),
 	WOOD_FLOOR(WoodFloorTile.class, 0, TickType.NONE, 3),
@@ -103,7 +103,7 @@ public enum TileType {
 	
 	public int layer;
 	public TickType type;
-	public int breakAmount;
+	public float breakAmount;
 	public Replaceable replaceable = Replaceable.NEVER;
 	public Class<? extends Tile> clazz;
 	
@@ -132,7 +132,7 @@ public enum TileType {
 		this.replaceable = replaceable;
 	}
 	
-	private TileType(Class<? extends Tile> clazz, int layer, TickType type, int breakAmount, Replaceable replaceable) {
+	private TileType(Class<? extends Tile> clazz, int layer, TickType type, float breakAmount, Replaceable replaceable) {
 		addIdentifier();
 		this.clazz = clazz;
 		this.layer = layer;

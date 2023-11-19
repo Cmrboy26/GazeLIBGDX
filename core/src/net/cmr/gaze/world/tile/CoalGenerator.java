@@ -3,6 +3,7 @@ package net.cmr.gaze.world.tile;
 import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -27,7 +28,6 @@ import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergyProducer;
-import net.cmr.gaze.world.powerGrid.PowerGrid;
 
 public class CoalGenerator extends BaseTile implements EnergyProducer, LightSource {
     
@@ -37,7 +37,7 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
     float itemDelta;
     int coalCount;
     final int MAX_COAL = 20;
-    final float COAL_TIME = 60;
+    final float COAL_TIME = 30;
 
     public CoalGenerator() {
         super(TileType.COAL_GENERATOR, 2, 1);
@@ -49,6 +49,8 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
 		game.batch.draw(game.getSprite("coalGenerator"+(!lastDisplayMachineProducing?"Off":"")), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*3);
 		super.render(game, screen, x, y);
 	}
+
+    float particleDelta;
 
     @Override
     public void update(TileData data, Point worldCoordinates) {
@@ -63,6 +65,15 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
                     }
                 }
             }
+
+            if(isMachineProducing()) {
+                particleDelta+=Tile.DELTA_TIME*Math.random()*2;
+                if(particleDelta > 2) {
+                    particleDelta-=1;
+                    TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.SMOKE, this, worldCoordinates.x+1, worldCoordinates.y, 2.65f, 1f/(Math.min(1f, (2f*coalCount/(coalCount+5f)))));
+                }
+            }
+
             boolean machineCurrentlyProducing = isMachineProducing();
             // If the machine has changed state from WORKING <-> NOT WORKING, update the visual of the tile on the client side
             if(machineCurrentlyProducing != lastDisplayMachineProducing) {
@@ -96,7 +107,8 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
                     coalCount++;
                     player.getPlayer().getInventory().remove(Items.getItem(ItemType.COAL, 1));
                     player.inventoryChanged(true);
-                    TileUtils.spawnParticleOffset(world, ParticleEffectType.LEAVES, this, x+.3f, y, .9f, 4);
+                    world.playSound("dirt", .8f, x, y);
+                    TileUtils.spawnParticleOffset(world, ParticleEffectType.SMOKE, this, x+new Random().nextFloat(), y-2, 2, 3);
                     world.onTileChange(x, y, 1);
                     return true;
                 }

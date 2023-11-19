@@ -106,10 +106,10 @@ public class Crafting {
 		
 		initializeRecipe("Materials", "brick", CraftingStation.FURNACE, new ItemType[] {ItemType.CLAY}, new int[] {1}, new ItemType[] {ItemType.BRICK}, new int[] {1}, research("gaze:resources.clayProcessing"));
 		initializeRecipe("Materials", "glass", CraftingStation.FURNACE, new ItemType[] {ItemType.SAND}, new int[] {2}, new ItemType[] {ItemType.GLASS}, new int[] {1}, research("gaze:resources.sandProcessing"));
-		initializeRecipe("Materials", "ironIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {2}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1});
-		initializeRecipe("Materials", "ironIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {3}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {2});
-		initializeRecipe("Materials", "copperIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {2}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1});
-		initializeRecipe("Materials", "copperIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {3}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {2});
+		initializeRecipe("Materials", "ironIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {1}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1});
+		initializeRecipe("Materials", "ironIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {2}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {3});
+		initializeRecipe("Materials", "copperIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {1}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1});
+		initializeRecipe("Materials", "copperIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {2}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {3});
 		initializeRecipe("Materials", "ironGear", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1}, new ItemType[] {ItemType.IRON_GEAR}, new int[] {2}, research("gaze:machinery.gears"));
 		initializeRecipe("Materials", "copperWire", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1}, new ItemType[] {ItemType.COPPER_WIRE}, new int[] {3}, research("gaze:machinery.electricity"));
 		initializeRecipe("Materials", "magnet", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1}, new ItemType[] {ItemType.MAGNET}, new int[] {3}, research("gaze:machinery.electricity"));
@@ -127,6 +127,8 @@ public class Crafting {
 		initializeRecipe("Tools", "stoneHoe", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD_HOE, ItemType.STONE}, new int[] {1, 10}, new ItemType[] {ItemType.STONE_HOE}, new int[] {1}, research("gaze:resources.stoneAge"));
 		initializeRecipe("Tools", "ironAxe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_AXE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_AXE}, new int[] {1}, research("gaze:resources.forging"));
 		initializeRecipe("Tools", "ironPickaxe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_PICKAXE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_PICKAXE}, new int[] {1}, research("gaze:resources.forging"));
+		initializeRecipe("Tools", "ironShovel", CraftingStation.TABLE, new ItemType[] {ItemType.STONE_SHOVEL, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_SHOVEL}, new int[] {1}, research("gaze:resources.forging"));
+		initializeRecipe("Tools", "ironHoe", CraftingStation.TABLE, new ItemType[] {ItemType.STONE_HOE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_HOE}, new int[] {1}, research("gaze:resources.forging"));
 		
 		initializeRecipe("Appliances", "table", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.TABLE}, new int[] {1});
 		initializeRecipe("Appliances", "campfire", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.CAMPFIRE}, new int[] {1});

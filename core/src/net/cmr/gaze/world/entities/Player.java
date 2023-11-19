@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
@@ -471,6 +472,14 @@ public class Player extends HealthEntity implements LightSource {
 		}
 		
 		return 2;
+	}
+
+	@Override
+	public Color getColor() {
+		if(getHeldItem() instanceof LightSource) {
+			return ((LightSource)getHeldItem()).getColor();
+		}
+		return new Color(1f, 1f, 1f, .5f);
 	}
 	
 	@Override

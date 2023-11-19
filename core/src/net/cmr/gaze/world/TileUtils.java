@@ -33,7 +33,7 @@ public class TileUtils {
 	 */
 	public static int getBreakSpriteInt(Tile tile, int breakSpriteAmount) {
 		
-		int max = tile.getType().breakAmount;
+		float max = tile.getType().breakAmount;
 		double progress = (double) tile.getBreakAmount()/max;
 		
 		int sprite = (int) Math.floor(((1f-progress)*(breakSpriteAmount)))+1;

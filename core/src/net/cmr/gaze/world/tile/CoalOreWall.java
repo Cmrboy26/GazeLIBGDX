@@ -97,7 +97,7 @@ public class CoalOreWall extends Tile implements WallTile {
 		TileUtils.spawnBreakParticle(world, this, x, y, this);
 		TileUtils.addPlayerXP(player, world, Skill.MINING, 8);
 		TileUtils.dropItem(world, x, y, Items.getItem(ItemType.COAL, 1));
-		if(0==new Random().nextInt(2)) {
+		if(0==new Random().nextInt(3)) {
 			TileUtils.dropItem(world, x, y, Items.getItem(ItemType.COAL, 1));
 		}
 	}

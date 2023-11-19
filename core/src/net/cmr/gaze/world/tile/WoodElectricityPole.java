@@ -62,6 +62,11 @@ public class WoodElectricityPole extends ElectricityPole {
     }
 
     @Override
+    public Rectangle getBoundingBox(int x, int y) {
+		return new Rectangle(x*TILE_SIZE+TILE_SIZE/3f, y*TILE_SIZE, TILE_SIZE/4f, TILE_SIZE/4f);
+    }
+
+    @Override
     public ElectricityPole readPole(DataInputStream input, TileType type) throws IOException {
         return new WoodElectricityPole();
     }

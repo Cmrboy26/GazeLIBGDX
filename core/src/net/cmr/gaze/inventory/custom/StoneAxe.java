@@ -23,12 +23,12 @@ public class StoneAxe extends Tool {
 
 	@Override
 	public double breakStrength() {
-		return 1.4;
+		return 1.1;
 	}
 	
 	@Override
 	public double breakSpeed() {
-		return 1;
+		return 1.26;
 	}
 
 	@Override
