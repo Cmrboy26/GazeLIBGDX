@@ -52,7 +52,7 @@ public class World {
 	public ConcurrentHashMap<Point, Chunk> chunkList;
 	public TileData tileData;
 	
-	double seed;
+	private double seed;
 	double worldTime;
 	
 	private String worldName;

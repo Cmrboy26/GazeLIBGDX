@@ -261,7 +261,9 @@ public class WorldManager {
 		if(worldMap.containsKey(name)) {
 			return;
 		}
-		World world = new World(generator, server, name, (new Random(getSeedFromWorld(name, generator)).nextDouble()-.5)*(Short.MAX_VALUE*2));
+		double seed = (new Random(getSeedFromWorld(name, generator)).nextDouble()-.5)*(Short.MAX_VALUE*2);
+		World world = new World(generator, server, name, seed);
+
 		worldMap.put(name, world);
 	}
 	

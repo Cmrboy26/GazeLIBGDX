@@ -61,7 +61,7 @@ public abstract class Tile implements Cloneable {
 	// must be added for any tile thats breakable in the readTile method
 	public static void readBreakData(DataInputStream input, Tile tile) throws IOException {
 		if(tile.isBreakable()) {
-			tile.breakAmount = input.readInt();
+			tile.breakAmount = input.readFloat();
 		}
 	}
 	
