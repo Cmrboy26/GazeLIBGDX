@@ -53,7 +53,10 @@ import net.cmr.gaze.stage.SettingScreen;
 import net.cmr.gaze.stage.menus.ResearchMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.util.Normalize;
+import net.cmr.gaze.world.EnvironmentController;
 import net.cmr.gaze.world.Tiles;
+import net.cmr.gaze.world.Weather;
+import net.cmr.gaze.world.Weather.WeatherType;
 import net.cmr.gaze.world.entities.Player;
 
 public class Gaze extends Game {

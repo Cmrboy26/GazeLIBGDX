@@ -610,7 +610,6 @@ public class GameScreen implements Screen {
 		shapeRenderer.setColor(ambience, ambience, ambience, 1);
 		shapeRenderer.rect(-1, 1, 2, -2);
 		shapeRenderer.end();
-
 		
 		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		game.batch.begin();

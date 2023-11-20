@@ -27,7 +27,31 @@ public class EnvironmentController {
     }
 
     public float getAmbientBrightness() {
-        return 0;
+        return (float) calculateAmbience(.1f, .8f, .025f, 60f);
+    }
+
+    /**
+     * Calculates the ambient lighting based on the time of day.
+     * @param min is the minimum value (typically .1)
+     * @param max is the maximum value (typically .8)
+     * @param rate is the rate at which the ambient lighting transitions between day and night (.025 is a somewhat good number?)
+     * @param duration is the duration that either day or night lasts before transitioning (60 is a good number)
+     * @return
+     */
+    private double calculateAmbience(double min, double max, double rate, double duration) {
+    	double transitionTime = (max-min)/rate;
+    	double x = getTime()%(2*duration+2*transitionTime);
+    	
+    	if(x < duration) {
+    		return max;
+    	}
+    	if(x < duration+transitionTime) {
+    		return (-rate*(x-duration)+max);
+    	}
+    	if(x < 2*duration+transitionTime) {
+    		return min;
+    	}
+    	return (rate*(x-2*duration-transitionTime)+min);
     }
 
     public void write(DataBuffer buffer) throws IOException {
@@ -46,6 +70,13 @@ public class EnvironmentController {
     }
     public double getTime() {
         return time;
+    }
+
+    public double getThunderThreshold() {
+        return 0.975;
+    }
+    public double getRainThreshold() {
+        return 0.7;
     }
 
 }

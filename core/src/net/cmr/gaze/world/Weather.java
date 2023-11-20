@@ -42,10 +42,21 @@ public class Weather {
         }
     }
 
-    public static WeatherType getWeather(EnvironmentController environmentController) {
-        // Use a perlin noise function to determine the weather based on the time and seed.
-        double noise = SimplexNoise.noise(environmentController.getTime(), environmentController.getSeed());
-        return null;
+    public static WeatherType getWeather(EnvironmentController env) {
+		double noise = SimplexNoise.noise(1, .0001, 30, .3, 1, env.getTime()/60f, env.getSeed());
+
+		noise++;
+		noise/=2d;
+
+		WeatherType type;
+		if(noise > env.getThunderThreshold()) {
+			type = WeatherType.THUNDER;
+		} else if(noise > env.getRainThreshold()) {
+			type = WeatherType.RAIN;
+		} else {
+			type = WeatherType.CLEAR;
+		}
+        return type;
     }
 
 }
