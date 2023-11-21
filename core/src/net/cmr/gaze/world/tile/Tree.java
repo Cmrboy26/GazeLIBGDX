@@ -20,6 +20,7 @@ import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomMath;
+import net.cmr.gaze.world.Ambiance;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Weather;
@@ -190,16 +191,9 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	@Override
 	public String getAmbientNoise(GameScreen game) {
-
-		if(Weather.getWeather(game.getEnvironmentController()) == WeatherType.RAIN) {
-			return "outro";
-		}
-		if(game.getEnvironmentController().getAmbientBrightness() < .2f) {
-			return "intro";
-		}
-
-		return "forestAmbience"+new Random().nextInt(5);
+		return Ambiance.getAmbientSound(Ambiance.FOREST, game.getEnvironmentController());
 	}
+	
 	@Override
 	public float getAmbientNoiseVolume() {
 		return .25f;

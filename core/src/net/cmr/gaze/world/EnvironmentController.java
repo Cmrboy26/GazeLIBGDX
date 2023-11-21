@@ -86,6 +86,10 @@ public class EnvironmentController {
         return (float) calculateAmbience(.1f, .8f, .025f, 60f);
     }
 
+    public boolean isNight() {
+        return getAmbientBrightness() <= .2f;
+    }
+
     /**
      * Calculates the ambient lighting based on the time of day.
      * @param min is the minimum value (typically .1)

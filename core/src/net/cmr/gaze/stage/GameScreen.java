@@ -108,6 +108,7 @@ import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
+import net.cmr.gaze.world.Ambiance;
 import net.cmr.gaze.world.AudioData;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.CeilingTile;
@@ -124,6 +125,7 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.WallTile;
+import net.cmr.gaze.world.Weather;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.HealthEntity;
@@ -460,6 +462,7 @@ public class GameScreen implements Screen {
 	}
 
 	float stepDelta = 0;
+	float weatherAmbianceDelta = 0;
 	
 	float lastX, lastY;
 	boolean lastSprint = false;
@@ -490,6 +493,15 @@ public class GameScreen implements Screen {
 		worldTime+=delta;
 		stepDelta+=Math.min(delta, .25f);
 		logPositionDelta+=delta;
+		weatherAmbianceDelta+=delta;
+
+		if(weatherAmbianceDelta > 5) {
+			weatherAmbianceDelta = 0;
+			if(environmentController!=null) {
+				Ambiance ambience = Weather.getWeather(environmentController).getAmbiance();
+				
+			}
+		}
 		
 		currentRenderRule = deriveRenderRule();
 
