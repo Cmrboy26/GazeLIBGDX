@@ -43,7 +43,13 @@ public class Weather {
     }
 
     public static WeatherType getWeather(EnvironmentController env) {
-		double noise = SimplexNoise.noise(1, .0001, 30, .3, 1, env.getTime()/60f, env.getSeed());
+
+        double time = env.getTime()/60;
+
+        time = Math.floor(time);
+        time*=60;
+
+		double noise = SimplexNoise.noise(1, .0003, 30, .3, 1, time, env.getSeed());
 
 		noise++;
 		noise/=2d;

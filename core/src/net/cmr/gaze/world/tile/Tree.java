@@ -22,11 +22,13 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.TileUtils;
+import net.cmr.gaze.world.Weather;
 import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.Weather.WeatherType;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
@@ -188,6 +190,14 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	
 	@Override
 	public String getAmbientNoise(GameScreen game) {
+
+		if(Weather.getWeather(game.getEnvironmentController()) == WeatherType.RAIN) {
+			return "outro";
+		}
+		if(game.getEnvironmentController().getAmbientBrightness() < .2f) {
+			return "intro";
+		}
+
 		return "forestAmbience"+new Random().nextInt(5);
 	}
 	@Override

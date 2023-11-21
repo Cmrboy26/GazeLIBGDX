@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 
 import net.cmr.gaze.util.Normalize;
+import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.generators.DefaultOverworldGenerator;
 import net.cmr.gaze.world.generators.DefaultUndergroundGenerator;
 import net.cmr.gaze.world.structures.Structure;
@@ -141,6 +142,11 @@ public abstract class WorldGenerator {
 
 	public boolean isUnderground() {
 		return Normalize.norm(getGeneratorType().id)==-1;
+	}
+
+	public abstract EnvironmentControllerType getEnvironmentControllerType();
+	public final EnvironmentController getEnvironmentController(double seed) {
+		return EnvironmentController.getEnvironmentController(getEnvironmentControllerType(), seed);
 	}
 	
 	

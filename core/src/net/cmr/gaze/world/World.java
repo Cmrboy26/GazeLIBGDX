@@ -36,6 +36,7 @@ import net.cmr.gaze.util.ArrayUtil;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
+import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.TileType.Replaceable;
 import net.cmr.gaze.world.abstractTiles.FloorTile;
 import net.cmr.gaze.world.entities.Entity;
@@ -59,12 +60,12 @@ public class World {
 	private ArrayList<PlayerConnection> players;
 	private GameServer server;
 	private WorldGenerator generator;
-	
-	
+	private EnvironmentController environmentController;
 	
 	public World(WorldGenerator generator, GameServer server, String worldName, double seed) {
 		this(server, worldName, seed);
 		this.generator = generator;
+		this.environmentController = generator.getEnvironmentController(seed);
 	}
 	
 	public World(GameServer server, String worldName, double seed) {
@@ -74,6 +75,7 @@ public class World {
 		this.chunkList = new ConcurrentHashMap<>();
 		this.server = server;
 		this.tileData = new TileData(this);
+		this.environmentController = EnvironmentController.getEnvironmentController(EnvironmentControllerType.DEFAULT, seed);
 	}
 	
 	public Chunk getChunk(Point chunkCoordinate) {
@@ -112,6 +114,8 @@ public class World {
 		updateTileTile+=delta;
 		playerTime+=delta;
 		worldTime+=delta;
+
+		getEnvironmentController().update(delta);
 		
 		processConnectionsAndInteractions(delta, loadedChunks);
 		updateEntities(loadedChunks);
@@ -784,6 +788,10 @@ public class World {
 	public void setGenerator(WorldGenerator generator) {
 		this.generator = generator;
 	}
+	public EnvironmentController getEnvironmentController() {
+		return environmentController;
+	}
+
 	public GameServer getServer() {
 		return server;
 	}

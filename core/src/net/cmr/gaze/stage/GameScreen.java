@@ -112,6 +112,7 @@ import net.cmr.gaze.world.AudioData;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.CeilingTile;
 import net.cmr.gaze.world.Chunk;
+import net.cmr.gaze.world.EnvironmentController;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Lights;
 import net.cmr.gaze.world.RenderRule;
@@ -156,11 +157,7 @@ public class GameScreen implements Screen {
 	ChestInventoryMenu chestInventoryMenu;
 	ResearchMenu researchMenu;
 	CraftingMenu craftingMenu;
-
 	Table hotbarTable;
-	
-	//PlayerInventoryWidget inventory;
-	//ChestInventoryWidget chestInventory;
 	
 	ButtonGroup<InventorySlot> hotbarButtonGroup;
 	
@@ -175,6 +172,7 @@ public class GameScreen implements Screen {
 	
 	FrameBuffer frameBuffer;
 	Lights lights;
+	EnvironmentController environmentController;
 	
 	long latency = 0;
 	double worldTime = 0;
@@ -552,6 +550,10 @@ public class GameScreen implements Screen {
 		
 		if(centerChunk != null) {
 
+			if(environmentController!=null) {
+				environmentController.update(delta);
+			}
+
 			frameBuffer.begin();
 			
 			renderWorld(centerChunk);
@@ -605,9 +607,17 @@ public class GameScreen implements Screen {
 	private void drawWorldToScreen() {
 		shapeRenderer.setProjectionMatrix(game.batch.getProjectionMatrix().idt());
 		shapeRenderer.begin(ShapeType.Filled);
-		float ambience = getAmbientLight();
+		//float ambience = getAmbientLight();
+		Color ambienceColor = environmentController.getAmbientColor();
+		//Color ambienceColor = new Color(ambience*, ambience, ambience, 1);
 		
-		shapeRenderer.setColor(ambience, ambience, ambience, 1);
+		if(gammaOverride) {
+			ambienceColor.mul(1f/environmentController.getAmbientBrightness());
+			ambienceColor.a = 1;
+		}
+
+		//shapeRenderer.setColor(ambience, ambience, ambience, 1);
+		shapeRenderer.setColor(ambienceColor.r, ambienceColor.g, ambienceColor.b, 1);
 		shapeRenderer.rect(-1, 1, 2, -2);
 		shapeRenderer.end();
 		
@@ -676,6 +686,7 @@ public class GameScreen implements Screen {
 	 * @param centerChunk the center chunk of the world to be rendered
 	 */
 	private void renderWorld(Point centerChunk) {
+
 		Gdx.gl.glClearColor(.2f, .2f, .2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -1442,6 +1453,7 @@ public class GameScreen implements Screen {
 			worldTime = change.getTime();
 			tileData.clear();
 			entities.clear();
+			this.environmentController = change.getController();
 			
 		} else if(packet instanceof CraftingStationPacket) {
 			CraftingStationPacket cspack = (CraftingStationPacket) packet;
@@ -1618,7 +1630,6 @@ public class GameScreen implements Screen {
     }
     
     public float getAmbientLight() {
-    	//return 1;
     	
     	if(gammaOverride) {
     		return 1;
@@ -1627,17 +1638,7 @@ public class GameScreen implements Screen {
 			return 0;
 		}
     	
-    	float value = 0;
-    	if(currentWorldType==null) {
-    		value = 0;
-    	} else {
-    		if(currentWorldType.isUnderground()) {
-    			value = 0;
-    		} else {
-    			value = calculateAmbience(.1f, .8f, .025f, 60f, (float) worldTime);
-    		}
-    	}
-    	return value;
+    	return environmentController.getAmbientBrightness();
     }
 
 	public void playWorldSound(AudioData data, int x, int y) {
@@ -1839,4 +1840,8 @@ public class GameScreen implements Screen {
 		sender.addPacket(new ChatPacket(new ChatMessage("", message)));
 	}
     
+	public EnvironmentController getEnvironmentController() {
+		return environmentController;
+	}
+
 }

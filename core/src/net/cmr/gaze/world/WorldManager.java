@@ -185,6 +185,7 @@ public class WorldManager {
 		World world = new World(WorldGenerator.getGenerator(type), server, worldName, seed);
 		world.seed = seed;
 		world.worldTime = worldTime;
+		world.getEnvironmentController().time = worldTime;
 		
 		for(File region : worldFolder.listFiles()) {
 			

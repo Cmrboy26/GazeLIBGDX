@@ -4,9 +4,12 @@ import java.awt.Point;
 
 import net.cmr.gaze.util.SimplexNoise;
 import net.cmr.gaze.world.Chunk;
+import net.cmr.gaze.world.EnvironmentController;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
+import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldGenerator;
+import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.structures.ChestStructure;
 import net.cmr.gaze.world.structures.Structure;
 import net.cmr.gaze.world.tile.DirtTile;
@@ -73,6 +76,11 @@ public class DefaultOverworldGenerator extends WorldGenerator {
 
 	public WorldGeneratorType getGeneratorType() {
 		return WorldGeneratorType.DEFAULT_OVERWORLD;
+	}
+
+	@Override
+	public EnvironmentControllerType getEnvironmentControllerType() {
+		return EnvironmentControllerType.DEFAULT;
 	}
 	
 }

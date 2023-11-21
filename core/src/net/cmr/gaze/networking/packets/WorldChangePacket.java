@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.networking.Packet;
 import net.cmr.gaze.networking.PacketID;
+import net.cmr.gaze.world.EnvironmentController;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
 
@@ -14,11 +15,13 @@ import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
 public class WorldChangePacket extends Packet {
 
 	WorldGeneratorType type;
+	EnvironmentController controller;
 	double time;
 	
 	public WorldChangePacket(World world) {
 		this.type = world.getGenerator().getGeneratorType();
 		this.time = world.getWorldTime();
+		this.controller = world.getEnvironmentController();
 	}
 	
 	public WorldChangePacket(DataInputStream input, int nextPacketSize) throws IOException {
@@ -31,17 +34,22 @@ public class WorldChangePacket extends Packet {
 	public double getTime() {
 		return time;
 	}
+	public EnvironmentController getController() {
+		return controller;
+	}
 
 	@Override
 	protected void writePacketData(DataBuffer buffer) throws IOException {
 		buffer.writeInt(type.getID());
 		buffer.writeDouble(time);
+		controller.write(buffer);
 	}
 
 	@Override
 	public void readPacketData(DataInputStream input, int packetSize) throws IOException {
 		type = WorldGeneratorType.getTypeFromID(input.readInt());
 		time = input.readDouble();
+		controller = EnvironmentController.read(input);
 	}
 
 }
