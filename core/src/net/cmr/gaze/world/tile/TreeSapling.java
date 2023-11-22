@@ -14,7 +14,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.world.Ambiance;
+import net.cmr.gaze.world.Ambience;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
@@ -121,7 +121,7 @@ public class TreeSapling extends BaseTile {
 
     @Override
 	public String getAmbientNoise(GameScreen game) {
-		return Ambiance.getAmbientSound(Ambiance.FOREST, game.getEnvironmentController());
+		return Ambience.getAmbientSound(Ambience.FOREST, game.getEnvironmentController());
 	}
 	
 	@Override

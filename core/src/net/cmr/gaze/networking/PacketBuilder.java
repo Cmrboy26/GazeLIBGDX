@@ -16,6 +16,7 @@ import net.cmr.gaze.networking.packets.CraftingStationPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.EnvironmentControllerSyncPacket;
 import net.cmr.gaze.networking.packets.FoodPacket;
 import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
@@ -202,6 +203,10 @@ public abstract class PacketBuilder {
 				}
 				case 27: {
 					processPacket(new ResearchPacket(input, nextPacketSize));
+					break;
+				}
+				case 28: {
+					processPacket(new EnvironmentControllerSyncPacket(input, nextPacketSize));
 					break;
 				}
 				default: {

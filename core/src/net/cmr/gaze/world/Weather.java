@@ -14,17 +14,18 @@ public class Weather {
     private static HashMap<Integer, WeatherType> weatherTypeMap = new HashMap<>();
     
     public enum WeatherType {
-        CLEAR(0, new Color(1f, 1f, 1f, 1f), Ambiance.SILENT),
-        RAIN(1, new Color(0.6784f, 0.6784f, 1f, 1f), Ambiance.RAIN),
-        THUNDER(2, new Color(0.4980f, 0.4980f, 0.7294f, 1f), Ambiance.THUNDER);
+        CLEAR(0, new Color(1f, 1f, 1f, 1f), Ambience.SILENT),
+        RAIN(1, new Color(0.6784f, 0.6784f, 1f, 1f), Ambience.RAIN),
+        THUNDER(2, new Color(0.4980f, 0.4980f, 0.7294f, 1f), Ambience.THUNDER);
 
         int id;
         Color ambientColor;
-        Ambiance ambiance;
+        Ambience ambience;
 
-        WeatherType(int id, Color ambientColor, Ambiance ambiance) {
+        WeatherType(int id, Color ambientColor, Ambience ambience) {
             this.id = id;
             this.ambientColor = ambientColor;
+            this.ambience = ambience;
             weatherTypeMap.put(id, this);
         }
 
@@ -34,8 +35,8 @@ public class Weather {
         public Color getAmbientColor() {
             return ambientColor;
         }
-        public Ambiance getAmbiance() {
-            return ambiance;
+        public Ambience getAmbience() {
+            return ambience;
         }
 
         public void write(DataBuffer buffer) throws IOException {

@@ -176,6 +176,9 @@ public class Gaze extends Game {
 		initSound("craftFail");
 		initSound("caveAmbience0");
 		initSound("eat");
+		initSound("crickets0");
+		initSound("crickets1");
+		initSound("machineworking");
 		
 		initMusic("peacefulOne");
 		

@@ -25,6 +25,7 @@ import net.cmr.gaze.networking.packets.ChunkDataPacket;
 import net.cmr.gaze.networking.packets.ChunkUnloadPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.EnvironmentControllerSyncPacket;
 import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
 import net.cmr.gaze.networking.packets.InventoryUpdatePacket;
@@ -102,6 +103,7 @@ public class World {
 	double playerTime;
 	double updateTime;
 	double updateTileTile;
+	double environmentSyncDelta;
 	int cooldown = 0;
 	
 	int debugIteration;
@@ -115,8 +117,15 @@ public class World {
 		playerTime+=delta;
 		worldTime+=delta;
 
+		environmentSyncDelta+=delta;
 		getEnvironmentController().update(delta);
-		
+		if(environmentSyncDelta >= 30) {
+			environmentSyncDelta = 0;
+			for(PlayerConnection connection : players) {
+				connection.getSender().addPacket(new EnvironmentControllerSyncPacket(getEnvironmentController()));
+			}
+		}
+
 		processConnectionsAndInteractions(delta, loadedChunks);
 		updateEntities(loadedChunks);
 		

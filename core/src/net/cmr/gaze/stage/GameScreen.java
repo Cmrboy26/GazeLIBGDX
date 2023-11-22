@@ -74,6 +74,7 @@ import net.cmr.gaze.networking.packets.CraftingStationPacket;
 import net.cmr.gaze.networking.packets.DespawnEntity;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.EntityPositionsPacket;
+import net.cmr.gaze.networking.packets.EnvironmentControllerSyncPacket;
 import net.cmr.gaze.networking.packets.FoodPacket;
 import net.cmr.gaze.networking.packets.HealthPacket;
 import net.cmr.gaze.networking.packets.HotbarUpdatePacket;
@@ -108,7 +109,7 @@ import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.util.CustomTime;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
-import net.cmr.gaze.world.Ambiance;
+import net.cmr.gaze.world.Ambience;
 import net.cmr.gaze.world.AudioData;
 import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.CeilingTile;
@@ -498,8 +499,11 @@ public class GameScreen implements Screen {
 		if(weatherAmbianceDelta > 5) {
 			weatherAmbianceDelta = 0;
 			if(environmentController!=null) {
-				Ambiance ambience = Weather.getWeather(environmentController).getAmbiance();
-				
+				Ambience ambience = Weather.getWeather(environmentController).getAmbience();
+				String noise = ambience.getAmbientSound(environmentController);
+				int x = getLocalPlayer().getTileX();
+				int y = getLocalPlayer().getTileY();
+				playWorldSound(new AudioData(noise, 1f, 1f), x, y);
 			}
 		}
 		
@@ -834,10 +838,11 @@ public class GameScreen implements Screen {
 			RenderBlock pair = xStrip.get(0);
 			
 			if(attemptSound) {
-				if(pair.getSecond().getAmbientNoise(this)!=null) {
+				String ambientNoise = pair.getSecond().getAmbientNoise(this);
+				if(ambientNoise!=null) {
 					if(soundChance <= 0 || r.nextInt(soundChance)==1) {
 						soundChance = 600;
-						playWorldSound(new AudioData(pair.getSecond().getAmbientNoise(this), pair.getSecond().getAmbientNoiseVolume(), pair.getSecond().getAmbientNoisePitch()), pair.getFirst(), y);
+						playWorldSound(new AudioData(ambientNoise, pair.getSecond().getAmbientNoiseVolume(), pair.getSecond().getAmbientNoisePitch()), pair.getFirst(), y);
 						attemptSound = false;
 					}
 				}
@@ -1581,6 +1586,9 @@ public class GameScreen implements Screen {
 				researchMenu.setResearchData(rpacket.getData());
 				researchMenu.refreshResearchPanel(false);
 			}
+		} else if(packet instanceof EnvironmentControllerSyncPacket) {
+			EnvironmentControllerSyncPacket env = (EnvironmentControllerSyncPacket) packet;
+			this.environmentController = env.getEnvironmentController();
 		}
 	}
 	
