@@ -127,8 +127,8 @@ public class Crafting {
 		initializeRecipe("Tools", "stoneHoe", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD_HOE, ItemType.STONE}, new int[] {1, 10}, new ItemType[] {ItemType.STONE_HOE}, new int[] {1}, research("gaze:resources.stoneAge"));
 		initializeRecipe("Tools", "ironAxe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_AXE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_AXE}, new int[] {1}, research("gaze:resources.forging"));
 		initializeRecipe("Tools", "ironPickaxe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_PICKAXE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_PICKAXE}, new int[] {1}, research("gaze:resources.forging"));
-		initializeRecipe("Tools", "ironShovel", CraftingStation.TABLE, new ItemType[] {ItemType.STONE_SHOVEL, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_SHOVEL}, new int[] {1}, research("gaze:resources.forging"));
-		initializeRecipe("Tools", "ironHoe", CraftingStation.TABLE, new ItemType[] {ItemType.STONE_HOE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_HOE}, new int[] {1}, research("gaze:resources.forging"));
+		initializeRecipe("Tools", "ironShovel", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_SHOVEL, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_SHOVEL}, new int[] {1}, research("gaze:resources.forging"));
+		initializeRecipe("Tools", "ironHoe", CraftingStation.ANVIL, new ItemType[] {ItemType.STONE_HOE, ItemType.IRON_INGOT}, new int[] {1, 8}, new ItemType[] {ItemType.IRON_HOE}, new int[] {1}, research("gaze:resources.forging"));
 		
 		initializeRecipe("Appliances", "table", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.TABLE}, new int[] {1});
 		initializeRecipe("Appliances", "campfire", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {8}, new ItemType[] {ItemType.CAMPFIRE}, new int[] {1});

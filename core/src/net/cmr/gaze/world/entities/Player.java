@@ -127,7 +127,7 @@ public class Player extends HealthEntity implements LightSource {
 
 		//Vector2 movement = AStar.findMovementVector(this, data, 2, new Point(2, 3));
 		//setVelocity(movement.x, movement.y);
-
+		setAnimationDirection();
 		super.update(deltaTime, data);
 
 
@@ -183,10 +183,27 @@ public class Player extends HealthEntity implements LightSource {
 		super.render(game, screen);
 	}
 	
-	String lastDirection;
+	public String lastDirection;
 	
-	public String getAnimationString() {
+	public void setAnimationDirection() {
+		float threshold = .25f;
+		if(getVelocityY() >= threshold) {
+			lastDirection = "Up";
+		} else if(getVelocityY() <= -threshold) {
+			lastDirection = "Down";
+		}
+		if(getVelocityX() >= threshold) {
+			lastDirection = "Right"; 
+		} else if(getVelocityX() <= -threshold) {
+			lastDirection = "Left";
+		}
 		
+		if(lastDirection==null) {
+			lastDirection = "Down";
+		}
+	}
+
+	public String getAnimationString() {
 		float threshold = .25f;
 		
 		boolean moving = false;

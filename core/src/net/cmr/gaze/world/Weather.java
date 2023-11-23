@@ -16,7 +16,7 @@ public class Weather {
     public enum WeatherType {
         CLEAR(0, new Color(1f, 1f, 1f, 1f), Ambience.SILENT),
         RAIN(1, new Color(0.6784f, 0.6784f, 1f, 1f), Ambience.RAIN),
-        THUNDER(2, new Color(0.4980f, 0.4980f, 0.7294f, 1f), Ambience.THUNDER);
+        THUNDER(2, new Color(0.3980f, 0.3980f, 0.9294f, 1f), Ambience.THUNDER);
 
         int id;
         Color ambientColor;

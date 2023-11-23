@@ -946,7 +946,7 @@ public class GameScreen implements Screen {
 	 */
 	private void processMouseInputs(float delta, Vector2 mouseLocalPosition) {
 		if(!overMenus(mouseLocalPosition)) {
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isKeyPressed(Input.Keys.V)) {
 				
 				if(inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot!=null) {
 					// drop item
@@ -959,7 +959,7 @@ public class GameScreen implements Screen {
 					
 					boolean automaticClick = true;
 					leftClickDelta+=delta;
-					if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+					if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 						leftClickDelta = Float.MAX_VALUE;
 						automaticClick = false;
 					}
@@ -972,14 +972,45 @@ public class GameScreen implements Screen {
 						int x = (int) Math.floor(output.x/Tile.TILE_SIZE);
 						int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
 						
+						boolean keyContinue = true;
+						if(Gdx.input.isKeyPressed(Input.Keys.V)) {
+
+							int px = getLocalPlayer().getTileX();
+							int py = getLocalPlayer().getTileY();
+
+							if(Math.abs(x-px)<=1 && Math.abs(y-py)<=1) {
+								keyContinue = false;
+							}
+							if(keyContinue) {
+								x = px;
+								y = py;
+								String direction = getLocalPlayer().lastDirection;
+								if(direction.equals("Up")) {
+									y++;
+								} else if(direction.equals("Down")) {
+									y--;
+								} else if(direction.equals("Left")) {
+									x--;
+								} else if(direction.equals("Right")) {
+									x++;
+								}
+								output.x = x*Tile.TILE_SIZE;
+								output.y = y*Tile.TILE_SIZE;
+							}
+						}
+
 						clientSideTileInteraction(x, y, 0);
 						
 						Tile at = tileDataObject.getTile(x, y, 1);
 						Tile below = tileDataObject.getTile(x, y-1, 1);
 						
 						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
-
 						boolean skipWall = false;
+
+						if(Gdx.input.isKeyPressed(Input.Keys.V) && keyContinue) {
+							ignoreCeiling = 1;
+							skipWall = true;
+						}
 
 						int downwardShift = 0;
 
@@ -1026,7 +1057,7 @@ public class GameScreen implements Screen {
 				leftClickDelta = 0;
 			}
 			
-			if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.V)) {
+			if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.X)) {
 				
 				boolean automaticClick = true;
 				
@@ -1039,7 +1070,7 @@ public class GameScreen implements Screen {
 					automaticClick = false;
 				}*/
 				
-				if((Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.V))) {
+				if((Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.X))) {
 					rightClickDelta = Integer.MAX_VALUE/2;
 					automaticClick = false;
 				}
@@ -1062,11 +1093,40 @@ public class GameScreen implements Screen {
 						}
 					}
 					
-					sender.addPacket(new PlayerInteractPacket(automaticClick, 2, (int) output.x, (int) output.y, modifier, Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0));
 					
 					int x = (int) Math.floor(output.x/Tile.TILE_SIZE);
 					int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
 					
+					boolean keyContinue = true;
+					if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+
+						int px = getLocalPlayer().getTileX();
+						int py = getLocalPlayer().getTileY();
+
+						if(Math.abs(x-px)<=1 && Math.abs(y-py)<=1) {
+							keyContinue = false;
+						}
+						if(keyContinue) {
+							x = px;
+							y = py;
+							String direction = getLocalPlayer().lastDirection;
+							if(direction.equals("Up")) {
+								y++;
+							} else if(direction.equals("Down")) {
+								y--;
+							} else if(direction.equals("Left")) {
+								x--;
+							} else if(direction.equals("Right")) {
+								x++;
+							}
+							output.x = x*Tile.TILE_SIZE;
+							output.y = y*Tile.TILE_SIZE;
+						}
+					}
+
+					sender.addPacket(new PlayerInteractPacket(automaticClick, 2, (int) output.x, (int) output.y, modifier, Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0));
+					
+
 					clientSideTileInteraction(x, y, 2);
 				}
 			} else {

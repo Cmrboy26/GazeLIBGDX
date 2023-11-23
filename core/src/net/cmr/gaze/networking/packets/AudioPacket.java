@@ -11,9 +11,9 @@ import net.cmr.gaze.networking.PacketID;
 @PacketID(id = 17)
 public class AudioPacket extends Packet {
 
-	String audioName;
-	float volume = 1;
-	float pitch = 1;
+	private String audioName;
+	private float volume;
+	private float pitch;
 	int x = Integer.MAX_VALUE, y = Integer.MAX_VALUE;
 	boolean isPositional = false;
 	
@@ -27,16 +27,23 @@ public class AudioPacket extends Packet {
 		this.pitch = pitch;
 		this.x = x;
 		this.y = y;
-		isPositional = true;
+		this.isPositional = true;
 	}
 	public AudioPacket(String audioName, float volume, float pitch) {
 		this.audioName = audioName;
 		this.volume = volume;
 		this.pitch = pitch;
+		this.x = Integer.MAX_VALUE;
+		this.y = Integer.MAX_VALUE;
+		this.isPositional = false;
 	}
 	public AudioPacket(String audioName, float volume) {
 		this.audioName = audioName;
 		this.volume = volume;
+		this.pitch = 1f;
+		this.x = Integer.MAX_VALUE;
+		this.y = Integer.MAX_VALUE;
+		this.isPositional = false;
 	}
 	
 	public float getPitch() {

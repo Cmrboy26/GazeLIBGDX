@@ -55,6 +55,7 @@ public class GameServer {
 	
 	public long serverRunningTime;
 	public float serverRunningDelta;
+	public float serverAutoSaveDelta;
 	
 	private WorldManager worldManager;
 	long universalSeed;
@@ -189,6 +190,13 @@ public class GameServer {
 				while(serverRunningDelta>1) {
 					serverRunningDelta-=1;
 					serverRunningTime++;
+				}
+
+				serverAutoSaveDelta+=deltaTime;
+				if(serverAutoSaveDelta>60) {
+					serverAutoSaveDelta-=60;
+					saveAll();
+					System.out.println("Autosaved server data");
 				}
 				
 				if(deltaTime < 1/1000f) {

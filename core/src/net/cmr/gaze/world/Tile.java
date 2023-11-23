@@ -226,13 +226,14 @@ public abstract class Tile implements Cloneable {
 			}
 			
 			breakAmount-=player.getPlayer().getBreakAmount(this);
+			float pitch = 1f+((float) (Math.random()-0.5f)/15f);
 			if(getBreakAmount() <= 0) {
 				world.removeTile(x, y, getType().layer);
 				onBreak(world, player.getPlayer(), x, y);
-				if(getBreakNoise()!=null) world.playSound(getBreakNoise(), 1f, x, y);
+				if(getBreakNoise()!=null) world.playSound(getBreakNoise(), 1f, pitch, x, y);
 			} else {
 				onHit(world, player.getPlayer(), x, y);
-				if(getHitNoise()!=null) world.playSound(getHitNoise(), 1f, x, y);
+				if(getHitNoise()!=null) world.playSound(getHitNoise(), 1f, pitch, x, y);
 			}
 			if(player.getPlayer().getBreakAmount(this)!=0) {
 				world.onTileChange(x, y, getType().layer);
