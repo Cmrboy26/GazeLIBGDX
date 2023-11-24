@@ -12,9 +12,10 @@ import net.cmr.gaze.util.SimplexNoise;
 public class Weather {
     
     private static HashMap<Integer, WeatherType> weatherTypeMap = new HashMap<>();
+    public static final Color CLEAR_COLOR = new Color(1f, 1f, 1f, 1f);
     
     public enum WeatherType {
-        CLEAR(0, new Color(1f, 1f, 1f, 1f), Ambience.SILENT),
+        CLEAR(0, CLEAR_COLOR, Ambience.SILENT),
         RAIN(1, new Color(0.6784f, 0.6784f, 1f, 1f), Ambience.RAIN),
         THUNDER(2, new Color(0.3980f, 0.3980f, 0.9294f, 1f), Ambience.THUNDER);
 

@@ -629,6 +629,9 @@ public class GameScreen implements Screen {
 		
 		if(gammaOverride) {
 			ambienceColor.mul(1f/environmentController.getAmbientBrightness());
+			if(environmentController.getAmbientBrightness() == 0) {
+				ambienceColor = Weather.CLEAR_COLOR;
+			}
 			ambienceColor.a = 1;
 		}
 

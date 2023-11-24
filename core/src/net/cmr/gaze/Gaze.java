@@ -32,6 +32,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.Hinting;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider.SliderStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -584,6 +585,18 @@ public class Gaze extends Game {
 		style.overFontColor = Color.YELLOW;
 		defaultSkin.add("button", style);
 		
+		TextButtonStyle defaultStyle = new TextButtonStyle();
+		defaultStyle.font = getFont(20);
+		defaultStyle.fontColor = Color.WHITE;
+		defaultStyle.overFontColor = Color.YELLOW;
+		defaultSkin.add("default", defaultStyle);
+
+		TextButtonStyle defaultSmallStyle = new TextButtonStyle();
+		defaultSmallStyle.font = getFont(15);
+		defaultSmallStyle.fontColor = Color.WHITE;
+		defaultSmallStyle.overFontColor = Color.YELLOW;
+		defaultSkin.add("defaultSmall", defaultSmallStyle);
+
 		TextButtonStyle largeStyle = new TextButtonStyle();
 		
 		//largeStyle.down = new TextureRegionDrawable(getSprite("buttonSelectedLarge"));

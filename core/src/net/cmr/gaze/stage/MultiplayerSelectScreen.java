@@ -147,9 +147,6 @@ public class MultiplayerSelectScreen implements Screen {
 		    public void clicked(InputEvent event, float x, float y)
 		    {
 				game.playSound("falseSelect", 1f);
-		    	//Gdx.app.exit();
-		    	//game.setScreen(new MainMenuScreen(game));
-		    	//GameLoader.startMultiplayer(game);
 				game.setScreen(new SaveSelectScreen(game, CreationType.Hosting));
 		    }
 		});
