@@ -20,8 +20,7 @@ import net.cmr.gaze.Gaze;
 public class SettingsWidget extends ScrollPane {
     
     public enum Setting {
-        GRAPHICS,
-        CUSTOMIZATION,
+        GRAPHICS, PLAYER, ONLINE, CONTROLS;
     }
 
     public final static int SPACING = 10;
@@ -88,7 +87,13 @@ public class SettingsWidget extends ScrollPane {
                 insert(table, worldScaleLabel, worldScaleSlider);
 
                 break;
-            case CUSTOMIZATION:
+            case PLAYER:
+                break;
+            case ONLINE:
+                break;
+            case CONTROLS:
+                break;
+            default:
                 break;
         }
         return table;

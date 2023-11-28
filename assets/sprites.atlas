@@ -13,21 +13,21 @@ CRAFTING
   index: -1
 FARMING
   rotate: false
-  xy: 1500, 724
+  xy: 1596, 740
   size: 4, 5
   orig: 4, 5
   offset: 0, 0
   index: -1
 FISHING
   rotate: false
-  xy: 1596, 740
+  xy: 1025, 201
   size: 4, 5
   orig: 4, 5
   offset: 0, 0
   index: -1
 FORAGING
   rotate: false
-  xy: 1675, 852
+  xy: 2038, 1006
   size: 4, 5
   orig: 4, 5
   offset: 0, 0
@@ -41,7 +41,7 @@ LV
   index: -1
 MINING
   rotate: false
-  xy: 1025, 201
+  xy: 1675, 852
   size: 4, 5
   orig: 4, 5
   offset: 0, 0
@@ -567,7 +567,7 @@ healthbarNine
   index: -1
 healthbarNineBackground
   rotate: false
-  xy: 978, 181
+  xy: 1500, 721
   size: 5, 8
   split: 2, 2, 3, 4
   orig: 5, 8
@@ -875,6 +875,13 @@ plusButtonSelected
   orig: 20, 20
   offset: 0, 0
   index: -1
+pointer
+  rotate: false
+  xy: 1296, 720
+  size: 7, 7
+  orig: 7, 7
+  offset: 0, 0
+  index: -1
 questBook
   rotate: false
   xy: 644, 262
@@ -1039,7 +1046,7 @@ sliderKnob
   index: -1
 smallArrow
   rotate: false
-  xy: 1296, 720
+  xy: 978, 182
   size: 7, 7
   orig: 7, 7
   offset: 0, 0

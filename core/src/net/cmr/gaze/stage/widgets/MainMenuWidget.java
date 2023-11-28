@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -71,6 +72,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
             public void draw(Batch batch, float parentAlpha) {
                 super.draw(batch, parentAlpha);
                 batch.draw(lineTexture, getX()-12, super.getY(), 2, super.getHeight());
+                drawPointer(batch, parentAlpha, playTable);
             }
         };
 
@@ -138,6 +140,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
             public void draw(Batch batch, float parentAlpha) {
                 super.draw(batch, parentAlpha);
                 batch.draw(lineTexture, getX()-12, super.getY(), 2, super.getHeight());
+                drawPointer(batch, parentAlpha, settingsTable);
             }
         };
 
@@ -155,7 +158,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
 		});
         settingsTable.add(graphics).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
 
-		TextButton gameCustomization = new TextButton("Customization", game.getSkin(), "defaultSmall");
+		/*TextButton gameCustomization = new TextButton("In-Game", game.getSkin(), "defaultSmall");
 		gameCustomization.setWidth(height*widthScale);
 		gameCustomization.setHeight(height*smallHeightScale);
         gameCustomization.getLabel().setAlignment(Align.left);
@@ -167,7 +170,49 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
                 openSettings(Setting.CUSTOMIZATION);
 		    }
 		});
-        settingsTable.add(gameCustomization).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
+        settingsTable.add(gameCustomization).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();*/
+
+        TextButton playerCustomization = new TextButton("Player", game.getSkin(), "defaultSmall");
+		playerCustomization.setWidth(height*widthScale);
+		playerCustomization.setHeight(height*smallHeightScale);
+        playerCustomization.getLabel().setAlignment(Align.left);
+		playerCustomization.addListener(new ClickListener(){
+		    @Override
+		    public void clicked(InputEvent event, float x, float y)
+		    {
+				game.playSound("trueSelect", 1f);
+                openSettings(Setting.PLAYER);
+		    }
+		});
+        settingsTable.add(playerCustomization).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
+
+        TextButton online = new TextButton("Online", game.getSkin(), "defaultSmall");
+		online.setWidth(height*widthScale);
+		online.setHeight(height*smallHeightScale);
+        online.getLabel().setAlignment(Align.left);
+		online.addListener(new ClickListener(){
+		    @Override
+		    public void clicked(InputEvent event, float x, float y)
+		    {
+				game.playSound("trueSelect", 1f);
+                openSettings(Setting.ONLINE);
+		    }
+		});
+        settingsTable.add(online).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
+
+        TextButton controls = new TextButton("Controls", game.getSkin(), "defaultSmall");
+		controls.setWidth(height*widthScale);
+		controls.setHeight(height*smallHeightScale);
+        controls.getLabel().setAlignment(Align.left);
+		controls.addListener(new ClickListener(){
+		    @Override
+		    public void clicked(InputEvent event, float x, float y)
+		    {
+				game.playSound("trueSelect", 1f);
+                openSettings(Setting.CONTROLS);
+		    }
+		});
+        settingsTable.add(controls).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
 
         credits = new TextButton("Credits", game.getSkin(), "default");
 		credits.setWidth(height*widthScale);
@@ -210,6 +255,10 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
         settingsTable.setVisible(false);
         settingsTable.setPosition(14+mainTable.getWidth(), -settingsTable.getHeight()/2f+0*mainTable.getHeight()/(mainTable.getRows())+(mainTable.getHeight()/(mainTable.getRows()*2)));
         addActor(settingsTable);
+    }
+
+    public void drawPointer(Batch batch, float alpha, Actor actor) {
+        batch.draw(game.getSprite("pointer"), actor.getX()-12-10, actor.getY()+actor.getHeight()/2f-5, 10, 10);
     }
 
     public void openSettings(Setting setting) {
