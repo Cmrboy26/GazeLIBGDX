@@ -20,7 +20,14 @@ import net.cmr.gaze.Gaze;
 public class SettingsWidget extends ScrollPane {
     
     public enum Setting {
-        GRAPHICS, PLAYER, ONLINE, CONTROLS;
+        GRAPHICS("Graphics"), PLAYER("Player"), ONLINE("Online"), CONTROLS("Controls"), AUDIO("Audio");
+        String displayName;
+        Setting(String displayName) {
+            this.displayName = displayName;
+        }
+        public String getDisplayName() {
+            return displayName;
+        }
     }
 
     public final static int SPACING = 10;
@@ -92,6 +99,16 @@ public class SettingsWidget extends ScrollPane {
             case ONLINE:
                 break;
             case CONTROLS:
+                break;
+            case AUDIO:
+                Slider masterVolume = getSlider(game, "masterVolume", 1f, 4f, 1, Float.class);
+                Label masterVolumeLabel = getAdaptiveLabel(game, "Master Volume", new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        return ((int) (masterVolume.getValue()*100))+"%";
+                    } 
+                });
+                insert(table, masterVolumeLabel, masterVolume);
                 break;
             default:
                 break;

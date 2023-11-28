@@ -144,20 +144,23 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
             }
         };
 
-        TextButton graphics = new TextButton("Graphics", game.getSkin(), "defaultSmall");
-		graphics.setWidth(height*widthScale);
-		graphics.setHeight(height*smallHeightScale);
-        graphics.getLabel().setAlignment(Align.left);
-		graphics.addListener(new ClickListener(){
-		    @Override
-		    public void clicked(InputEvent event, float x, float y)
-		    {
-				game.playSound("trueSelect", 1f);
-                openSettings(Setting.GRAPHICS);
-		    }
-		});
-        settingsTable.add(graphics).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
+        for(Setting setting : Setting.values()) {
+            TextButton button = new TextButton(setting.getDisplayName(), game.getSkin(), "defaultSmall");
+            button.setWidth(height*widthScale);
+            button.setHeight(height*smallHeightScale);
+            button.getLabel().setAlignment(Align.left);
+            button.addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y)
+                {
+                    game.playSound("trueSelect", 1f);
+                    openSettings(setting);
+                }
+            });
+            settingsTable.add(button).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();    
+        }
 
+        
 		/*TextButton gameCustomization = new TextButton("In-Game", game.getSkin(), "defaultSmall");
 		gameCustomization.setWidth(height*widthScale);
 		gameCustomization.setHeight(height*smallHeightScale);
@@ -172,7 +175,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
 		});
         settingsTable.add(gameCustomization).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();*/
 
-        TextButton playerCustomization = new TextButton("Player", game.getSkin(), "defaultSmall");
+        /*TextButton playerCustomization = new TextButton("Player", game.getSkin(), "defaultSmall");
 		playerCustomization.setWidth(height*widthScale);
 		playerCustomization.setHeight(height*smallHeightScale);
         playerCustomization.getLabel().setAlignment(Align.left);
@@ -213,6 +216,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
 		    }
 		});
         settingsTable.add(controls).width(height*widthScale).height(height*smallHeightScale).spaceBottom(spacing/2f).spaceTop(spacing/2f).row();
+        */
 
         credits = new TextButton("Credits", game.getSkin(), "default");
 		credits.setWidth(height*widthScale);
