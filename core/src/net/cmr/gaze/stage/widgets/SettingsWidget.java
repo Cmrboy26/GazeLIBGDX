@@ -13,9 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.PlayerDisplayWidget;
+import net.cmr.gaze.world.entities.Player;
 
 public class SettingsWidget extends ScrollPane {
     
@@ -42,6 +45,7 @@ public class SettingsWidget extends ScrollPane {
         this.setWidth(640/2-SPACING);
         this.setHeight(360-SPACING);
         this.setScrollPercentY(100f);
+        setOverscroll(false, false);
     }
 
     public Setting getSetting() {
@@ -95,20 +99,75 @@ public class SettingsWidget extends ScrollPane {
 
                 break;
             case PLAYER:
+                final Player displayPlayer = new Player(game.settings.getInteger("playerType"), null);
+                PlayerDisplayWidget playerDisplay = new PlayerDisplayWidget(game, displayPlayer) {
+                    double deltaTime;
+                    @Override
+                    public void act(float delta) {
+                        super.act(delta);
+                        deltaTime+=delta;
+                        double vX = 0, vY = 0;
+                        int v = (int) Math.floor((deltaTime/1f)%4f);
+                        if(v == 0) {vX = 0; vY = -1;}
+                        if(v == 1) {vX = 1; vY = 0;}
+                        if(v == 2) {vX = 0; vY = 1;}
+                        if(v == 3) {vX = -1; vY = 0;}
+                        displayPlayer.setVelocity(vX, vY);
+                    }
+                };
+                TextButtonStyle style = new TextButtonStyle(game.getSkin().get("toggle", TextButtonStyle.class));
+                TextButton playerTypeButton = new TextButton("Change Player", style);
+                playerDisplay.setHeight(200);
+                playerDisplay.setWidth(200);
+                playerTypeButton.setWidth(100);
+                playerTypeButton.setHeight(25f);
+                playerTypeButton.addListener(new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor) {
+                        game.settings.putInteger("playerType", (game.settings.getInteger("playerType")+1)%(Player.AVAILABLE_PLAYER_TYPES+1));
+                        displayPlayer.setPlayerType(game.settings.getInteger("playerType"));
+                    }
+                });
+                insert(table, playerDisplay, playerTypeButton);
+
                 break;
             case ONLINE:
                 break;
             case CONTROLS:
                 break;
             case AUDIO:
-                Slider masterVolume = getSlider(game, "masterVolume", 1f, 4f, 1, Float.class);
-                Label masterVolumeLabel = getAdaptiveLabel(game, "Master Volume", new Callable<String>() {
+                Slider masterVolume = getSlider(game, "masterVolume", 0, 1f, .05f, Float.class);
+                Label masterVolumeLabel = getAdaptiveLabel(game, "Master", new Callable<String>() {
                     @Override
                     public String call() throws Exception {
                         return ((int) (masterVolume.getValue()*100))+"%";
                     } 
                 });
                 insert(table, masterVolumeLabel, masterVolume);
+                Slider musicVolume = getSlider(game, "musicVolume", 0, 1f, .05f, Float.class);
+                Label musicVolumeLabel = getAdaptiveLabel(game, "Music", new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        return ((int) (musicVolume.getValue()*100))+"%";
+                    } 
+                });
+                insert(table, musicVolumeLabel, musicVolume);
+                Slider sfxVolume = getSlider(game, "sfxVolume", 0, 1f, .05f, Float.class);
+                Label sfxVolumeLabel = getAdaptiveLabel(game, "SFX", new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        return ((int) (sfxVolume.getValue()*100))+"%";
+                    } 
+                });
+                insert(table, sfxVolumeLabel, sfxVolume);
+                Slider ambientVolume = getSlider(game, "ambientVolume", 0, 1f, .05f, Float.class);
+                Label ambientVolumeLabel = getAdaptiveLabel(game, "Ambient", new Callable<String>() {
+                    @Override
+                    public String call() throws Exception {
+                        return ((int) (ambientVolume.getValue()*100))+"%";
+                    } 
+                });
+                insert(table, ambientVolumeLabel, ambientVolume);
                 break;
             default:
                 break;
