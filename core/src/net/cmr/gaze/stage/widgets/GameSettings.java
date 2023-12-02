@@ -1,7 +1,11 @@
 package net.cmr.gaze.stage.widgets;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -15,12 +19,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.PlayerDisplayWidget;
+import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.world.entities.Player;
 
-public class SettingsWidget extends ScrollPane {
+public class GameSettings extends ScrollPane {
     
     public enum Setting {
         GRAPHICS("Graphics"), PLAYER("Player"), ONLINE("Online"), CONTROLS("Controls"), AUDIO("Audio");
@@ -33,12 +39,131 @@ public class SettingsWidget extends ScrollPane {
         }
     }
 
+    public enum InputType {
+        NONE,
+        KEYBOARD, 
+        MOUSE, 
+        CONTROLLER;
+    }
+
+    public enum Controls {
+
+        // Any Input Controls
+        MOVE_UP(0),
+        MOVE_DOWN(1),
+        MOVE_LEFT(2),
+        MOVE_RIGHT(3),
+        SPRINT(4),
+        INTERACT(5), // used for interacting in the world and special clicking in the inventory, Right click by default
+        SELECT(6), // used for attacking, breaking, clicking inventory, Right click by default
+        CLOSE(7), // used for closing the menu
+        INVENTORY(8),
+        RESEARCH(9),
+        CRAFTING(10);
+
+        // Keyboard Only Controls
+
+        int defaultControlCode;
+        InputType defaultInputType;
+        int id;
+        Controls(int id) {
+            this(id, -1, InputType.NONE);
+        }
+        Controls(int id, int defaultControlCode, InputType defaultInputType) {
+            this.id = id;
+            this.defaultControlCode = defaultControlCode;
+            this.defaultInputType = defaultInputType;
+        }
+
+        public void write(DataBuffer buffer) throws IOException {
+            buffer.writeInt(id);
+        } 
+        public static Controls read(DataInputStream input) throws IOException {
+            return controls.get(input.readInt());
+        }
+
+        public int getDefaultControlCode() {
+            return defaultControlCode;
+        }
+        public InputType getDefaultInputType() {
+            return defaultInputType;
+        }
+
+        public boolean isDown() {
+            return GameSettings.isDown(this);
+        }
+        public boolean isJustDown() {
+            return GameSettings.isJustDown(this);
+        }
+
+    }
+
+    static boolean initialized = false;
+    static HashMap<Integer, Controls> controls = new HashMap<Integer, Controls>();
+    static HashMap<Controls, Pair<Integer, InputType>> controlSettings = new HashMap<Controls, Pair<Integer, InputType>>();
+
+    public static void initialize() {
+        initialized = true;
+        controls = new HashMap<Integer, Controls>();
+        controlSettings = new HashMap<Controls, Pair<Integer, InputType>>();
+        for(Controls control : Controls.values()) {
+            controls.put(control.id, control);
+        }
+        if(Gaze.singletonExists()) {
+            Gaze game = Gaze.get();
+            for(Controls control : Controls.values()) {
+                int controlCode = game.settings.getInteger("control_"+control.name().toLowerCase());
+                InputType inputType = InputType.values()[game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType")];
+                controlSettings.put(control, new Pair<Integer, InputType>(controlCode, inputType));
+            }
+        }
+    }
+
+    private static boolean isDown(Controls controls) {
+        // Get the control from the static list
+        Pair<Integer, InputType> control = controlSettings.get(controls);
+
+        if(control.getFirst()==-1 || control.getSecond()==InputType.NONE) {
+            control = new Pair<Integer, InputType>(controls.getDefaultControlCode(), controls.getDefaultInputType());
+            if(control.getFirst()==-1 || control.getSecond()==InputType.NONE) {
+                return false;
+            }
+        }
+
+        switch (control.getSecond()) {
+            case KEYBOARD:
+                return Gdx.input.isKeyPressed(control.getFirst());
+            case MOUSE:
+                return Gdx.input.isButtonPressed(control.getFirst());
+            case CONTROLLER:
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private static boolean isJustDown(Controls controls) {
+        // Get the control from the static list
+        Pair<Integer, InputType> control = controlSettings.get(controls);
+
+        switch (control.getSecond()) {
+            case KEYBOARD:
+                return Gdx.input.isKeyJustPressed(control.getFirst());
+            case MOUSE:
+                return Gdx.input.isButtonJustPressed(control.getFirst());
+            case CONTROLLER:
+                return false;
+            default:
+                return false;
+        }
+    }
+
     public final static int SPACING = 10;
     private final static int ELEMENT_SPACING_Y = 10, ELEMENT_SPACING_X = 5;
     Gaze game;
     Setting setting;
 
-    public SettingsWidget(Gaze game, Setting setting) {
+    public GameSettings(Gaze game, Setting setting) {
         super(getTable(game, setting));
         this.game = game;
         this.setting = setting;

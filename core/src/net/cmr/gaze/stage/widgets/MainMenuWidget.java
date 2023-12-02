@@ -20,7 +20,7 @@ import net.cmr.gaze.stage.MainMenuScreen;
 import net.cmr.gaze.stage.MultiplayerSelectScreen;
 import net.cmr.gaze.stage.SaveSelectScreen;
 import net.cmr.gaze.stage.SettingScreen;
-import net.cmr.gaze.stage.widgets.SettingsWidget.Setting;
+import net.cmr.gaze.stage.widgets.GameSettings.Setting;
 
 public class MainMenuWidget extends WidgetGroup implements Disposable {
 
@@ -30,7 +30,7 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
     
     Table mainTable, playTable, settingsTable;
 	TextButton play, playSingleplayer, playMultiplayer, hostMultiplayer, settings, credits, exit;
-    SettingsWidget settingsWidget;
+    GameSettings settingsWidget;
     final float topDistance = 140;
 	final float spacing = 0;
 	final float height = 35;
@@ -274,8 +274,8 @@ public class MainMenuWidget extends WidgetGroup implements Disposable {
             }
             settingsWidget = null;
         }
-        settingsWidget = new SettingsWidget(game, setting);
-        settingsWidget.setPosition(640/2+SettingsWidget.SPACING/2f, SettingsWidget.SPACING/2f);
+        settingsWidget = new GameSettings(game, setting);
+        settingsWidget.setPosition(640/2+GameSettings.SPACING/2f, GameSettings.SPACING/2f);
         screen.stages.get(Align.right).addActor(settingsWidget);
     }
 

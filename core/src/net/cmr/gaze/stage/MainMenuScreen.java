@@ -25,7 +25,7 @@ import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.widgets.Background;
 import net.cmr.gaze.stage.widgets.HintMenu;
 import net.cmr.gaze.stage.widgets.MainMenuWidget;
-import net.cmr.gaze.stage.widgets.SettingsWidget;
+import net.cmr.gaze.stage.widgets.GameSettings;
 
 public class MainMenuScreen implements Screen {
 

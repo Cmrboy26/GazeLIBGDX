@@ -52,6 +52,7 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.stage.IntroScreen;
 import net.cmr.gaze.stage.SettingScreen;
 import net.cmr.gaze.stage.menus.ResearchMenu;
+import net.cmr.gaze.stage.widgets.GameSettings;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.world.EnvironmentController;
@@ -768,6 +769,7 @@ public class Gaze extends Game {
 	}
 	
 	public static void initializeGameContent() {
+		GameSettings.initialize();
 		Items.initialize();
 		Tiles.initialize();
 		Crafting.initialize();
