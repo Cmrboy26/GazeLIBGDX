@@ -6,9 +6,13 @@ import java.util.HashMap;
 import java.util.concurrent.Callable;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -17,9 +21,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.DataBuffer;
+import com.badlogic.gdx.utils.DelayedRemovalArray;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.PlayerDisplayWidget;
@@ -112,11 +118,32 @@ public class GameSettings extends ScrollPane {
         if(Gaze.singletonExists()) {
             Gaze game = Gaze.get();
             for(Controls control : Controls.values()) {
+                if(!game.settings.get().containsKey("control_"+control.name().toLowerCase()) || !game.settings.get().containsKey("control_"+control.name().toLowerCase()+"_inputType")) {
+                    game.settings.putInteger("control_"+control.name().toLowerCase(), control.getDefaultControlCode());
+                    game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", control.getDefaultInputType().ordinal());
+                    game.settings.flush();
+                }
                 int controlCode = game.settings.getInteger("control_"+control.name().toLowerCase());
-                InputType inputType = InputType.values()[game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType")];
-                controlSettings.put(control, new Pair<Integer, InputType>(controlCode, inputType));
+                int inputTypeIndex = game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType");
+                InputType inputType = null;
+                if(controlCode==-1 || inputTypeIndex<=0 || controlCode>=Controls.values().length) {
+                    controlCode = control.getDefaultControlCode();
+                    inputType = control.getDefaultInputType();
+                } else {
+                    inputType = InputType.values()[inputTypeIndex];
+                }
+                setControl(game, control, controlCode, inputType);
             }
         }
+    }
+
+    public static void setControl(Gaze game, Controls control, int controlCode, InputType inputType) {
+        controlSettings.put(control, new Pair<Integer, InputType>(controlCode, inputType));
+        game.settings.putInteger("control_"+control.name().toLowerCase(), controlCode);
+        game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", inputType.ordinal());
+        System.out.println("Set control "+control.name().toLowerCase()+" to "+controlCode+" with input type "+inputType.name());
+        System.out.println(game.settings.getInteger("control_"+control.name().toLowerCase())+" "+game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType"));
+        game.settings.flush();
     }
 
     private static boolean isDown(Controls controls) {
@@ -259,6 +286,9 @@ public class GameSettings extends ScrollPane {
             case ONLINE:
                 break;
             case CONTROLS:
+                TextField moveUp = getControlButton(game, Controls.MOVE_UP);
+                TextField moveDown = getControlButton(game, Controls.MOVE_DOWN);
+                insert(table, moveUp, moveDown);
                 break;
             case AUDIO:
                 Slider masterVolume = getSlider(game, "masterVolume", 0, 1f, .05f, Float.class);
@@ -314,6 +344,43 @@ public class GameSettings extends ScrollPane {
             right.expandX();
         }
         right.row();
+    }
+
+    public static TextField getControlButton(Gaze game, final Controls controls) {
+        TextField textField = new TextField("", game.getSkin(), "textField") {
+            int displayKeyCode = -1;
+            boolean addedInputListener = false;
+            @Override
+            public void act(float delta) {
+                super.act(delta);
+                if(!addedInputListener) {
+                    Pair<Integer, InputType> control = controlSettings.get(controls);
+                    displayKeyCode = control.getFirst();
+                    addCaptureListener(new InputListener() {
+                        @Override
+                        public boolean keyDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
+                            if(keycode==Input.Keys.ESCAPE) {
+                                setControl(game, controls, -1, InputType.NONE);
+                                displayKeyCode = -1;
+                            } else {
+                                System.out.println("SETTING CONTROL TO "+keycode);
+                                setControl(game, controls, keycode, InputType.KEYBOARD);
+                                displayKeyCode = keycode;
+                            }
+                            return true;
+                        }
+                    });
+                    addedInputListener = true;
+                }
+                if(displayKeyCode!=-1) {
+                    setText(Input.Keys.toString(displayKeyCode));
+                } else {
+                    setText("None");
+                }
+            }
+        };
+        textField.setMessageText("Press a key...");
+        return textField;
     }
 
     public static Label getAdaptiveLabel(Gaze game, final String text, final Callable<String> adaptiveStringRetriever) {
