@@ -29,13 +29,14 @@ import com.badlogic.gdx.utils.DelayedRemovalArray;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.PlayerDisplayWidget;
+import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.util.Pair;
 import net.cmr.gaze.world.entities.Player;
 
 public class GameSettings extends ScrollPane {
     
     public enum Setting {
-        GRAPHICS("Graphics"), PLAYER("Player"), ONLINE("Online"), CONTROLS("Controls"), AUDIO("Audio");
+        GRAPHICS("Graphics"), PLAYER("Player"), GAME("Game"), CONTROLS("Controls"), AUDIO("Audio");
         String displayName;
         Setting(String displayName) {
             this.displayName = displayName;
@@ -100,6 +101,15 @@ public class GameSettings extends ScrollPane {
         }
         public boolean isJustDown() {
             return GameSettings.isJustDown(this);
+        }
+        public String toString() {
+            String enumName = name().toLowerCase();
+            String[] words = enumName.split("_");
+            StringBuilder result = new StringBuilder();
+            for (String word : words) {
+                result.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+            }
+            return result.toString().trim();
         }
 
     }
@@ -280,15 +290,35 @@ public class GameSettings extends ScrollPane {
                         displayPlayer.setPlayerType(game.settings.getInteger("playerType"));
                     }
                 });
-                insert(table, playerDisplay, playerTypeButton);
-
+                insert(table, playerDisplay, null);
+                insert(table, playerTypeButton, null);
                 break;
-            case ONLINE:
+            case GAME:
+                TextButton invertScrollingButton = getToggleButton(game, "invertScroll", "Invert Scroll", "On", "Off");
+                TextButton showFPSButton = getToggleButton(game, "showFPS", "Show FPS", "On", "Off");
+                insert(table, invertScrollingButton, showFPSButton);
+                
+                TextButton showHintsButton = getToggleButton(game, "showHints", "Hints", "On", "Off");
+                TextButton resetHintsButton = getActionButton(game, "Reset Hints", new Runnable() {
+                    @Override
+                    public void run() {
+                        HintMenuType.resetHints();
+                        HintMenuType.saveViewedHints();
+                    }
+                });
+                insert(table, showHintsButton, resetHintsButton);
                 break;
             case CONTROLS:
-                TextField moveUp = getControlButton(game, Controls.MOVE_UP);
-                TextField moveDown = getControlButton(game, Controls.MOVE_DOWN);
-                insert(table, moveUp, moveDown);
+                for(final Controls control : Controls.values()) {
+                    Label label = getAdaptiveLabel(game, control.name(), new Callable<String>() {
+                        @Override
+                        public String call() throws Exception {
+                            return control.toString();
+                        } 
+                    });
+                    TextField textField = getControlButton(game, control);
+                    insert(table, label, textField);
+                }
                 break;
             case AUDIO:
                 Slider masterVolume = getSlider(game, "masterVolume", 0, 1f, .05f, Float.class);
@@ -299,6 +329,7 @@ public class GameSettings extends ScrollPane {
                     } 
                 });
                 insert(table, masterVolumeLabel, masterVolume);
+
                 Slider musicVolume = getSlider(game, "musicVolume", 0, 1f, .05f, Float.class);
                 Label musicVolumeLabel = getAdaptiveLabel(game, "Music", new Callable<String>() {
                     @Override
@@ -307,6 +338,7 @@ public class GameSettings extends ScrollPane {
                     } 
                 });
                 insert(table, musicVolumeLabel, musicVolume);
+
                 Slider sfxVolume = getSlider(game, "sfxVolume", 0, 1f, .05f, Float.class);
                 Label sfxVolumeLabel = getAdaptiveLabel(game, "SFX", new Callable<String>() {
                     @Override
@@ -315,6 +347,7 @@ public class GameSettings extends ScrollPane {
                     } 
                 });
                 insert(table, sfxVolumeLabel, sfxVolume);
+
                 Slider ambientVolume = getSlider(game, "ambientVolume", 0, 1f, .05f, Float.class);
                 Label ambientVolumeLabel = getAdaptiveLabel(game, "Ambient", new Callable<String>() {
                     @Override
@@ -335,15 +368,20 @@ public class GameSettings extends ScrollPane {
     }
 
     public static void insert(Table table, Actor actorLeft, Actor actorRight) {
-        Cell<Actor> left = table.add(actorLeft).padLeft(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
-        if(left.getActor() instanceof Label) {
-            left.expandX();
+       
+        if(actorLeft != null) {
+            Cell<Actor> left = table.add(actorLeft).padLeft(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
+            if(left.getActor() instanceof Label) {
+                left.expandX();
+            }
         }
-        Cell<Actor> right = table.add(actorRight).padRight(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
-        if(right.getActor() instanceof Label) {
-            right.expandX();
+        if(actorRight != null) {
+            Cell<Actor> right = table.add(actorRight).padRight(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
+            if(right.getActor() instanceof Label) {
+                right.expandX();
+            }
         }
-        right.row();
+        table.row();
     }
 
     public static TextField getControlButton(Gaze game, final Controls controls) {
@@ -379,7 +417,6 @@ public class GameSettings extends ScrollPane {
                 }
             }
         };
-        textField.setMessageText("Press a key...");
         return textField;
     }
 
@@ -424,6 +461,23 @@ public class GameSettings extends ScrollPane {
         slider.setValue(value);
 
         return slider;
+    }
+
+    public static TextButton getActionButton(Gaze game, final String text, Runnable action) {
+        TextButtonStyle style = new TextButtonStyle(game.getSkin().get("toggle", TextButtonStyle.class));
+        style.font = game.getFont(15);
+        style.downFontColor = style.fontColor;
+        TextButton button = new TextButton("", style);
+        button.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int buttonIndex) {
+                action.run();
+                return true;
+            }
+        });
+        boolean value = getPreferences(game).getBoolean(settingsLocation);
+        button.setChecked(value);
+        return button;
     }
 
     public static TextButton getToggleButton(Gaze game, String settingsLocation, final String text, String onText, String offText) {

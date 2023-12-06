@@ -9,11 +9,13 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 
 import net.cmr.gaze.networking.GameServer;
 import net.cmr.gaze.networking.GameServer.ServerType;
+import net.cmr.gaze.stage.widgets.GameSettings.Controls;
 
 public class ServerLauncher {
 
 	public static void main(String[] args) {
 		try {
+			System.out.println(Controls.MOVE_LEFT.toString());
 			Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 			
 			config.setInitialVisible(false);
