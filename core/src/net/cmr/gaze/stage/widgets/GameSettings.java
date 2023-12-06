@@ -10,9 +10,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -21,11 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.DataBuffer;
-import com.badlogic.gdx.utils.DelayedRemovalArray;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.PlayerDisplayWidget;
@@ -47,26 +48,35 @@ public class GameSettings extends ScrollPane {
     }
 
     public enum InputType {
-        NONE,
-        KEYBOARD, 
-        MOUSE, 
-        CONTROLLER;
+        NONE(0),
+        KEYBOARD(1), 
+        MOUSE(2), 
+        CONTROLLER(3);
+        
+        int id;
+        InputType(int id) {
+            this.id = id;
+        }
+
+        public int getID() {
+            return id;
+        }
     }
 
     public enum Controls {
 
         // Any Input Controls
-        MOVE_UP(0),
-        MOVE_DOWN(1),
-        MOVE_LEFT(2),
-        MOVE_RIGHT(3),
-        SPRINT(4),
-        INTERACT(5), // used for interacting in the world and special clicking in the inventory, Right click by default
-        SELECT(6), // used for attacking, breaking, clicking inventory, Right click by default
-        CLOSE(7), // used for closing the menu
-        INVENTORY(8),
-        RESEARCH(9),
-        CRAFTING(10);
+        MOVE_UP(0, Input.Keys.W, InputType.KEYBOARD),
+        MOVE_DOWN(1, Input.Keys.S, InputType.KEYBOARD),
+        MOVE_LEFT(2, Input.Keys.A, InputType.KEYBOARD),
+        MOVE_RIGHT(3, Input.Keys.D, InputType.KEYBOARD),
+        SPRINT(4, Input.Keys.SHIFT_LEFT, InputType.KEYBOARD),
+        INTERACT(5, Input.Buttons.RIGHT, InputType.MOUSE), // used for interacting in the world and special clicking in the inventory, Right click by default
+        SELECT(6, Input.Buttons.LEFT, InputType.MOUSE), // used for attacking, breaking, clicking inventory, Left click by default
+        CLOSE(7, Input.Keys.ESCAPE, InputType.KEYBOARD), // used for closing the menu
+        INVENTORY(8, Input.Keys.E, InputType.KEYBOARD),
+        RESEARCH(9, Input.Keys.R, InputType.KEYBOARD),
+        CRAFTING(10, Input.Keys.C, InputType.KEYBOARD);
 
         // Keyboard Only Controls
 
@@ -130,13 +140,13 @@ public class GameSettings extends ScrollPane {
             for(Controls control : Controls.values()) {
                 if(!game.settings.get().containsKey("control_"+control.name().toLowerCase()) || !game.settings.get().containsKey("control_"+control.name().toLowerCase()+"_inputType")) {
                     game.settings.putInteger("control_"+control.name().toLowerCase(), control.getDefaultControlCode());
-                    game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", control.getDefaultInputType().ordinal());
+                    game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", control.getDefaultInputType().getID());
                     game.settings.flush();
                 }
-                int controlCode = game.settings.getInteger("control_"+control.name().toLowerCase());
-                int inputTypeIndex = game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType");
+                int controlCode = Integer.parseInt((String) game.settings.get().get("control_"+control.name().toLowerCase()));
+                int inputTypeIndex = Integer.parseInt((String) game.settings.get().get("control_"+control.name().toLowerCase()+"_inputType"));
                 InputType inputType = null;
-                if(controlCode==-1 || inputTypeIndex<=0 || controlCode>=Controls.values().length) {
+                if(inputTypeIndex<=0 || inputTypeIndex>=InputType.values().length) {
                     controlCode = control.getDefaultControlCode();
                     inputType = control.getDefaultInputType();
                 } else {
@@ -150,9 +160,7 @@ public class GameSettings extends ScrollPane {
     public static void setControl(Gaze game, Controls control, int controlCode, InputType inputType) {
         controlSettings.put(control, new Pair<Integer, InputType>(controlCode, inputType));
         game.settings.putInteger("control_"+control.name().toLowerCase(), controlCode);
-        game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", inputType.ordinal());
-        System.out.println("Set control "+control.name().toLowerCase()+" to "+controlCode+" with input type "+inputType.name());
-        System.out.println(game.settings.getInteger("control_"+control.name().toLowerCase())+" "+game.settings.getInteger("control_"+control.name().toLowerCase()+"_inputType"));
+        game.settings.putInteger("control_"+control.name().toLowerCase()+"_inputType", inputType.getID());
         game.settings.flush();
     }
 
@@ -387,23 +395,63 @@ public class GameSettings extends ScrollPane {
     public static TextField getControlButton(Gaze game, final Controls controls) {
         TextField textField = new TextField("", game.getSkin(), "textField") {
             int displayKeyCode = -1;
-            boolean addedInputListener = false;
+            InputType displayInputType = InputType.NONE;
+            boolean addedInputListener = false, readNextInput = false;
+            boolean leftSelected = false;
             @Override
             public void act(float delta) {
                 super.act(delta);
+                if(leftSelected) {
+                    getStage().setKeyboardFocus(null);
+                    leftSelected = false;
+                }
                 if(!addedInputListener) {
                     Pair<Integer, InputType> control = controlSettings.get(controls);
                     displayKeyCode = control.getFirst();
+                    displayInputType = control.getSecond();
+                    setTouchable(Touchable.enabled);
                     addCaptureListener(new InputListener() {
                         @Override
                         public boolean keyDown(com.badlogic.gdx.scenes.scene2d.InputEvent event, int keycode) {
-                            if(keycode==Input.Keys.ESCAPE) {
+                            if(keycode==Input.Keys.BACKSPACE) {
                                 setControl(game, controls, -1, InputType.NONE);
                                 displayKeyCode = -1;
+                                displayInputType = InputType.KEYBOARD;
                             } else {
-                                System.out.println("SETTING CONTROL TO "+keycode);
                                 setControl(game, controls, keycode, InputType.KEYBOARD);
                                 displayKeyCode = keycode;
+                                displayInputType = InputType.KEYBOARD;
+                            }
+                            getStage().setKeyboardFocus(null);
+                            readNextInput = false;
+                            return true;
+                        }
+                        @Override
+                        public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                            if(!readNextInput) {
+                                readNextInput = true;
+                                return true;
+                            } else {
+                                if(button==Input.Buttons.LEFT) {
+                                    setControl(game, controls, Input.Buttons.LEFT, InputType.MOUSE);
+                                    displayKeyCode = Input.Buttons.LEFT;
+                                    leftSelected = true;
+                                } else if(button==Input.Buttons.RIGHT) {
+                                    setControl(game, controls, Input.Buttons.RIGHT, InputType.MOUSE);
+                                    displayKeyCode = Input.Buttons.RIGHT;
+                                } else if(button==Input.Buttons.MIDDLE) {
+                                    setControl(game, controls, Input.Buttons.MIDDLE, InputType.MOUSE);
+                                    displayKeyCode = Input.Buttons.MIDDLE;
+                                } else if(button==Input.Buttons.FORWARD) {
+                                    setControl(game, controls, Input.Buttons.FORWARD, InputType.MOUSE);
+                                    displayKeyCode = Input.Buttons.FORWARD;
+                                } else if(button==Input.Buttons.BACK) {
+                                    setControl(game, controls, Input.Buttons.BACK, InputType.MOUSE);
+                                    displayKeyCode = Input.Buttons.BACK;
+                                }
+                                displayInputType = InputType.MOUSE;
+                                readNextInput = false;
+                                getStage().setKeyboardFocus(null);
                             }
                             return true;
                         }
@@ -411,7 +459,39 @@ public class GameSettings extends ScrollPane {
                     addedInputListener = true;
                 }
                 if(displayKeyCode!=-1) {
-                    setText(Input.Keys.toString(displayKeyCode));
+                    switch(displayInputType) {
+                        case KEYBOARD:
+                            setText(Input.Keys.toString(displayKeyCode));
+                            break;
+                        case MOUSE:
+                            switch(displayKeyCode) {
+                                case Input.Buttons.LEFT:
+                                    setText("Left Mouse");
+                                    break;
+                                case Input.Buttons.RIGHT:
+                                    setText("Right Mouse");
+                                    break;
+                                case Input.Buttons.MIDDLE:
+                                    setText("Middle Mouse");
+                                    break;
+                                case Input.Buttons.FORWARD:
+                                    setText("Forward Mouse");
+                                    break;
+                                case Input.Buttons.BACK:
+                                    setText("Back Mouse");
+                                    break;
+                                default:
+                                    setText("Mouse Button "+displayKeyCode);
+                                    break;
+                            }
+                            break;
+                        case CONTROLLER:
+                            setText("Controller "+displayKeyCode);
+                            break;
+                        default:
+                            setText("None");
+                            break;
+                    }
                 } else {
                     setText("None");
                 }
@@ -427,7 +507,7 @@ public class GameSettings extends ScrollPane {
             public void act(float delta) {
                 super.act(delta);
                 try {
-                    setText(text+": "+adaptiveStringRetriever.call());
+                    setText(adaptiveStringRetriever.call());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -475,8 +555,6 @@ public class GameSettings extends ScrollPane {
                 return true;
             }
         });
-        boolean value = getPreferences(game).getBoolean(settingsLocation);
-        button.setChecked(value);
         return button;
     }
 
