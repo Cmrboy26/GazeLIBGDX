@@ -230,7 +230,7 @@ public class GameSettings extends ScrollPane {
         switch (setting) {
             case GRAPHICS:
                 Slider fpsSlider = getSlider(game, "FPS", -10, 150, 10, Integer.class);
-                Label fpsLabel = getAdaptiveLabel(game, "FPS", new Callable<String>() {
+                Label fpsLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
                         int value = (int) fpsSlider.getValue();
@@ -240,7 +240,7 @@ public class GameSettings extends ScrollPane {
                         if(value==0) {
                             return "VSync";
                         }
-                        return value+"";
+                        return "FPS: "+value+"";
                     } 
                 });
                 insert(table, fpsLabel, fpsSlider);
@@ -250,19 +250,19 @@ public class GameSettings extends ScrollPane {
                 insert(table, fullscreenButton, particlesButton);
 
                 Slider uiScaleSlider = getSlider(game, "uiZoom", 1f, 3f, .5f, Float.class);
-                Label uiScaleLabel = getAdaptiveLabel(game, "UI Scale", new Callable<String>() {
+                Label uiScaleLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (1/uiScaleSlider.getValue()*100))+"%";
+                        return "UI Scale: "+((int) (1/uiScaleSlider.getValue()*100))+"%";
                     } 
                 });
                 insert(table, uiScaleLabel, uiScaleSlider);
 
                 Slider worldScaleSlider = getSlider(game, "worldZoom", 1f, 4f, 1, Float.class);
-                Label worldScaleLabel = getAdaptiveLabel(game, "World Zoom", new Callable<String>() {
+                Label worldScaleLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (2/worldScaleSlider.getValue()*100))+"%";
+                        return "World Zoom: "+((int) (2/worldScaleSlider.getValue()*100))+"%";
                     } 
                 });
                 insert(table, worldScaleLabel, worldScaleSlider);
@@ -303,7 +303,7 @@ public class GameSettings extends ScrollPane {
                 break;
             case GAME:
                 TextButton invertScrollingButton = getToggleButton(game, "invertScroll", "Invert Scroll", "On", "Off");
-                TextButton showFPSButton = getToggleButton(game, "showFPS", "Show FPS", "On", "Off");
+                TextButton showFPSButton = getToggleButton(game, "displayFPS", "Show FPS", "On", "Off");
                 insert(table, invertScrollingButton, showFPSButton);
                 
                 TextButton showHintsButton = getToggleButton(game, "showHints", "Hints", "On", "Off");
@@ -318,7 +318,7 @@ public class GameSettings extends ScrollPane {
                 break;
             case CONTROLS:
                 for(final Controls control : Controls.values()) {
-                    Label label = getAdaptiveLabel(game, control.name(), new Callable<String>() {
+                    Label label = getAdaptiveLabel(game, new Callable<String>() {
                         @Override
                         public String call() throws Exception {
                             return control.toString();
@@ -330,37 +330,37 @@ public class GameSettings extends ScrollPane {
                 break;
             case AUDIO:
                 Slider masterVolume = getSlider(game, "masterVolume", 0, 1f, .05f, Float.class);
-                Label masterVolumeLabel = getAdaptiveLabel(game, "Master", new Callable<String>() {
+                Label masterVolumeLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (masterVolume.getValue()*100))+"%";
+                        return "Master: "+((int) (masterVolume.getValue()*100))+"%";
                     } 
                 });
                 insert(table, masterVolumeLabel, masterVolume);
 
                 Slider musicVolume = getSlider(game, "musicVolume", 0, 1f, .05f, Float.class);
-                Label musicVolumeLabel = getAdaptiveLabel(game, "Music", new Callable<String>() {
+                Label musicVolumeLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (musicVolume.getValue()*100))+"%";
+                        return "Music: "+((int) (musicVolume.getValue()*100))+"%";
                     } 
                 });
                 insert(table, musicVolumeLabel, musicVolume);
 
                 Slider sfxVolume = getSlider(game, "sfxVolume", 0, 1f, .05f, Float.class);
-                Label sfxVolumeLabel = getAdaptiveLabel(game, "SFX", new Callable<String>() {
+                Label sfxVolumeLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (sfxVolume.getValue()*100))+"%";
+                        return "SFX: "+((int) (sfxVolume.getValue()*100))+"%";
                     } 
                 });
                 insert(table, sfxVolumeLabel, sfxVolume);
 
                 Slider ambientVolume = getSlider(game, "ambientVolume", 0, 1f, .05f, Float.class);
-                Label ambientVolumeLabel = getAdaptiveLabel(game, "Ambient", new Callable<String>() {
+                Label ambientVolumeLabel = getAdaptiveLabel(game, new Callable<String>() {
                     @Override
                     public String call() throws Exception {
-                        return ((int) (ambientVolume.getValue()*100))+"%";
+                        return  "Ambient: "+((int) (ambientVolume.getValue()*100))+"%";
                     } 
                 });
                 insert(table, ambientVolumeLabel, ambientVolume);
@@ -500,8 +500,14 @@ public class GameSettings extends ScrollPane {
         return textField;
     }
 
-    public static Label getAdaptiveLabel(Gaze game, final String text, final Callable<String> adaptiveStringRetriever) {
+    public static Label getAdaptiveLabel(Gaze game, final Callable<String> adaptiveStringRetriever) {
         LabelStyle style = new LabelStyle(game.getFont(15), Color.WHITE);
+        String text = "";
+        try {
+            text = adaptiveStringRetriever.call();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         Label label = new Label(text, style) {
             @Override
             public void act(float delta) {
@@ -547,7 +553,7 @@ public class GameSettings extends ScrollPane {
         TextButtonStyle style = new TextButtonStyle(game.getSkin().get("toggle", TextButtonStyle.class));
         style.font = game.getFont(15);
         style.downFontColor = style.fontColor;
-        TextButton button = new TextButton("", style);
+        TextButton button = new TextButton(text, style);
         button.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int buttonIndex) {

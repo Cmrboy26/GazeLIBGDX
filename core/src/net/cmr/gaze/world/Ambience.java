@@ -1,7 +1,5 @@
 package net.cmr.gaze.world;
 
-import com.badlogic.gdx.graphics.g3d.environment.AmbientCubemap;
-
 public enum Ambience {
     
     SILENT,
@@ -42,9 +40,9 @@ public enum Ambience {
             case FACTORY:
                 return new String[] {"machineworking"};
             case RAIN:
-                return new String[] {"outro"};
+                return new String[] {};
             case THUNDER:
-                return new String[] {"intro"};
+                return new String[] {};
             default:
                 return new String[] {};
         }
