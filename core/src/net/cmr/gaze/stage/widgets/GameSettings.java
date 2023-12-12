@@ -102,8 +102,22 @@ public class GameSettings extends ScrollPane {
         public int getDefaultControlCode() {
             return defaultControlCode;
         }
+        public int getControlCode() {
+            Pair<Integer, InputType> control = controlSettings.get(this);
+            if(control==null) {
+                return -1;
+            }
+            return control.getFirst();
+        }
         public InputType getDefaultInputType() {
             return defaultInputType;
+        }
+        public InputType getInputType() {
+            Pair<Integer, InputType> control = controlSettings.get(this);
+            if(control==null) {
+                return InputType.NONE;
+            }
+            return control.getSecond();
         }
 
         public boolean isDown() {
@@ -112,6 +126,8 @@ public class GameSettings extends ScrollPane {
         public boolean isJustDown() {
             return GameSettings.isJustDown(this);
         }
+
+
         public String toString() {
             String enumName = name().toLowerCase();
             String[] words = enumName.split("_");
@@ -379,15 +395,15 @@ public class GameSettings extends ScrollPane {
        
         if(actorLeft != null) {
             Cell<Actor> left = table.add(actorLeft).padLeft(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
-            if(left.getActor() instanceof Label) {
+            //if(left.getActor() instanceof Label) {
                 left.expandX();
-            }
+            //}
         }
         if(actorRight != null) {
             Cell<Actor> right = table.add(actorRight).padRight(ELEMENT_SPACING_X).padBottom(ELEMENT_SPACING_Y/2f).padTop(ELEMENT_SPACING_Y/2f);
-            if(right.getActor() instanceof Label) {
+            //if(right.getActor() instanceof Label) {
                 right.expandX();
-            }
+            //}
         }
         table.row();
     }

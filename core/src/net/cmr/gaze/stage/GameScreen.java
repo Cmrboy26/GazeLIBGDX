@@ -38,7 +38,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -46,7 +45,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ActorGestureListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import net.cmr.gaze.Gaze;
@@ -100,6 +98,8 @@ import net.cmr.gaze.stage.menus.PauseMenu;
 import net.cmr.gaze.stage.menus.ResearchMenu;
 import net.cmr.gaze.stage.widgets.BarsWidget;
 import net.cmr.gaze.stage.widgets.ChatWidget;
+import net.cmr.gaze.stage.widgets.GameSettings.Controls;
+import net.cmr.gaze.stage.widgets.GameSettings.InputType;
 import net.cmr.gaze.stage.widgets.HintMenu;
 import net.cmr.gaze.stage.widgets.HintMenu.HintMenuType;
 import net.cmr.gaze.stage.widgets.Notification;
@@ -949,7 +949,8 @@ public class GameScreen implements Screen {
 	 */
 	private void processMouseInputs(float delta, Vector2 mouseLocalPosition) {
 		if(!overMenus(mouseLocalPosition)) {
-			if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isKeyPressed(Input.Keys.V)) {
+			if(Controls.SELECT.isDown()) {
+			//if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) || Gdx.input.isKeyPressed(Input.Keys.V)) {
 				
 				if(inventoryMenu.getInventoryWidget().inventoryGroup.selectedSlot!=null) {
 					// drop item
@@ -962,7 +963,8 @@ public class GameScreen implements Screen {
 					
 					boolean automaticClick = true;
 					leftClickDelta+=delta;
-					if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.V)) {
+					if(Controls.SELECT.isJustDown()) {
+					//if(Gdx.input.isButtonJustPressed(Input.Buttons.LEFT) || Gdx.input.isKeyJustPressed(Input.Keys.V)) {
 						leftClickDelta = Float.MAX_VALUE;
 						automaticClick = false;
 					}
@@ -976,7 +978,8 @@ public class GameScreen implements Screen {
 						int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
 						
 						boolean keyContinue = true;
-						if(Gdx.input.isKeyPressed(Input.Keys.V)) {
+						if(Controls.SELECT.getInputType()==InputType.KEYBOARD) {
+						//if(Gdx.input.isKeyPressed(Input.Keys.V)) {
 
 							int px = getLocalPlayer().getTileX();
 							int py = getLocalPlayer().getTileY();
@@ -1010,7 +1013,7 @@ public class GameScreen implements Screen {
 						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
 						boolean skipWall = false;
 
-						if(Gdx.input.isKeyPressed(Input.Keys.V) && keyContinue) {
+						if(Controls.SELECT.isDown() && keyContinue) {
 							ignoreCeiling = 1;
 							skipWall = true;
 						}
@@ -1060,7 +1063,8 @@ public class GameScreen implements Screen {
 				leftClickDelta = 0;
 			}
 			
-			if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.X)) {
+			if(Controls.INTERACT.isDown()) {
+			//if(Gdx.input.isButtonPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.X)) {
 				
 				boolean automaticClick = true;
 				
@@ -1073,7 +1077,8 @@ public class GameScreen implements Screen {
 					automaticClick = false;
 				}*/
 				
-				if((Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.X))) {
+				//if((Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT) || Gdx.input.isKeyJustPressed(Input.Keys.X))) {
+				if(Controls.INTERACT.isJustDown()) {
 					rightClickDelta = Integer.MAX_VALUE/2;
 					automaticClick = false;
 				}
@@ -1101,7 +1106,8 @@ public class GameScreen implements Screen {
 					int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
 					
 					boolean keyContinue = true;
-					if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+					//if(Gdx.input.isKeyPressed(Input.Keys.X)) {
+					if(Controls.INTERACT.getInputType()==InputType.KEYBOARD) {
 
 						int px = getLocalPlayer().getTileX();
 						int py = getLocalPlayer().getTileY();
@@ -1148,16 +1154,16 @@ public class GameScreen implements Screen {
 
 
 		if(chatWidget.getStage().getKeyboardFocus()==null) {
-			if(Gdx.input.isKeyPressed(Input.Keys.W)) {
+			if(Controls.MOVE_UP.isDown()) {
 				iy += speed;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+			if(Controls.MOVE_DOWN.isDown()) {
 				iy -= speed;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+			if(Controls.MOVE_RIGHT.isDown()) {
 				ix += speed;
 			}
-			if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+			if(Controls.MOVE_LEFT.isDown()) {
 				ix -= speed;
 			}
 		}
@@ -1166,7 +1172,7 @@ public class GameScreen implements Screen {
 		ix = clamp.x;
 		iy = clamp.y;
 		
-		boolean sprint = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
+		boolean sprint = Controls.SPRINT.isDown();
 		
 		if(lastX !=ix || lastY != iy || lastSprint != sprint) {
 			//this.previousPlayerPositions.put(System.currentTimeMillis(), new Vector2Double(getLocalPlayer().getX(), getLocalPlayer().getY()));
