@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.game.CropBreeding.CropType;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.SeedItem;
@@ -36,6 +37,11 @@ public class CottonSeeds extends SeedItem {
 	@Override
 	public TileType getTileToPlace() {
 		return TileType.COTTON;
+	}
+
+	@Override
+	public CropType getCropType() {
+		return CropType.COTTON;
 	}
 
 }
