@@ -22,6 +22,7 @@ import net.cmr.gaze.world.tile.LavaTile;
 import net.cmr.gaze.world.tile.SandTile;
 import net.cmr.gaze.world.tile.SandstoneTile;
 import net.cmr.gaze.world.tile.SolarPanel;
+import net.cmr.gaze.world.tile.SteamEngine;
 import net.cmr.gaze.world.tile.StoneBrickCeilingTile;
 import net.cmr.gaze.world.tile.StoneBrickFloorTile;
 import net.cmr.gaze.world.tile.StoneBrickWallTile;
@@ -87,7 +88,8 @@ public enum TileType {
 	BED(BedTile.class, 1, TickType.NONE, 3, Replaceable.NEVER), 
 	COTTON(CottonTile.class, 1, TickType.NONE), 
 	SANDSTONE(SandstoneTile.class, 0, TickType.NEARBY), 
-	CLAY(ClayTile.class, 0, TickType.NONE);
+	CLAY(ClayTile.class, 0, TickType.NONE),
+	STEAM_ENGINE(SteamEngine.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,

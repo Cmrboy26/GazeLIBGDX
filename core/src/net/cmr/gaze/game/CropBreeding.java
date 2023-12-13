@@ -36,9 +36,12 @@ public class CropBreeding {
         }
     }
 
-    public Item breedSeeds(SeedItem seed1, SeedItem seed2) {
-        Objects.requireNonNull(seed1);
-        Objects.requireNonNull(seed2);
+    public static Item breedSeeds(Item item1, Item item2) {
+        if(!(item1 instanceof SeedItem) || !(item2 instanceof SeedItem)) {
+            return null;
+        }
+        SeedItem seed1 = (SeedItem) item1;
+        SeedItem seed2 = (SeedItem) item2;
         CropType type1 = seed1.getCropType();
         CropType type2 = seed2.getCropType();
         if(seed1.getSize() < 1 || seed2.getSize() < 1) {
@@ -61,7 +64,7 @@ public class CropBreeding {
     Rice + Wheat = Sugar
      */
 
-    public CropType getBreedResult(CropType type1, CropType type2) {
+    public static CropType getBreedResult(CropType type1, CropType type2) {
         if(type1==CropType.WHEAT && type2==CropType.WHEAT) {
             if(rareChance()) {
                 return CropType.BARLEY;
@@ -101,17 +104,17 @@ public class CropBreeding {
         return type1;
     }
 
-    private boolean rareChance() {
+    private static boolean rareChance() {
         return Math.random() < RARE_CHANCE;
     }
-    private boolean uncommonChance() {
+    private static boolean uncommonChance() {
         return Math.random() < UNCOMMON_CHANCE;
     }
 
-    private boolean eitherEqual(CropType type1, CropType type2, CropType compare) {
+    private static boolean eitherEqual(CropType type1, CropType type2, CropType compare) {
         return type1 == compare || type2 == compare;
     }
-    private CropType random(CropType... types) {
+    private static CropType random(CropType... types) {
         return types[(int)(Math.random()*types.length)];
     }
 
