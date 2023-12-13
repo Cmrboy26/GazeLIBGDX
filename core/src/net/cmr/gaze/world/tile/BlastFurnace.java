@@ -49,7 +49,7 @@ public class BlastFurnace extends BaseTile implements EnergyConsumer, CraftingSt
 	}
 
     @Override
-    public void update(TileData data, Point worldCoordinates) {
+    public void update(TileData data, Point worldCoordinates, boolean loadedByPlayer) {
         if(data.isServer()) {
             boolean machineCurrentlyFunctioning = isMachineFunctioning();
             // If the machine has changed state from WORKING <-> NOT WORKING, update the visual of the tile on the client side

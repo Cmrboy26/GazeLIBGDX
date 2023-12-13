@@ -71,7 +71,7 @@ public abstract class Tile implements Cloneable {
 	public float getRenderYOffset() {
 		return 0;
 	}
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		
 	}
 	

@@ -38,7 +38,7 @@ public class ChestTile extends Tile {
 	}
 
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(data.isServer()) {
 			data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
 		}

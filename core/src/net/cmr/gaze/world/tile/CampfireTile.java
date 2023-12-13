@@ -73,7 +73,7 @@ public class CampfireTile extends Tile implements CraftingStationTile, LightSour
 	float campfireParticleDelta = 0;
 
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(data.isServer()) {
 			campfireParticleDelta+=Tile.DELTA_TIME*Math.random()*2;
 			if(campfireParticleDelta > 2) {

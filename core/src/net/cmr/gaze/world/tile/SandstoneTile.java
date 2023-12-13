@@ -34,7 +34,7 @@ public class SandstoneTile extends TransitionTile {
     double lastCheck = 0;
 	
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(data.isServer()) {
 			lastCheck+=Tile.DELTA_TIME;
 			if(lastCheck>5) {

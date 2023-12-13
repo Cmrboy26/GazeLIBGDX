@@ -67,7 +67,7 @@ public class DirtTile extends TransitionTile {
 	double lastCheck = 0;
 	
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(persistent) {
 			return;
 		}

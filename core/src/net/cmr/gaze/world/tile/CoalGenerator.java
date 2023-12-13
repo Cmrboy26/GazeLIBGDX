@@ -53,7 +53,7 @@ public class CoalGenerator extends BaseTile implements EnergyProducer, LightSour
     float particleDelta;
 
     @Override
-    public void update(TileData data, Point worldCoordinates) {
+    public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
         if(data.isServer()) {
             if(coalCount > 0) {
                 if(getPowerGrid()!=null) {

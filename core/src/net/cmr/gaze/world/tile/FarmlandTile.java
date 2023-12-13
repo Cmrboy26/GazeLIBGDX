@@ -68,7 +68,7 @@ public class FarmlandTile extends TransitionTile {
 	public static final float CHECK_DURATION = 1;
 	
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		
 		int seconds = 180;
 		if(moisture>0) {

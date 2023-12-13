@@ -44,7 +44,7 @@ public class SolarPanel extends BaseTile implements EnergyProducer {
     float delta = 2;
 
     @Override
-    public void update(TileData data, Point worldCoordinates) {
+    public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
         if(data.isServer()) {
             if(getPowerGrid()!=null) {
                 delta += Tile.DELTA_TIME;

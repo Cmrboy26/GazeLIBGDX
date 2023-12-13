@@ -41,7 +41,7 @@ public class CoalGeneratorItem extends Placeable {
 
 	@Override
 	public TileType getTileToPlace() {
-		return TileType.COAL_GENERATOR;
+		return TileType.STEAM_ENGINE;
 	}
 	
 }

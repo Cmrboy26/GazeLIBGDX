@@ -46,8 +46,7 @@ public class TreeSapling extends BaseTile {
 	}
 
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
-		super.update(data, worldCoordinates);
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(data.isServer()) {
 			if(stage<=2) {
 				elapsedTime+=DELTA_TIME;

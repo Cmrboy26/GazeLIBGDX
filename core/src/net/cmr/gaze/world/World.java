@@ -619,9 +619,9 @@ public class World {
 	}
 	
 	public void updateEntityChunk(Entity entity, boolean add) {
-		//System.out.println("changed entity thing");
 		Point newChunk = entity.getChunk();
 		getChunk(newChunk, true).addEntity(entity);
+
 		// if the entity's current chunk in loading distance of player AND its previous position was not in the loading distance of the player, send spawnEntity
 		SpawnEntity packet = new SpawnEntity(entity);
 		

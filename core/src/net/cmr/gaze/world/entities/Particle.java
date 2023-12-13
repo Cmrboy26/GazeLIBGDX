@@ -333,6 +333,12 @@ public class Particle extends Entity implements ExcludePositionUpdates {
 				return;
 			}
 		}
+		if(data.isClient()) {
+			if(particleLife<0) {
+				data.getScreen().getEntities().remove(getUUID());
+				return;
+			}
+		}
 	}
 	
 	@Override

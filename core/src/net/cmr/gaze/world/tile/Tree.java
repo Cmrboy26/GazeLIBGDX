@@ -75,7 +75,7 @@ public class Tree extends BaseTile implements SeeThroughTile {
 	private static float particleDelta, particleDelta2;
 	
 	@Override
-	public void update(TileData data, Point worldCoordinates) {
+	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(shake > 0) {
 			shake-=Tile.DELTA_TIME;
 		}

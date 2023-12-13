@@ -3,17 +3,21 @@ package net.cmr.gaze.world;
 import java.awt.Point;
 import java.util.HashMap;
 
+import net.cmr.gaze.stage.GameScreen;
+
 // A "wrapper" object that 
 public class TileData {
 
 	private World serverData;
 	private HashMap<Point, Tile[][][]> clientData;
+	private GameScreen screen;
 	
 	public TileData(World serverData) {
 		this.serverData = serverData;
 	}
-	public TileData(HashMap<Point, Tile[][][]> clientData) {
-		this.clientData = clientData;
+	public TileData(GameScreen screen) {
+		this.screen = screen;
+		this.clientData = screen.getTiles();
 	}
 	
 	public boolean isClient() {
@@ -83,5 +87,12 @@ public class TileData {
 			throw new IllegalStateException("Development problem: Attempted to access world object on server side. (Did you forget a isClient() check before accessing?)");
 		}
     }
+	public GameScreen getScreen() {
+		if(isClient()) {
+			return screen;
+		} else {
+			throw new IllegalStateException("Development problem: Attempted to access screen object on server side. (Did you forget a isClient() check before accessing?)");
+		}
+	}
 	
 }

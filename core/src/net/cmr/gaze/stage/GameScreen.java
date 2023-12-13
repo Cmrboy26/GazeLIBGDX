@@ -202,7 +202,7 @@ public class GameScreen implements Screen {
 		this.worldViewport.getCamera().position.set(64f/2f, 36f/2f, 0);
 		((OrthographicCamera)worldViewport.getCamera()).zoom = prefs.getFloat("worldZoom");
 		this.tileData = new HashMap<>();
-		this.tileDataObject = new TileData(tileData);
+		this.tileDataObject = new TileData(this);
 		shapeRenderer = new ShapeRenderer();
 		this.username = username;
 		this.server = server;
@@ -1931,6 +1931,14 @@ public class GameScreen implements Screen {
     
 	public EnvironmentController getEnvironmentController() {
 		return environmentController;
+	}
+
+    public HashMap<Point, Tile[][][]> getTiles() {
+        return tileData;
+    }
+
+	public ConcurrentHashMap<UUID, Entity> getEntities() {
+		return entities;
 	}
 
 }

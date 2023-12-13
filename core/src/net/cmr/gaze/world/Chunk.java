@@ -102,12 +102,12 @@ public class Chunk {
 	public void update(boolean loadedByPlayer, boolean updateTiles) {
 		if(updateTiles) {
 			for(Pair<Point, Integer> point : constantUpdateTiles.keySet()) {
-				constantUpdateTiles.get(point).update(world.tileData, point.getFirst());
+				constantUpdateTiles.get(point).update(world.tileData, point.getFirst(), loadedByPlayer);
 				//System.out.println("UPDATED CONSTANT: "+constantUpdateTiles.get(point));
 			}
 			if(loadedByPlayer) {
 				for(Pair<Point, Integer> point : this.updateTiles.keySet()) {
-					this.updateTiles.get(point).update(world.tileData, point.getFirst());
+					this.updateTiles.get(point).update(world.tileData, point.getFirst(), true);
 					//System.out.println("UPDATED NEARBY: "+this.updateTiles.get(point));
 				}
 			}
