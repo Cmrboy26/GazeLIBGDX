@@ -1,9 +1,12 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.abstractTiles;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import com.badlogic.gdx.utils.DataBuffer;
+
+import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileType;
 
 public abstract class CeilingTile extends Tile {
 

@@ -13,10 +13,10 @@ import com.badlogic.gdx.utils.DataBuffer;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.LightSource;
-import net.cmr.gaze.world.SpeedChangeTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
-import net.cmr.gaze.world.TransitionTile;
+import net.cmr.gaze.world.abstractTiles.TransitionTile;
+import net.cmr.gaze.world.interfaceTiles.SpeedChangeTile;
 
 public class LavaTile extends TransitionTile implements SpeedChangeTile, LightSource {
 

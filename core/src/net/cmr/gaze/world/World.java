@@ -39,12 +39,15 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.TileType.Replaceable;
+import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.CeilingTile;
 import net.cmr.gaze.world.abstractTiles.FloorTile;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.ExcludePositionUpdates;
 import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
+import net.cmr.gaze.world.interfaceTiles.Rotatable;
 import net.cmr.gaze.world.entities.Player;
 
 public class World {
@@ -362,8 +365,8 @@ public class World {
 		getChunk(Chunk.getChunk(tilex, tiley), disableGenerate); // Generates the chunk if it is null
 		if(t instanceof BaseTile) {
 			BaseTile base = (BaseTile) t;
-			int width = base.width;
-			int height = base.height;
+			int width = base.getWidth();
+			int height = base.getHeight();
 			for(int x = 0; x<width; x++) {
 				for(int y = 0; y<height; y++) {
 					if(!isValidPlacement(base, tilex+x, tiley+y, countReplacables)) {
@@ -487,8 +490,8 @@ public class World {
 				baseY = tiley;
 			}
 			
-			for(int x = 0; x < base.width; x++) {
-				for(int y = 0; y < base.height; y++) {
+			for(int x = 0; x < base.getWidth(); x++) {
+				for(int y = 0; y < base.getHeight(); y++) {
 					if(breakTile) {
 						if(x == 0 && y == 0) {
 							if(at != null) {

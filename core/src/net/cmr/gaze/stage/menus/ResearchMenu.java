@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.Logger;
 import net.cmr.gaze.networking.packets.ResearchPacket;
 import net.cmr.gaze.research.ResearchData;
 import net.cmr.gaze.research.ResearchTree;
@@ -52,6 +53,10 @@ public class ResearchMenu extends GameMenu {
     public static void initialize() {
         if(initialized) {return;}
         researchTrees = new ArrayList<>();
+        if(Gdx.files == null) {
+            Logger.error("ERROR", "Gdx.files is null! Research tree not initialized!");
+            return;
+        }
         for(int i = 0; true; i++) {
             FileHandle handle = Gdx.files.internal("content/tech"+i+".json");
             if(!handle.exists()) {

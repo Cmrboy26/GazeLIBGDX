@@ -18,12 +18,12 @@ import net.cmr.gaze.inventory.custom.TorchItem;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
-import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.CraftingStationTile;
 
 public class FurnaceTile extends Tile implements CraftingStationTile, LightSource {
 

@@ -1,4 +1,7 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.abstractTiles;
+
+import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileType;
 
 public abstract class BaseTile extends Tile {
 

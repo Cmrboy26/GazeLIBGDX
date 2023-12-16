@@ -1,4 +1,4 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.interfaceTiles;
 
 import net.cmr.gaze.crafting.Crafting.CraftingStation;
 

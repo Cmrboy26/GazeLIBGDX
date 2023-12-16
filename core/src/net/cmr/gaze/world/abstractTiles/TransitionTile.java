@@ -1,4 +1,4 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.abstractTiles;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomTime;
-import net.cmr.gaze.world.abstractTiles.FloorTile;
+import net.cmr.gaze.world.Chunk;
+import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileType;
 
 public abstract class TransitionTile extends Tile {
 

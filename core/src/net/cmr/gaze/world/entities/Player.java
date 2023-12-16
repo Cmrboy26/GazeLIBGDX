@@ -39,7 +39,7 @@ import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldManager;
-import net.cmr.gaze.world.abstractTiles.HousingDoor;
+import net.cmr.gaze.world.interfaceTiles.HousingDoor;
 import net.cmr.gaze.world.pathfind.AStar;
 
 // TODO: Player Inventory data should only be sent when the player is within range

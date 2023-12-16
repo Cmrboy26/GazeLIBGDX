@@ -46,10 +46,10 @@ import net.cmr.gaze.research.ResearchVertex.ResearchReward;
 import net.cmr.gaze.stage.menus.ResearchMenu;
 import net.cmr.gaze.stage.widgets.QuestBook.Quest;
 import net.cmr.gaze.util.CustomMath;
-import net.cmr.gaze.world.CraftingStationTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.entities.DroppedItem;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.CraftingStationTile;
 import net.cmr.gaze.world.tile.ChestTile;
 
 public class PlayerConnection {

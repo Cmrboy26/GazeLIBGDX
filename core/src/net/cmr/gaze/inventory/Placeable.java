@@ -1,10 +1,10 @@
 package net.cmr.gaze.inventory;
 
 import net.cmr.gaze.inventory.Items.ItemType;
-import net.cmr.gaze.world.Rotatable;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
+import net.cmr.gaze.world.interfaceTiles.Rotatable;
 
 public abstract class Placeable extends Item {
 

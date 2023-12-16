@@ -4,6 +4,8 @@ import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
 
+import net.cmr.gaze.world.abstractTiles.CeilingTile;
+
 public abstract class RenderRule {
     
     public static float delta = 0;

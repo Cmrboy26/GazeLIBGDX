@@ -1,4 +1,4 @@
-package net.cmr.gaze.world.abstractTiles;
+package net.cmr.gaze.world.interfaceTiles;
 
 import net.cmr.gaze.world.Housing;
 

@@ -9,12 +9,11 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.world.SpeedChangeTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
-import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.SpeedChangeTile;
 
 public abstract class FloorTile extends TransitionTile implements SpeedChangeTile {
 	

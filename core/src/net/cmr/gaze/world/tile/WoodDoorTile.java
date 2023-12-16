@@ -14,13 +14,13 @@ import net.cmr.gaze.inventory.Tool.Material;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
-import net.cmr.gaze.world.Rotatable;
-import net.cmr.gaze.world.RotatableTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
-import net.cmr.gaze.world.abstractTiles.HousingDoor;
+import net.cmr.gaze.world.abstractTiles.RotatableTile;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.HousingDoor;
+import net.cmr.gaze.world.interfaceTiles.Rotatable;
 
 public class WoodDoorTile extends RotatableTile implements HousingDoor {
 

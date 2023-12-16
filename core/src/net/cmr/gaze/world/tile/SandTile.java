@@ -19,8 +19,8 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
-import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class SandTile extends TransitionTile {

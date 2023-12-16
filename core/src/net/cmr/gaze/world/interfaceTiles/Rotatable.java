@@ -1,4 +1,4 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.interfaceTiles;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -12,6 +12,13 @@ public interface Rotatable {
 	public default int maxDirection() {
 		return 3;
 	};
+
+	public default int getComponentX() {
+		return getDirection() == 1 ? -1 : getDirection() == 3 ? 1 : 0;
+	}
+	public default int getComponentY() {
+		return getDirection() == 0 ? -1 : getDirection() == 2 ? 1 : 0;
+	}
 	
 	public default void writeRotatableData(DataBuffer buffer) throws IOException {
 		buffer.writeInt(getDirection());

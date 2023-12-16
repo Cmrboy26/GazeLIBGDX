@@ -13,10 +13,10 @@ import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.leveling.Skills.Skill;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
-import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.CropTile;
 import net.cmr.gaze.world.entities.Player;
 
 public class CottonTile extends CropTile {

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
@@ -196,12 +197,12 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         return "ElectricityPole["+worldCoordinates.x+", "+worldCoordinates.y+"]";
     }
 
-    public abstract void writePole(TileType type, DataBuffer buffer) throws IOException;
-    public abstract ElectricityPole readPole(DataInputStream input, TileType type) throws IOException;
+    //public abstract void writePole(TileType type, DataBuffer buffer) throws IOException;
+    //public abstract ElectricityPole readPole(DataInputStream input, TileType type) throws IOException;
 
     @Override
     public Tile readTile(DataInputStream input, TileType type) throws IOException {
-        ElectricityPole pole = readPole(input, type);
+        ElectricityPole pole = (ElectricityPole) Tiles.getTile(type);
         readBreakData(input, pole);
         pole.worldCoordinates = new Point(input.readInt(), input.readInt());
         
@@ -217,7 +218,6 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
         if(worldCoordinates == null) {
             throw new NullPointerException("World Coordinate is null for tile "+tile.name());
         }
-        writePole(tile, buffer);
         buffer.writeInt(worldCoordinates.x);
         buffer.writeInt(worldCoordinates.y);
         // Write 3 random floats based on the hashCode of the powerGrid

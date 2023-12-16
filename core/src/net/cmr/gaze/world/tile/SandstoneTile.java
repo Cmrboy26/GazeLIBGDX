@@ -13,7 +13,7 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
-import net.cmr.gaze.world.TransitionTile;
+import net.cmr.gaze.world.abstractTiles.TransitionTile;
 
 public class SandstoneTile extends TransitionTile {
 

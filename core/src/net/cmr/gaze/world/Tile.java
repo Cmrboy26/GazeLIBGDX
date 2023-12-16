@@ -19,6 +19,7 @@ import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileType.Replaceable;
+import net.cmr.gaze.world.abstractTiles.BaseTile;
 import net.cmr.gaze.world.entities.Player;
 
 public abstract class Tile implements Cloneable {

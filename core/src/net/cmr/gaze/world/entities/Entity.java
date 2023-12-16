@@ -15,10 +15,10 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.UuidUtils;
 import net.cmr.gaze.world.Chunk;
-import net.cmr.gaze.world.SpeedChangeTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.interfaceTiles.SpeedChangeTile;
 
 /*
  

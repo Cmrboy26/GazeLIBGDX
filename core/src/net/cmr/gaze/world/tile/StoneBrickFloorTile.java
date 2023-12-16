@@ -16,8 +16,8 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.abstractTiles.FloorTile;
-import net.cmr.gaze.world.abstractTiles.HousingFloor;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.HousingFloor;
 
 public class StoneBrickFloorTile extends FloorTile implements HousingFloor {
 

@@ -21,17 +21,17 @@ import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.util.CustomMath;
 import net.cmr.gaze.world.Ambience;
-import net.cmr.gaze.world.BaseTile;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Weather;
-import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.Weather.WeatherType;
+import net.cmr.gaze.world.abstractTiles.BaseTile;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
+import net.cmr.gaze.world.interfaceTiles.SeeThroughTile;
 
 public class Tree extends BaseTile implements SeeThroughTile {
 	

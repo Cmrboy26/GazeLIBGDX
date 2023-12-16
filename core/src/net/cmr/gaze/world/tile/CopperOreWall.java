@@ -19,9 +19,9 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
-import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.WallTile;
 
 public class CopperOreWall extends Tile implements WallTile {
 

@@ -14,14 +14,14 @@ import net.cmr.gaze.inventory.Tool;
 import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
-import net.cmr.gaze.world.CropTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
-import net.cmr.gaze.world.TransitionTile;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.CropTile;
+import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
 public class FarmlandTile extends TransitionTile {

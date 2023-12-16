@@ -1,4 +1,4 @@
-package net.cmr.gaze.world.abstractTiles;
+package net.cmr.gaze.world.interfaceTiles;
 
 import java.util.Objects;
 
@@ -7,7 +7,6 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Housing;
 import net.cmr.gaze.world.RenderRule;
 import net.cmr.gaze.world.Tile;
-import net.cmr.gaze.world.WallTile;
 
 public interface HousingWall extends WallTile, Housing {
 

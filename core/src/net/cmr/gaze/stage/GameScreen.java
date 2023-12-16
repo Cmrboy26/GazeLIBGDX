@@ -111,27 +111,27 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.Ambience;
 import net.cmr.gaze.world.AudioData;
-import net.cmr.gaze.world.BaseTile;
-import net.cmr.gaze.world.CeilingTile;
 import net.cmr.gaze.world.Chunk;
 import net.cmr.gaze.world.EnvironmentController;
 import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Lights;
 import net.cmr.gaze.world.RenderRule;
-import net.cmr.gaze.world.Rotatable;
-import net.cmr.gaze.world.SeeThroughTile;
 import net.cmr.gaze.world.StructureTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
-import net.cmr.gaze.world.TransitionTile;
-import net.cmr.gaze.world.WallTile;
 import net.cmr.gaze.world.Weather;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
+import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.CeilingTile;
+import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.Rotatable;
+import net.cmr.gaze.world.interfaceTiles.SeeThroughTile;
+import net.cmr.gaze.world.interfaceTiles.WallTile;
 
 public class GameScreen implements Screen {
 

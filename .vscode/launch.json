@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ConsoleTest",
+            "request": "launch",
+            "mainClass": "net.cmr.gaze.ConsoleTest",
+            "projectName": "Gaze-desktop"
+        },
+        {
+            "type": "java",
             "name": "Current File",
             "request": "launch",
             "mainClass": "${file}"

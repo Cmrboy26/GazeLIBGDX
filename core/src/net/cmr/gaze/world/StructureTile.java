@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
+import net.cmr.gaze.world.abstractTiles.BaseTile;
+
 public class StructureTile extends Tile {
 
 	int x, y;

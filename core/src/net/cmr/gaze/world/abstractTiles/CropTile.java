@@ -1,7 +1,11 @@
-package net.cmr.gaze.world;
+package net.cmr.gaze.world.abstractTiles;
 
 import java.util.Random;
 
+import net.cmr.gaze.world.Tile;
+import net.cmr.gaze.world.TileData;
+import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.tile.FarmlandTile;
 
 public abstract class CropTile extends Tile {
