@@ -12,9 +12,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.custom.CoalItem;
+import net.cmr.gaze.inventory.custom.SteamCanister;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
@@ -26,11 +28,12 @@ import net.cmr.gaze.world.abstractTiles.BaseTile;
 import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
+import net.cmr.gaze.world.interfaceTiles.ConveyorReciever;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergyProducer;
 
-public class SteamEngine extends BaseTile implements EnergyProducer {
+public class SteamEngine extends BaseTile implements EnergyProducer, ConveyorReciever {
 
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;
@@ -150,7 +153,7 @@ public class SteamEngine extends BaseTile implements EnergyProducer {
 
     @Override
     public void onBreak(World world, Player player, int x, int y) {
-        TileUtils.dropItem(world, x, y, Items.getItem(ItemType.COAL_GENERATOR, 1));
+        TileUtils.dropItem(world, x, y, Items.getItem(ItemType.STEAM_ENGINE, 1));
         removeEnergyDistributor();
     }
 
@@ -160,7 +163,7 @@ public class SteamEngine extends BaseTile implements EnergyProducer {
             if(player.getPlayer().getHeldItem() instanceof CoalItem) {
                 if(steamCount < MAX_STEAM) {
                     steamCount++;
-                    player.getPlayer().getInventory().remove(Items.getItem(ItemType.COAL, 1));
+                    player.getPlayer().getInventory().remove(Items.getItem(ItemType.STEAM_CANISTER, 1));
                     player.inventoryChanged(true);
                     world.playSound("dirt", .8f, x, y);
                     TileUtils.spawnParticleOffset(world, ParticleEffectType.SMOKE, this, x+1.4f, y-.8f, 2, 3);
@@ -210,5 +213,18 @@ public class SteamEngine extends BaseTile implements EnergyProducer {
     
     public boolean equals(Object object) {
         return super.equals(this) && object == this;
+    }
+
+    @Override
+    public boolean canAcceptItem(Item item) {
+        if(item instanceof SteamCanister) {
+            return steamCount < MAX_STEAM;
+        }
+        return false;
+    }
+
+    @Override
+    public void acceptItem(Item item) {
+        steamCount++;
     }
 }

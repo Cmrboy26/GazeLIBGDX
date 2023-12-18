@@ -194,7 +194,7 @@ public class World {
 			}
 		}
 		long end = System.nanoTime();
-		System.out.println("Entity update took "+(end-start)/1000000d+"ms");
+		//System.out.println("Entity update took "+(end-start)/1000000d+"ms");
 	}
 	
 	private void processConnectionsAndInteractions(double delta, HashSet<Rectangle> loadedChunks) {
@@ -212,7 +212,7 @@ public class World {
 				}
 			}*/
 			long end = System.nanoTime();
-			System.out.println("Chunk loading took "+(end-start)/1000000d+"ms");
+			//System.out.println("Chunk loading took "+(end-start)/1000000d+"ms");
 			
 			connection.setPlayerMovement();
 			player.update(delta, tileData);

@@ -23,6 +23,7 @@ import net.cmr.gaze.inventory.custom.BasicCircuit;
 import net.cmr.gaze.inventory.custom.BasicConveyorItem;
 import net.cmr.gaze.inventory.custom.BasicGenerator;
 import net.cmr.gaze.inventory.custom.BasicMotor;
+import net.cmr.gaze.inventory.custom.BasicPumpItem;
 import net.cmr.gaze.inventory.custom.BedItem;
 import net.cmr.gaze.inventory.custom.BlastFurnaceItem;
 import net.cmr.gaze.inventory.custom.Bread;
@@ -55,6 +56,7 @@ import net.cmr.gaze.inventory.custom.SandItem;
 import net.cmr.gaze.inventory.custom.Silicon;
 import net.cmr.gaze.inventory.custom.SolarPanelItem;
 import net.cmr.gaze.inventory.custom.SteamCanister;
+import net.cmr.gaze.inventory.custom.SteamEngineItem;
 import net.cmr.gaze.inventory.custom.SteelIngot;
 import net.cmr.gaze.inventory.custom.Stone;
 import net.cmr.gaze.inventory.custom.StoneAxe;
@@ -143,6 +145,8 @@ public class Items {
 		BLAST_FURNACE(BlastFurnaceItem.class, 4), 
 		SOLAR_PANEL(SolarPanelItem.class, 4),
 		COAL_GENERATOR(CoalGeneratorItem.class, 4),
+		STEAM_ENGINE(SteamEngineItem.class, 4),
+		BASIC_PUMP(BasicPumpItem.class, 4),
 		BASIC_MINING_DRILL(null),
 		BASIC_STOVE(null),
 		BASIC_CROP_BREEDER(null),

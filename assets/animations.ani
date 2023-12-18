@@ -72,6 +72,32 @@
 			}
 		]
 	},
+	"basicPump": {
+		"tileX": 32,
+		"tileY": 32,
+		"animations": [
+			{
+				"name": "basicPump0",
+				"y": 0,
+				"time": 0.1
+			},
+			{
+				"name": "basicPump1",
+				"y": 1,
+				"time": 0.1
+			},
+			{
+				"name": "basicPump2",
+				"y": 2,
+				"time": 0.1
+			},
+			{
+				"name": "basicPump3",
+				"y": 3,
+				"time": 0.1
+			}
+		]
+	}
 	"player": {
 		"tileX": 64,
 		"tileY": 64,

@@ -224,7 +224,7 @@ public class GameServer {
 				double percent = ((millis/1000f)/Tile.DELTA_TIME);
 				sumMS += millis;
 				countMS++;
-				System.out.println("  ms instant: "+Normalize.truncateDouble(millis, 2)+"\t   ms avg: "+Normalize.truncateDouble((sumMS/countMS),5)+"\t   tps avg:"+Normalize.truncateDouble(((1d/Tile.DELTA_TIME)*(Tile.DELTA_TIME*1000d)/(sumMS/countMS)), 5));
+				//System.out.println("  ms instant: "+Normalize.truncateDouble(millis, 2)+"\t   ms avg: "+Normalize.truncateDouble((sumMS/countMS),5)+"\t   tps avg:"+Normalize.truncateDouble(((1d/Tile.DELTA_TIME)*(Tile.DELTA_TIME*1000d)/(sumMS/countMS)), 5));
 				if(countMS > 1000) {
 					double newSum = (sumMS/countMS)*100;
 					sumMS = newSum;

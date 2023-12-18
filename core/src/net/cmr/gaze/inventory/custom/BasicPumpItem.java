@@ -4,34 +4,31 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.Placeable;
-import net.cmr.gaze.world.LightSource;
-import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 
-public class CoalGeneratorItem extends Placeable {
-
-	public CoalGeneratorItem(int size) {
-		super(ItemType.COAL_GENERATOR, size);
+public class BasicPumpItem extends Placeable {
+    
+    public BasicPumpItem(int size) {
+		super(ItemType.BASIC_PUMP, size);
 	}
-	public CoalGeneratorItem() {
-		super(ItemType.COAL_GENERATOR, 1);
+	public BasicPumpItem() {
+		super(ItemType.BASIC_PUMP, 1);
 	}
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		batch.draw(game.getSprite("coalGenerator"), x+width*(1f/6f), y, width*(2f/3f), height);
+		batch.draw(game.getAnimation("basicPump1").getKeyFrame(0), x+(width/8f), y+(height/8f), width-(width/4f), height-(height/4f));
 	}
 
 	@Override
 	public Item readItem(DataInputStream input, ItemType type, int size) throws IOException {
-		return new CoalGeneratorItem(size);
+		return new BasicPumpItem(size);
 	}
 
 	@Override
@@ -41,7 +38,7 @@ public class CoalGeneratorItem extends Placeable {
 
 	@Override
 	public TileType getTileToPlace() {
-		return TileType.COAL_GENERATOR;
+		return TileType.BASIC_PUMP;
 	}
-	
+
 }
