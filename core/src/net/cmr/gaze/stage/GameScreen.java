@@ -663,13 +663,13 @@ public class GameScreen implements Screen {
 				Tile temp = Tiles.getTile(placeable.getTileToPlace());
 				if(temp instanceof Rotatable) {
 					Rotatable rotatable = (Rotatable) temp;
-					if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+					if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
 						rotation++;
 						if(rotation>rotatable.maxDirection()) {
 							rotation = 0;
 						}
 					}
-					if(Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+					if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
 						rotation--;
 						if(rotation<0) {
 							rotation = rotatable.maxDirection();

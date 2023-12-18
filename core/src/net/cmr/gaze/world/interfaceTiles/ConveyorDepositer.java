@@ -5,7 +5,7 @@ import net.cmr.gaze.inventory.Item;
 public interface ConveyorDepositer {
     
     public default boolean depositItem(ConveyorReciever reciever, Item item) {
-        if(reciever.canAcceptItem()) {
+        if(reciever.canAcceptItem(item)) {
             reciever.acceptItem(item);
             onDepositItem(reciever, item);
             return true;

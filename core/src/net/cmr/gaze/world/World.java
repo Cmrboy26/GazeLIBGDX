@@ -47,12 +47,13 @@ import net.cmr.gaze.world.entities.ExcludePositionUpdates;
 import net.cmr.gaze.world.entities.HealthEntity;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
-import net.cmr.gaze.world.interfaceTiles.Rotatable;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.Rotatable;
 
 public class World {
 
-	public static final int SIMULATION_DISTANCE = 2;
+	//public static final int SIMULATION_DISTANCE = 2;
+	public static final int SIMULATION_DISTANCE = 500;
 	
 	public ConcurrentHashMap<Point, Chunk> chunkList;
 	public TileData tileData;
@@ -81,7 +82,7 @@ public class World {
 		this.tileData = new TileData(this);
 		this.environmentController = EnvironmentController.getEnvironmentController(EnvironmentControllerType.DEFAULT, seed);
 	}
-	
+
 	public Chunk getChunk(Point chunkCoordinate) {
 		return getChunk(chunkCoordinate, false);
 	}
@@ -113,7 +114,7 @@ public class World {
 	
 	public void update(double delta) {
 		long now = System.nanoTime();
-		HashSet<Point> loadedChunks = new HashSet<>();
+		HashSet<Rectangle> loadedChunks = new HashSet<>();
 		
 		updateTime+=delta;
 		updateTileTile+=delta;
@@ -129,6 +130,7 @@ public class World {
 			}
 		}
 
+		
 		processConnectionsAndInteractions(delta, loadedChunks);
 		updateEntities(loadedChunks);
 		
@@ -136,13 +138,22 @@ public class World {
 		loadedChunks = null;
 	}
 
-	private void updateEntities(HashSet<Point> loadedChunks) {
+	private void updateEntities(HashSet<Rectangle> loadedChunks) {
+		long start = System.nanoTime();
 		while(updateTime>=Entity.DELTA_TIME) {
 			updateTime-=Entity.DELTA_TIME;
 			boolean b = updateTileTile>Tile.DELTA_TIME;
 			for(Point chunkCoordinate : chunkList.keySet()) {
 				Chunk chunk = chunkList.get(chunkCoordinate);
-				chunk.update(loadedChunks.contains(chunkCoordinate), b);
+				Rectangle chunkRect = new Rectangle(chunkCoordinate.x, chunkCoordinate.y, 1, 1);
+				boolean loaded = false;
+				for(Rectangle rect : loadedChunks) {
+					if(chunkRect.x > rect.x && chunkRect.x < rect.x+rect.width && chunkRect.y > rect.y && chunkRect.y < rect.y+rect.height) {
+						loaded = true;
+						break;
+					}
+				}
+				chunk.update(loaded, b);
 			}
 			if(b) {
 				updateTileTile = 0;
@@ -182,25 +193,31 @@ public class World {
 				}
 			}
 		}
+		long end = System.nanoTime();
+		System.out.println("Entity update took "+(end-start)/1000000d+"ms");
 	}
 	
-	private void processConnectionsAndInteractions(double delta, HashSet<Point> loadedChunks) {
+	private void processConnectionsAndInteractions(double delta, HashSet<Rectangle> loadedChunks) {
 		ArrayList<PlayerConnection> temporaryList = new ArrayList<>(players);
 		for(int i = 0; i < temporaryList.size(); i++) {
 			PlayerConnection connection = temporaryList.get(i);
 			connection.update();
 			Player player = connection.getPlayer();
 			Point chunk = player.getChunk();
-			for(int x = -World.SIMULATION_DISTANCE; x <= World.SIMULATION_DISTANCE; x++) {
+			long start = System.nanoTime();
+			loadedChunks.add(new Rectangle(-World.SIMULATION_DISTANCE+chunk.x, -World.SIMULATION_DISTANCE+chunk.y, World.SIMULATION_DISTANCE*2, World.SIMULATION_DISTANCE*2));
+			/*for(int x = -World.SIMULATION_DISTANCE; x <= World.SIMULATION_DISTANCE; x++) {
 				for(int y = -World.SIMULATION_DISTANCE; y <= World.SIMULATION_DISTANCE; y++) {
-					loadedChunks.add(new Point(x+chunk.x, y+chunk.y));
+					//loadedChunks.add(new Point(x+chunk.x, y+chunk.y));
 				}
-			}
+			}*/
+			long end = System.nanoTime();
+			System.out.println("Chunk loading took "+(end-start)/1000000d+"ms");
 			
 			connection.setPlayerMovement();
 			player.update(delta, tileData);
-
-			if(player.getWorld().equals(this)) {
+			
+			if(player != null && player.getWorld() != null && player.getWorld().equals(this)) {
 				sendNeededChunks(connection);
 			}
 
@@ -225,9 +242,9 @@ public class World {
 							ItemInteraction result = ((InteractiveItem) held).onInteract(connection, this, interact.getClickType(), x, y);
 							if (result != null) {
 								if (result.itemChangeAmount != 0) {
-									player.getInventory().remove(
-											Items.getItem(held.getType(), -result.itemChangeAmount),
-											player.getHotbarSlot());
+									Item copy = held.clone();
+									copy.set(-result.itemChangeAmount);
+									player.getInventory().remove(copy, player.getHotbarSlot());
 									connection.inventoryChanged(true);
 								}
 								if (result.actionOccured) {
@@ -250,7 +267,13 @@ public class World {
 								int rotation = CustomMath.minMax(0,interact.getModifier(),max);
 								Tile tile = placeable.getPlaceTile(rotation);
 								Tile at = getTile(x, y, tile.getType().layer);
+
 								if(at!=null && at.getType()==tile.getType()) {
+									if(at instanceof Rotatable) {
+										Rotatable rot = (Rotatable) at;
+										rot.setDirection(rotation);
+										onTileChange(x, y, at.getType().layer);
+									}
 									continue;
 								}
 								
@@ -307,6 +330,19 @@ public class World {
 								}
 								if(interact.getExclusionRule()==1) {
 									if(at instanceof CeilingTile) {
+										continue;
+									}
+								}
+
+								if(held instanceof Placeable) {
+									Placeable placeable = (Placeable) held;
+									Tile placeableTile = Tiles.getTile(placeable.getTileToPlace());
+									// if both at and placeableTile are floor tiles, allow the interaction to occur. otherwise continue
+									if(at instanceof FloorTile && !(placeableTile instanceof FloorTile)) {
+										continue;
+									} 
+								} else {
+									if(at instanceof FloorTile) {
 										continue;
 									}
 								}

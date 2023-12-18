@@ -6,8 +6,11 @@ public interface EnergyConsumer extends EnergyUser {
 
     public double getEnergyConsumption();
     public default boolean isMachineFunctioning() {
-        if(getPowerGrid() == null) return false;
-        return getPowerGrid().getMachineEfficiency() > MIN_EFFICIENCY;
+        return getMachineEfficiency() >= MIN_EFFICIENCY;
+    }
+    public default double getMachineEfficiency() {
+        if(getPowerGrid() == null) return 0;
+        return getPowerGrid().getMachineEfficiency();
     }
 
 }

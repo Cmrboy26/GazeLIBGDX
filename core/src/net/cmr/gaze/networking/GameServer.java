@@ -17,12 +17,16 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.Logger;
+import net.cmr.gaze.debug.RateCalculator;
 import net.cmr.gaze.game.ChatMessage;
 import net.cmr.gaze.networking.ConnectionPredicates.ConnectionPredicate;
 import net.cmr.gaze.networking.packets.AuthenticationPacket;
 import net.cmr.gaze.networking.packets.DisconnectPacket;
 import net.cmr.gaze.networking.packets.PingPacket;
 import net.cmr.gaze.networking.packets.PlayerConnectionStatusPacket;
+import net.cmr.gaze.util.Normalize;
+import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.WorldManager;
 import net.cmr.gaze.world.entities.Entity;
@@ -182,7 +186,9 @@ public class GameServer {
 	public void serverLoop() {
 		long lastTime = System.nanoTime();
 		float deltaTime = -1;
-		
+		double sumMS = 0;
+		int countMS = 0;
+
 		while(serverRunning) {
 			if(deltaTime>=0) {
 				//long now = System.nanoTime();
@@ -209,12 +215,21 @@ public class GameServer {
 					}
 				}
 				
+				long startTime = System.nanoTime();
 				processPacketData(deltaTime);
 				getWorldManager().updateWorlds(deltaTime);
-				//double time = CustomTime.timeToSeconds(System.nanoTime()-now);
-				//if(time > .001) {
-				//	System.out.println(time);
-				//}
+				long end = System.nanoTime();
+				long elapsedTime = end-startTime; 
+				float millis = elapsedTime/1E6f;
+				double percent = ((millis/1000f)/Tile.DELTA_TIME);
+				sumMS += millis;
+				countMS++;
+				System.out.println("  ms instant: "+Normalize.truncateDouble(millis, 2)+"\t   ms avg: "+Normalize.truncateDouble((sumMS/countMS),5)+"\t   tps avg:"+Normalize.truncateDouble(((1d/Tile.DELTA_TIME)*(Tile.DELTA_TIME*1000d)/(sumMS/countMS)), 5));
+				if(countMS > 1000) {
+					double newSum = (sumMS/countMS)*100;
+					sumMS = newSum;
+					countMS = 100;
+				}
 			}
 			
 			deltaTime = (System.nanoTime()-lastTime)/1000000000f;

@@ -2,6 +2,7 @@ package net.cmr.gaze.inventory;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -154,9 +155,10 @@ public abstract class Item implements Cloneable {
 		this.size = Math.max(0, this.size);
 		return returnvalue;
 	}
-	public void set(int size) {
+	public Item set(int size) {
 		lastSize = size;
 		this.size = Math.min(size, type.maxSize);
+		return this;
 	}
 	
 	
@@ -164,7 +166,7 @@ public abstract class Item implements Cloneable {
 		if(item==null) {
 			return null;
 		}
-		if(item.getType()!=getType()) {
+		if(!Objects.equals(item, this)) {
 			return item;
 		}
 		int leftovers = add(item.getSize());
@@ -177,7 +179,7 @@ public abstract class Item implements Cloneable {
 		if(item == null) {
 			return null;
 		}
-		if(item.getType()!=getType()) {
+		if(!Objects.equals(item, this)) {
 			return item;
 		}
 		int notRemoved = subtract(item.getSize());

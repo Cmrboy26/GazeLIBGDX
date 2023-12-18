@@ -13,10 +13,10 @@ public interface Rotatable {
 		return 3;
 	};
 
-	public default int getComponentX() {
-		return getDirection() == 1 ? -1 : getDirection() == 3 ? 1 : 0;
+	public default float getComponentX() {
+		return getDirection() == 1 ? 1 : getDirection() == 3 ? -1 : 0;
 	}
-	public default int getComponentY() {
+	public default float getComponentY() {
 		return getDirection() == 0 ? -1 : getDirection() == 2 ? 1 : 0;
 	}
 	

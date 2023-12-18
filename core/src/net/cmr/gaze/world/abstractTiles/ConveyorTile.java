@@ -4,28 +4,35 @@ import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.DataBuffer;
 import com.badlogic.gdx.utils.Null;
 
 import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
+import net.cmr.gaze.world.LightSource;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileType.TickType;
+import net.cmr.gaze.world.TileUtils;
+import net.cmr.gaze.world.Tiles;
+import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.interfaceTiles.ConveyorDepositer;
 import net.cmr.gaze.world.interfaceTiles.ConveyorReciever;
 import net.cmr.gaze.world.interfaceTiles.Rotatable;
-import net.cmr.gaze.world.Tiles;
 
-public abstract class ConveyorTile extends RotatableTile implements ConveyorDepositer, ConveyorReciever{
+public abstract class ConveyorTile extends RotatableTile implements ConveyorDepositer, ConveyorReciever, LightSource {
 
-    Item item;
-    float conveyorDelta = 0;
+    protected Item item;
+    protected float conveyorDelta = 0;
 
     public ConveyorTile(TileType tileType) {
         super(tileType);
         if(tileType.layer != 1) throw new IllegalArgumentException("ConveyorTile must be on layer 1");
-        if(tileType.type != TickType.CONSTANT) throw new IllegalArgumentException("ConveyorTile must be of type CONSTANT");
+        //if(tileType.type != TickType.CONSTANT) throw new IllegalArgumentException("ConveyorTile must be of type CONSTANT");
     }
     
     @Override
@@ -40,22 +47,35 @@ public abstract class ConveyorTile extends RotatableTile implements ConveyorDepo
                 conveyorDelta += getConveyorSpeed()*Tile.DELTA_TIME;
                 if(conveyorDelta >= 1) {
                     ConveyorReciever reciever = getReciever(data, worldCoordinates);
-                    if(reciever != null && reciever.canAcceptItem()) {
+                    if(reciever != null && reciever.canAcceptItem(item)) {
                         conveyorDelta = 0;
                         depositItem(reciever, item);
+                        data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
+                        data.getServerData().onTileChange((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                     }
                 }
             }
         }
     }
 
+    
+
+    @Override
+    public void onDepositItem(ConveyorReciever reciever, Item item) {
+        this.item = null;
+    }
+
     public ConveyorReciever getReciever(TileData data, Point worldCoordinates) {
-        Point nextTile = new Point(worldCoordinates.x + getComponentX(), worldCoordinates.y + getComponentY());
+        Point nextTile = new Point((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()));
         Tile tile = data.getTile(nextTile.x, nextTile.y, 1);
         if(tile instanceof ConveyorReciever) {
             return (ConveyorReciever) tile;
         }
         return null;
+    }
+
+    public float getConveyorDelta() {
+        return conveyorDelta;
     }
 
     /**
@@ -74,17 +94,13 @@ public abstract class ConveyorTile extends RotatableTile implements ConveyorDepo
     }
 
     @Override
-    public boolean canAcceptItem() {
+    public boolean canAcceptItem(Item item) {
         return getItem() == null;
     }
     @Override
     public void acceptItem(Item item) {
         this.item = item;
         this.conveyorDelta = 0;
-    }
-    @Override
-    public void onDepositItem(ConveyorReciever reciever, Item item) {
-        this.item = null;
     }
 
     @Override
@@ -106,13 +122,44 @@ public abstract class ConveyorTile extends RotatableTile implements ConveyorDepo
     }
 
     @Override
+    public void onBreak(World world, Player player, int x, int y) {
+        TileUtils.dropItem(world, x, y, getItem());
+        TileUtils.dropItem(world, x, y, Items.getItem(ItemType.BASIC_CONVEYOR, 1));
+    }
+
+    @Override
     public TileType[] belowWhitelist() {
         return null;
     }
 
     @Override
     public TileType[] belowBlacklist() {
-        return defaultBlacklist;
+        return new TileType[] {TileType.LAVA};
+    }
+
+    @Override
+    public String getBreakNoise() {
+        return "stoneHit";
+    }
+    @Override
+    public String getHitNoise() {
+        return "stoneHit";
+    }
+
+    @Override
+    public float getIntensity() {
+        if(getItem() instanceof LightSource) {
+            return ((LightSource) getItem()).getIntensity();
+        }
+        return 0;
+    }
+
+    @Override
+    public Color getColor() {
+        if(getItem() instanceof LightSource) {
+            return ((LightSource) getItem()).getColor();
+        }
+        return Color.WHITE;
     }
 
 }

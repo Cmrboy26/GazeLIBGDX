@@ -20,6 +20,7 @@ import net.cmr.gaze.inventory.custom.AcornItem;
 import net.cmr.gaze.inventory.custom.AnvilItem;
 import net.cmr.gaze.inventory.custom.Apple;
 import net.cmr.gaze.inventory.custom.BasicCircuit;
+import net.cmr.gaze.inventory.custom.BasicConveyorItem;
 import net.cmr.gaze.inventory.custom.BasicGenerator;
 import net.cmr.gaze.inventory.custom.BasicMotor;
 import net.cmr.gaze.inventory.custom.BedItem;
@@ -53,6 +54,7 @@ import net.cmr.gaze.inventory.custom.Magnet;
 import net.cmr.gaze.inventory.custom.SandItem;
 import net.cmr.gaze.inventory.custom.Silicon;
 import net.cmr.gaze.inventory.custom.SolarPanelItem;
+import net.cmr.gaze.inventory.custom.SteamCanister;
 import net.cmr.gaze.inventory.custom.SteelIngot;
 import net.cmr.gaze.inventory.custom.Stone;
 import net.cmr.gaze.inventory.custom.StoneAxe;
@@ -67,6 +69,7 @@ import net.cmr.gaze.inventory.custom.TableItem;
 import net.cmr.gaze.inventory.custom.TechnologyTableItem;
 import net.cmr.gaze.inventory.custom.TitaniumIngot;
 import net.cmr.gaze.inventory.custom.TorchItem;
+import net.cmr.gaze.inventory.custom.WaterCanister;
 import net.cmr.gaze.inventory.custom.Wheat;
 import net.cmr.gaze.inventory.custom.WheatSeeds;
 import net.cmr.gaze.inventory.custom.Wood;
@@ -169,7 +172,11 @@ public class Items {
 		BRICK_CEILING(BrickCeilingItem.class), 
 		BED(BedItem.class),
 		
-		WOOD_ELECTRICITY_POLE(WoodElectricityPoleItem.class);
+		WOOD_ELECTRICITY_POLE(WoodElectricityPoleItem.class), 
+		BASIC_CONVEYOR(BasicConveyorItem.class), 
+		
+		STEAM_CANISTER(SteamCanister.class),
+		WATER_CANISTER(WaterCanister.class);
 		
 		final int maxSize;
 		final Class<? extends Item> clazz;

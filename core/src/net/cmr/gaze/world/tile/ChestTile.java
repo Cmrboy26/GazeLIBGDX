@@ -21,8 +21,9 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
+import net.cmr.gaze.world.interfaceTiles.ConveyorReciever;
 
-public class ChestTile extends Tile {
+public class ChestTile extends Tile implements ConveyorReciever {
 
 	Inventory inventory;
 	
@@ -40,6 +41,7 @@ public class ChestTile extends Tile {
 	@Override
 	public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
 		if(data.isServer()) {
+			// TODO: Optimize this
 			data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
 		}
 	}
@@ -107,6 +109,16 @@ public class ChestTile extends Tile {
 			inventory = new Inventory(3*7);
 		}
 		return inventory;
+	}
+
+	@Override
+	public boolean canAcceptItem(Item item) {
+		return inventory.canFitItem(item);
+	}
+
+	@Override
+	public void acceptItem(Item item) {
+		inventory.add(item);
 	}
 
 }

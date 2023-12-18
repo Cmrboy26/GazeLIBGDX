@@ -9,7 +9,7 @@ public interface ConveyorReciever {
      * For tiles such as conveyors, this should return true if
      * there is no item on the conveyor.
      */
-    public boolean canAcceptItem();
+    public boolean canAcceptItem(Item item);
     public void acceptItem(Item item);
 
 }

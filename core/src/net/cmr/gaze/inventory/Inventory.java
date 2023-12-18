@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.DataBuffer;
@@ -201,6 +202,26 @@ public class Inventory {
 			}
 		}
 		return returnValue;
+	}
+
+	public boolean canFitItem(Item item) {
+		if(item == null) {
+			return true;
+		}
+		int sizeLeft = item.getSize();
+		for(int i = 0; i < getSize(); i++) {
+			Item slot = get(i);
+			if(slot == null) {
+				return true;
+			}
+			if(Objects.equals(item, slot)) {
+				sizeLeft -= item.getType().getMaxStackSize()-slot.getSize();
+				if(sizeLeft <= 0) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public void clear() {
