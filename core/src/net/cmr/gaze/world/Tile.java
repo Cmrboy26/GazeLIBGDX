@@ -19,7 +19,7 @@ import net.cmr.gaze.inventory.Tool.ToolType;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.TileType.Replaceable;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.entities.Player;
 
 public abstract class Tile implements Cloneable {
@@ -196,9 +196,9 @@ public abstract class Tile implements Cloneable {
 		
 		if(this instanceof StructureTile) {
 			StructureTile struct = ((StructureTile) this);
-			Tile base = struct.getBaseTile(world, x, y);
-			if(base instanceof BaseTile) {
-				return ((BaseTile)base).onInteract(player, world, x-struct.x, y-struct.y, clickType);
+			Tile base = struct.getMultiTileCore(world, x, y);
+			if(base instanceof MultiTile) {
+				return ((MultiTile)base).onInteract(player, world, x-struct.x, y-struct.y, clickType);
 			}
 		}
 		

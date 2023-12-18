@@ -3,11 +3,11 @@ package net.cmr.gaze.world.abstractTiles;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 
-public abstract class BaseTile extends Tile {
+public abstract class MultiTile extends Tile {
 
 	int width, height;
 	
-	public BaseTile(TileType tileType, int width, int height) {
+	public MultiTile(TileType tileType, int width, int height) {
 		super(tileType);
 		this.width = width;
 		this.height = height;

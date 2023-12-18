@@ -39,7 +39,7 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.TileType.Replaceable;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.CeilingTile;
 import net.cmr.gaze.world.abstractTiles.FloorTile;
 import net.cmr.gaze.world.entities.Entity;
@@ -399,8 +399,8 @@ public class World {
 		// TODO: to improve performance, use subtype polymorphism to avoid instanceof checks as shown here (the first answer): 
 		// - https://stackoverflow.com/questions/5579309/is-it-possible-to-use-the-instanceof-operator-in-a-switch-statement
 		getChunk(Chunk.getChunk(tilex, tiley), disableGenerate); // Generates the chunk if it is null
-		if(t instanceof BaseTile) {
-			BaseTile base = (BaseTile) t;
+		if(t instanceof MultiTile) {
+			MultiTile base = (MultiTile) t;
 			int width = base.getWidth();
 			int height = base.getHeight();
 			for(int x = 0; x<width; x++) {
@@ -477,7 +477,7 @@ public class World {
 					if(above != null) {
 						
 						if(above instanceof StructureTile) {
-							above = ((StructureTile)above).getBaseTile(this, tilex, tiley);
+							above = ((StructureTile)above).getMultiTileCore(this, tilex, tiley);
 						}
 						
 						if(!isValidPlacement(above, tilex, tiley, countReplacables)) {
@@ -505,23 +505,23 @@ public class World {
 	public void removeTile(int tilex, int tiley, int layer, boolean breakTile) {
 		Tile at = getTile(tilex, tiley, layer);
 		
-		if(at instanceof BaseTile || at instanceof StructureTile) {
+		if(at instanceof MultiTile || at instanceof StructureTile) {
 			
-			BaseTile base;
+			MultiTile base;
 			int baseX, baseY;
 			
 			if(at instanceof StructureTile) {
 				StructureTile struct = (StructureTile) at;
 				Tile temp = getTile(tilex-struct.x, tiley-struct.y, layer);
-				if(temp instanceof BaseTile) {
-					base = (BaseTile) temp;
+				if(temp instanceof MultiTile) {
+					base = (MultiTile) temp;
 				} else {
 					return;
 				}
 				baseX = tilex-struct.x;
 				baseY = tiley-struct.y;
 			} else {
-				base = (BaseTile) at;
+				base = (MultiTile) at;
 				baseX = tilex;
 				baseY = tiley;
 			}

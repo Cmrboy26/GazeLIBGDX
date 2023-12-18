@@ -7,6 +7,13 @@ import com.badlogic.gdx.utils.DataBuffer;
 
 public interface Rotatable {
 
+	public static class Direction {
+		public static final int DOWN = 0;
+		public static final int LEFT = 1;
+		public static final int UP = 2;
+		public static final int RIGHT = 3;
+	}
+
 	public int getDirection(); // down = 0, left = 1, up = 2, right = 3
 	public void setDirection(int v);
 	public default int maxDirection() {

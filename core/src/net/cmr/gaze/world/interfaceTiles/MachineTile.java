@@ -29,7 +29,7 @@ public interface MachineTile extends EnergyUser {
     public void setMachineDisplayState(boolean on);
 
     public default void onConstruct(Tile tile) {
-        if(tile.getType().type != TickType.CONSTANT) throw new IllegalArgumentException("Machine tiles must be constant tick type");
+        if(tile.getType().tickType != TickType.CONSTANT) throw new IllegalArgumentException("Machine tiles must be constant tick type");
         if(tile.getType().layer != 1) throw new IllegalArgumentException("Machine tiles must be layer 1");
         setDistributorPoint(new Point(Integer.MAX_VALUE, Integer.MAX_VALUE));
     }

@@ -28,12 +28,12 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.Weather.WeatherType;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.interfaceTiles.SeeThroughTile;
 
-public class Tree extends BaseTile implements SeeThroughTile {
+public class Tree extends MultiTile implements SeeThroughTile {
 	
 	float random = 0;
 	

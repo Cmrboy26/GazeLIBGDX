@@ -6,6 +6,7 @@ import net.cmr.gaze.world.tile.BasicConveyorTile;
 import net.cmr.gaze.world.tile.BasicPumpTile;
 import net.cmr.gaze.world.tile.BedTile;
 import net.cmr.gaze.world.tile.BlastFurnace;
+import net.cmr.gaze.world.tile.Boiler;
 import net.cmr.gaze.world.tile.BrickCeilingTile;
 import net.cmr.gaze.world.tile.CampfireTile;
 import net.cmr.gaze.world.tile.ChestTile;
@@ -93,7 +94,8 @@ public enum TileType {
 	CLAY(ClayTile.class, 0, TickType.NONE),
 	STEAM_ENGINE(SteamEngine.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	BASIC_CONVEYOR(BasicConveyorTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
-	BASIC_PUMP(BasicPumpTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
+	BASIC_PUMP(BasicPumpTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER),
+	BOILER(Boiler.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,
@@ -108,7 +110,7 @@ public enum TileType {
 	}
 	
 	public int layer;
-	public TickType type;
+	public TickType tickType;
 	public float breakAmount;
 	public Replaceable replaceable = Replaceable.NEVER;
 	public Class<? extends Tile> clazz;
@@ -117,7 +119,7 @@ public enum TileType {
 		addIdentifier();
 		this.clazz = clazz;
 		this.layer = layer;
-		this.type = type;
+		this.tickType = type;
 		this.breakAmount = 0;
 	}
 	
@@ -125,7 +127,7 @@ public enum TileType {
 		addIdentifier();
 		this.clazz = clazz;
 		this.layer = layer;
-		this.type = type;
+		this.tickType = type;
 		this.breakAmount = breakAmount;
 	}
 	
@@ -133,7 +135,7 @@ public enum TileType {
 		addIdentifier();
 		this.clazz = clazz;
 		this.layer = layer;
-		this.type = type;
+		this.tickType = type;
 		this.breakAmount = 0;
 		this.replaceable = replaceable;
 	}
@@ -142,7 +144,7 @@ public enum TileType {
 		addIdentifier();
 		this.clazz = clazz;
 		this.layer = layer;
-		this.type = type;
+		this.tickType = type;
 		this.breakAmount = breakAmount;
 		this.replaceable = replaceable;
 	}
@@ -163,10 +165,6 @@ public enum TileType {
 		}
 		Tiles.identifierStorage.put(getID(), this);
 	}
-	
-	/*public boolean isBaseTile() {
-		return width != -1 && height != -1;
-	}*/
 	
 	
 }

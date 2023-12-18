@@ -147,19 +147,19 @@ public class Chunk {
 		updateTiles.remove(new Pair<>(worldCoord, layer));
 		
 		if(at != null && !(at instanceof StructureTile)) {
-			if(at.getType().type == TickType.CONSTANT) {
+			if(at.getType().tickType == TickType.CONSTANT) {
 				constantUpdateTiles.remove(new Pair<>(worldCoord, layer));
 			}
-			if(at.getType().type == TickType.NEARBY) {
+			if(at.getType().tickType == TickType.NEARBY) {
 				updateTiles.remove(new Pair<>(worldCoord, layer));
 			}
 		}
 		
 		if(t != null && !(t instanceof StructureTile)) {
-			if(t.getType().type == TickType.CONSTANT) {
+			if(t.getType().tickType == TickType.CONSTANT) {
 				constantUpdateTiles.put(new Pair<>(worldCoord, layer), t);
 			}
-			if(t.getType().type == TickType.NEARBY) {
+			if(t.getType().tickType == TickType.NEARBY) {
 				updateTiles.put(new Pair<>(worldCoord, layer), t);
 			}
 		}
@@ -238,10 +238,10 @@ public class Chunk {
 					
 					if(in != null && !(in instanceof StructureTile)) {
 						Point worldCoord = end.relativeToWorldCoordinates(new Point(x, y));
-						if(in.getType().type == TickType.CONSTANT) {
+						if(in.getType().tickType == TickType.CONSTANT) {
 							end.constantUpdateTiles.put(new Pair<>(worldCoord, z), in);
 						}
-						if(in.getType().type == TickType.NEARBY) {
+						if(in.getType().tickType == TickType.NEARBY) {
 							end.updateTiles.put(new Pair<>(worldCoord, z), in);
 						}
 					}

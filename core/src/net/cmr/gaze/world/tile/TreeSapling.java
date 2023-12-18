@@ -21,11 +21,11 @@ import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 
-public class TreeSapling extends BaseTile {
+public class TreeSapling extends MultiTile {
 
     int stage;
 	float elapsedTime = 0;

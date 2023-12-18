@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 
 public class StructureTile extends Tile {
 
@@ -25,12 +25,12 @@ public class StructureTile extends Tile {
 		return null;
 	}
 	
-	public Tile getBaseTile(World world, int tilex, int tiley) {
-		return (BaseTile) world.getTile(tilex-x, tiley-y, getType().layer);
+	public Tile getMultiTileCore(World world, int tilex, int tiley) {
+		return (MultiTile) world.getTile(tilex-x, tiley-y, getType().layer);
 	}
 	
-	public Tile getBaseTile(TileData data, int tilex, int tiley) {
-		return (BaseTile) data.getTile(tilex-x, tiley-y, getType().layer);
+	public Tile getMultiTileCore(TileData data, int tilex, int tiley) {
+		return (MultiTile) data.getTile(tilex-x, tiley-y, getType().layer);
 	}
 	
 	@Override

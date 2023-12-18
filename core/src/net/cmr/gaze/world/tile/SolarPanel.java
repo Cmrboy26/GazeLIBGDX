@@ -17,13 +17,13 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergyProducer;
 
-public class SolarPanel extends BaseTile implements EnergyProducer {
+public class SolarPanel extends MultiTile implements EnergyProducer {
 
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;

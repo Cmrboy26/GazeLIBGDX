@@ -16,11 +16,11 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.interfaceTiles.CraftingStationTile;
 
-public class TechnologyTableTile extends BaseTile implements CraftingStationTile {
+public class TechnologyTableTile extends MultiTile implements CraftingStationTile {
 
     public TechnologyTableTile() {
         super(TileType.TECHNOLOGY_TABLE, 2, 1);

@@ -122,7 +122,7 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.Weather;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.CeilingTile;
 import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Entity;
@@ -883,8 +883,8 @@ public class GameScreen implements Screen {
 			
 			boolean translucent = false;
 			if(pair.getSecond() instanceof SeeThroughTile) {
-				if(pair.getSecond() instanceof BaseTile) {
-					BaseTile tile = ((BaseTile)pair.getSecond());
+				if(pair.getSecond() instanceof MultiTile) {
+					MultiTile tile = ((MultiTile)pair.getSecond());
 					for(int width = 0; width < tile.getWidth(); width++) {
 						for(int height = 0; height < tile.getHeight(); height++) {
 							if(z == 1 
@@ -1232,7 +1232,7 @@ public class GameScreen implements Screen {
 				Tile at = tileDataObject.getTile(x, y, i);
 				
 				if(at instanceof StructureTile) {
-					at = ((StructureTile)at).getBaseTile(tileDataObject, x, y);
+					at = ((StructureTile)at).getMultiTileCore(tileDataObject, x, y);
 				}
 				
 				if(at != null) {

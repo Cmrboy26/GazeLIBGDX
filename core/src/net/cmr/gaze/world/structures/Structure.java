@@ -27,7 +27,7 @@ public abstract class Structure {
 	public void generateChestLoot(ChestTile tile, int x, int y) {}
 	
 	private static Structure largeTreeStructure;
-	public static Structure baseTileToStructure(Point point, TileType type) {
+	public static Structure multiTileToStructure(Point point, TileType type) {
 		if(type==TileType.TREE) {
 			if(largeTreeStructure == null) {
 				largeTreeStructure = new Structure(point, 1, 1) {

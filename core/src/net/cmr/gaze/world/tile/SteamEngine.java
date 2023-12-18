@@ -24,7 +24,7 @@ import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.World;
-import net.cmr.gaze.world.abstractTiles.BaseTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
@@ -33,7 +33,7 @@ import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 import net.cmr.gaze.world.powerGrid.EnergyProducer;
 
-public class SteamEngine extends BaseTile implements EnergyProducer, ConveyorReciever {
+public class SteamEngine extends MultiTile implements EnergyProducer, ConveyorReciever {
 
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;
