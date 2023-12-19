@@ -37,10 +37,10 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
     float coalDelta = 0;
     float waterDelta = 0;
 
-    final int MAX_COAL = 32;
-    final int MAX_WATER = 32;
-    final float COAL_PER_SEC = 1f/10f;
-    final float WATER_PER_SEC = 1f/5f;
+    public static final int MAX_COAL = 32;
+    public static final int MAX_WATER = 32;
+    public static final float COAL_PER_SEC = 1f/20f;
+    public static final float WATER_PER_SEC = 1f/10f;
 
     public Boiler() {
         super(TileType.BOILER, 2, 1);

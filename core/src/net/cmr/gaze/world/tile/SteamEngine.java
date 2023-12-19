@@ -40,8 +40,9 @@ public class SteamEngine extends MultiTile implements EnergyProducer, ConveyorRe
     boolean lastDisplayMachineProducing = false;
     float steamDelta;
     int steamCount;
-    final int MAX_STEAM = 20;
-    final float STEAM_TIME = 5;
+    final int MAX_STEAM = 32;
+    final float STEAM_TIME = 1f/Boiler.WATER_PER_SEC; // 1 steam engine per boiler
+    final float EU_PRODUCTION = 15;
 
     public SteamEngine() {
         super(TileType.STEAM_ENGINE, 2, 1);
@@ -146,7 +147,7 @@ public class SteamEngine extends MultiTile implements EnergyProducer, ConveyorRe
     @Override
     public double getEnergyProduced() {
         if(steamCount > 0) {
-            return 20f;
+            return EU_PRODUCTION;
         }
         return 0;
     }
