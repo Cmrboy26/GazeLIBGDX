@@ -26,6 +26,7 @@ import net.cmr.gaze.inventory.custom.BasicMotor;
 import net.cmr.gaze.inventory.custom.BasicPumpItem;
 import net.cmr.gaze.inventory.custom.BedItem;
 import net.cmr.gaze.inventory.custom.BlastFurnaceItem;
+import net.cmr.gaze.inventory.custom.BoilerItem;
 import net.cmr.gaze.inventory.custom.Bread;
 import net.cmr.gaze.inventory.custom.BrickCeilingItem;
 import net.cmr.gaze.inventory.custom.BrickItem;
@@ -146,7 +147,8 @@ public class Items {
 		SOLAR_PANEL(SolarPanelItem.class, 4),
 		COAL_GENERATOR(CoalGeneratorItem.class, 4),
 		STEAM_ENGINE(SteamEngineItem.class, 4),
-		BASIC_PUMP(BasicPumpItem.class, 4),
+		BASIC_PUMP(BasicPumpItem.class, 4), 
+		BOILER(BoilerItem.class),
 		BASIC_MINING_DRILL(null),
 		BASIC_STOVE(null),
 		BASIC_CROP_BREEDER(null),

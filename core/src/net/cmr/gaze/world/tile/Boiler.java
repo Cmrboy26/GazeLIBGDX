@@ -13,7 +13,6 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.inventory.custom.CoalItem;
-import net.cmr.gaze.inventory.custom.SteamCanister;
 import net.cmr.gaze.inventory.custom.WaterCanister;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
@@ -48,21 +47,35 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
     }
 
     float renderDelta = 0;
+    float particleDelta = 0;
+    boolean lastCoalActive = false;
 
     @Override
     public void render(Gaze game, GameScreen screen, int x, int y) {
         renderDelta += Gdx.graphics.getDeltaTime()* (coalDelta > 0 ? 1 : 0);
-        game.batch.draw(game.getAnimation("boiler").getKeyFrame(renderDelta), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*1.5f);
+        //game.batch.draw(game.getAnimation("steamEngine").getKeyFrame(renderDelta), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*1.5f);
+        String steamStatus = ((steamAmount > 0 || (coalDelta > 0 && (waterAmount > 0))) ? "Steam" : "NoSteam");
+        String coalStatus = (((coalDelta > 0 && waterDelta > 0))? "CoalOn" : "CoalOff");
+        game.batch.draw(game.getAnimation("boiler"+steamStatus+coalStatus).getKeyFrame(renderDelta), x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE*2, TILE_SIZE*1.5f);
     }
 
     @Override
     public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
         if(data.isServer()) {
+            if(coalDelta <= 0 && lastCoalActive) {
+                data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
+                lastCoalActive = false;
+            }
+
             // if coal finished and there is still water, add a new coal to be burned
             if(coalDelta <= 0 && coalAmount > 0 && waterAmount > 0) {
                 coalDelta = 1;
                 coalAmount--;
+                coalAmount = Math.max(0, coalAmount);
+                lastCoalActive = true;
+                data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
             }
+
             // if a piece of coal is burning and there is water, continue boiling the water
             if((coalDelta > 0 || coalAmount > 0) && waterAmount > 0) {
                 waterDelta+=Tile.DELTA_TIME*WATER_PER_SEC;
@@ -71,39 +84,56 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
             if(coalDelta > 0) {
                 coalDelta-=Tile.DELTA_TIME*COAL_PER_SEC;
             }
+
             // if water has finished boiling, destroy one canister, prepare the next water
             // canister, and export a steam canister
             if(waterDelta >= 1) {
                 waterDelta -= 1;
                 waterAmount--;
                 steamAmount++;
+                data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
             }
+
             // attempt to export the steam to the side conveyors
             if(steamAmount > 0) {
                 Tile left = data.getTile(worldCoordinates.x-1, worldCoordinates.y, 1);
-                Tile right = data.getTile(worldCoordinates.x+2, worldCoordinates.y, 1);
-                if(left instanceof ConveyorReciever) {
+                if(steamAmount > 0 && left instanceof ConveyorReciever) {
                     ConveyorReciever conveyor = (ConveyorReciever) left;
                     if(left instanceof ConveyorTile) {
                         ConveyorTile conveyorTile = (ConveyorTile) left;
-                        if(conveyorTile.getDirection() == Rotatable.Direction.LEFT) {
-                            exportSteam(conveyorTile);
+                        if(conveyorTile.getDirection() != Rotatable.Direction.RIGHT) {
+                            exportSteam(data, worldCoordinates.x-1, worldCoordinates.y, conveyorTile);
+                            data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
                         }
                     } else {
-                        exportSteam(conveyor);
+                        exportSteam(data, worldCoordinates.x-1, worldCoordinates.y, conveyor);
+                        data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
                     }
-                } else if(right instanceof ConveyorReciever) {
+                }
+                Tile right = data.getTile(worldCoordinates.x+2, worldCoordinates.y, 1);
+                if(steamAmount > 0 && right instanceof ConveyorReciever) {
                     ConveyorReciever conveyor = (ConveyorReciever) right;
                     if(right instanceof ConveyorTile) {
                         ConveyorTile conveyorTile = (ConveyorTile) right;
-                        if(conveyorTile.getDirection() == Rotatable.Direction.RIGHT) {
-                            exportSteam(conveyorTile);
+                        if(conveyorTile.getDirection() != Rotatable.Direction.LEFT) {
+                            exportSteam(data, worldCoordinates.x+2, worldCoordinates.y, conveyorTile);
+                            data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
                         }
                     } else {
-                        exportSteam(conveyor);
+                        exportSteam(data, worldCoordinates.x+2, worldCoordinates.y, conveyor);
+                        data.getServerData().onTileChange(worldCoordinates.x, worldCoordinates.y, 1);
                     }
                 }
             }
+
+            if(coalDelta > 0) {
+                particleDelta+=Tile.DELTA_TIME*Math.random()*2;
+                if(particleDelta > .3) {
+                    particleDelta-=.3;
+                    TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.SMOKE, this, worldCoordinates.x+.75f, worldCoordinates.y, 0.9f, 2f);
+                }
+            }
+
         }
     }
 
@@ -136,9 +166,10 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
         return false;
     }
 
-    private void exportSteam(ConveyorReciever conveyor) {
+    private void exportSteam(TileData data, int x, int y, ConveyorReciever conveyor) {
         Item steamCanister = Items.getItem(ItemType.STEAM_CANISTER, 1);
         depositItem(conveyor, steamCanister);
+        data.getServerData().onTileChange(x, y, 1);
     }
     @Override
     public void onDepositItem(ConveyorReciever reciever, Item item) {

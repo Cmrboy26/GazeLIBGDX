@@ -67,13 +67,13 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
             pumpDelta += Tile.DELTA_TIME*getMachineEfficiency();
             if(pumpDelta >= 1) {
                 pumpDelta = 0;
-                Tile tile = data.getTile((int) (worldCoordinates.x - getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
+                Tile tile = data.getTile((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                 if(tile instanceof ConveyorReciever) {
                     ConveyorReciever reciever = (ConveyorReciever) tile;
                     Item itemToAccept = Items.getItem(ItemType.WATER_CANISTER, 1);
                     if(reciever.canAcceptItem(itemToAccept)) {
                         reciever.acceptItem(itemToAccept);
-                        data.getServerData().onTileChange((int) (worldCoordinates.x - getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
+                        data.getServerData().onTileChange((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                     }
                 }
             }

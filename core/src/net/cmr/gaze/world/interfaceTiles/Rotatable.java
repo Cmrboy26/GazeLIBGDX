@@ -21,7 +21,7 @@ public interface Rotatable {
 	};
 
 	public default float getComponentX() {
-		return getDirection() == 1 ? 1 : getDirection() == 3 ? -1 : 0;
+		return getDirection() == 1 ? -1 : getDirection() == 3 ? 1 : 0;
 	}
 	public default float getComponentY() {
 		return getDirection() == 0 ? -1 : getDirection() == 2 ? 1 : 0;

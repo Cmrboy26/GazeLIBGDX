@@ -41,7 +41,7 @@ public class SteamEngine extends MultiTile implements EnergyProducer, ConveyorRe
     float steamDelta;
     int steamCount;
     final int MAX_STEAM = 20;
-    final float STEAM_TIME = 30;
+    final float STEAM_TIME = 5;
 
     public SteamEngine() {
         super(TileType.STEAM_ENGINE, 2, 1);
@@ -160,7 +160,7 @@ public class SteamEngine extends MultiTile implements EnergyProducer, ConveyorRe
     @Override
     protected boolean overrideOnInteract(PlayerConnection player, World world, int x, int y, int clickType) {
         if(clickType == 2) {
-            if(player.getPlayer().getHeldItem() instanceof CoalItem) {
+            if(player.getPlayer().getHeldItem() instanceof SteamCanister) {
                 if(steamCount < MAX_STEAM) {
                     steamCount++;
                     player.getPlayer().getInventory().remove(Items.getItem(ItemType.STEAM_CANISTER, 1));
