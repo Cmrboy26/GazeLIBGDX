@@ -39,7 +39,7 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
 
     public static final int MAX_COAL = 32;
     public static final int MAX_WATER = 32;
-    public static final float COAL_PER_SEC = 1f/20f;
+    public static final float COAL_PER_SEC = 1f/40f;
     public static final float WATER_PER_SEC = 1f/10f;
 
     public Boiler() {

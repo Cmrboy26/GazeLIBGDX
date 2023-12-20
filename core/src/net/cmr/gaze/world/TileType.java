@@ -1,7 +1,7 @@
 package net.cmr.gaze.world;
 
 import net.cmr.gaze.world.tile.AirTile;
-import net.cmr.gaze.world.tile.AnvilTile;
+import net.cmr.gaze.world.tile.Anvil;
 import net.cmr.gaze.world.tile.BasicConveyorTile;
 import net.cmr.gaze.world.tile.BasicPumpTile;
 import net.cmr.gaze.world.tile.BedTile;
@@ -76,7 +76,7 @@ public enum TileType {
 	STONE_PATH_FLOOR(StonePathFloorTile.class, 0, TickType.NONE, 3),
 	STONE_BRICK_WALL(StoneBrickWallTile.class, 1, TickType.NONE, 3), 
 	STONE_BRICK_FLOOR(StoneBrickFloorTile.class, 0, TickType.NONE, 3), 
-	ANVIL(AnvilTile.class, 1, TickType.NONE, 3), 
+	ANVIL(Anvil.class, 1, TickType.NONE, 3), 
 	TREE_SAPLING(TreeSapling.class, 1, TickType.NEARBY, 3, Replaceable.GENERATION), 
 	WOOD_CEILING(WoodCeilingTile.class, 2, TickType.NONE, 2), 
 	STONE_BRICK_CEILING(StoneBrickCeilingTile.class, 2, TickType.NONE, 2), 

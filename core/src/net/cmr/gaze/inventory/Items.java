@@ -186,6 +186,7 @@ public class Items {
 		
 		final int maxSize;
 		final Class<? extends Item> clazz;
+		int collisionAddition = 0;
 		private ItemType(Class<? extends Item> clazz, int maxSize) {
 			addIdentifier();
 			this.clazz = clazz;
@@ -197,8 +198,9 @@ public class Items {
 			maxSize = 64;
 		}
 		private void addIdentifier() {
-			if(identifierStorage.getOrDefault(getID(), null)!=null) {
-				throw new NullPointerException("ID Conflict! Either the same name was used for a Item or there's a name().hashCode() conflict!");
+			while(identifierStorage.getOrDefault(getID(), null)!=null) {
+				collisionAddition++;
+				throw new NullPointerException("ID Conflict! Either the same name was used for an Item or there's a name().hashCode() conflict!");
 			}
 			identifierStorage.put(getID(), this);
 		}
@@ -213,7 +215,7 @@ public class Items {
 			return identifierStorage.containsKey(identifier);
 		}
 		public int getID() {
-			return name().hashCode();
+			return name().hashCode()+collisionAddition;
 		}
 		public Class<? extends Item> getItemClass() {
 			return clazz;

@@ -23,6 +23,7 @@ import net.cmr.gaze.world.interfaceTiles.ConveyorDepositer;
 import net.cmr.gaze.world.interfaceTiles.ConveyorReciever;
 import net.cmr.gaze.world.interfaceTiles.MachineTile;
 import net.cmr.gaze.world.interfaceTiles.Rotatable;
+import net.cmr.gaze.world.interfaceTiles.ExploitableTile.ExploitType;
 import net.cmr.gaze.world.powerGrid.EnergyConsumer;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
@@ -111,7 +112,7 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
 
     @Override
     public TileType[] belowWhitelist() {
-        return new TileType[] {TileType.WATER, TileType.LAVA};
+        return ExploitType.PUMP.getTileWhitelist();
     }
 
     @Override

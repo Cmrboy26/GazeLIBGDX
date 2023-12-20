@@ -21,9 +21,9 @@ import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.interfaceTiles.CraftingStationTile;
 
-public class AnvilTile extends Tile implements CraftingStationTile {
+public class Anvil extends Tile implements CraftingStationTile {
 
-	public AnvilTile() {
+	public Anvil() {
 		super(TileType.ANVIL);
 	}
 
@@ -78,7 +78,7 @@ public class AnvilTile extends Tile implements CraftingStationTile {
 	
 	@Override
 	public Tile readTile(DataInputStream input, TileType type) throws IOException {
-		AnvilTile table = new AnvilTile();
+		Anvil table = new Anvil();
 		Tile.readBreakData(input, table);
 		return table;
 	}

@@ -1,21 +1,23 @@
 package net.cmr.gaze.world.tile;
 
-import java.awt.Point;
 import java.io.DataInputStream;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Random;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.abstractTiles.TransitionTile;
+import net.cmr.gaze.world.interfaceTiles.ExploitableTile;
 import net.cmr.gaze.world.interfaceTiles.SpeedChangeTile;
 
-public class WaterTile extends TransitionTile implements SpeedChangeTile {
+public class WaterTile extends TransitionTile implements SpeedChangeTile, ExploitableTile {
 
 	public WaterTile() {
 		super(TileType.WATER);
@@ -69,6 +71,16 @@ public class WaterTile extends TransitionTile implements SpeedChangeTile {
 	@Override
 	public float getSpeedMultiplier() {
 		return .5f;
+	}
+
+	@Override
+	public Item getExploitedItem() {
+		return Items.getItem(ItemType.WATER_CANISTER, 1);
+	}
+
+	@Override
+	public ExploitType getExploitType() {
+		return ExploitType.PUMP;
 	}
 
 }
