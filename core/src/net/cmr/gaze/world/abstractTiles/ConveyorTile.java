@@ -12,10 +12,10 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.world.LightSource;
+import net.cmr.gaze.world.StructureTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
-import net.cmr.gaze.world.TileType.TickType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
@@ -68,6 +68,9 @@ public abstract class ConveyorTile extends RotatableTile implements ConveyorDepo
     public ConveyorReciever getReciever(TileData data, Point worldCoordinates) {
         Point nextTile = new Point((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()));
         Tile tile = data.getTile(nextTile.x, nextTile.y, 1);
+        if(tile instanceof StructureTile ) {
+            tile = ((StructureTile) tile).getMultiTileCore(data, nextTile.x, nextTile.y);
+        }
         if(tile instanceof ConveyorReciever) {
             return (ConveyorReciever) tile;
         }

@@ -28,6 +28,8 @@ import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
 public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyConsumer, ConveyorDepositer {
 
+
+    public static final float PUMP_TIME = 3f;
     float pumpDelta;
 
     public BasicPumpTile() {
@@ -65,7 +67,7 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
     public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
         if(data.isServer() && isConnectedToPowerGrid()) {
             pumpDelta += Tile.DELTA_TIME*getMachineEfficiency();
-            if(pumpDelta >= 1) {
+            if(pumpDelta >= PUMP_TIME) {
                 pumpDelta = 0;
                 Tile tile = data.getTile((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                 if(tile instanceof ConveyorReciever) {
