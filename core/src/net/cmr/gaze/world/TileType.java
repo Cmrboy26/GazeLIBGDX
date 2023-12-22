@@ -3,6 +3,7 @@ package net.cmr.gaze.world;
 import net.cmr.gaze.world.tile.Air;
 import net.cmr.gaze.world.tile.Anvil;
 import net.cmr.gaze.world.tile.BasicConveyorTile;
+import net.cmr.gaze.world.tile.BasicMiningDrill;
 import net.cmr.gaze.world.tile.BasicPumpTile;
 import net.cmr.gaze.world.tile.BedTile;
 import net.cmr.gaze.world.tile.BlastFurnace;
@@ -95,7 +96,8 @@ public enum TileType {
 	STEAM_ENGINE(SteamEngine.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	BASIC_CONVEYOR(BasicConveyorTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	BASIC_PUMP(BasicPumpTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER),
-	BOILER(Boiler.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
+	BOILER(Boiler.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
+	BASIC_MINING_DRILL(BasicMiningDrill.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,

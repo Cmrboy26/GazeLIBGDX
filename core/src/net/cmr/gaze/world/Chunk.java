@@ -237,6 +237,7 @@ public class Chunk {
 					end.tileData[x][y][z] = in;
 					
 					if(in != null && !(in instanceof StructureTile)) {
+						in.existsInWorld = true;
 						Point worldCoord = end.relativeToWorldCoordinates(new Point(x, y));
 						if(in.getType().tickType == TickType.CONSTANT) {
 							end.constantUpdateTiles.put(new Pair<>(worldCoord, z), in);

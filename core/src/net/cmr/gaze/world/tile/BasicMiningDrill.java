@@ -31,7 +31,7 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
     transient DrillableTile drillableTile;
 
     public BasicMiningDrill() {
-        super(TileType.BASIC_PUMP, 2, 1);
+        super(TileType.BASIC_MINING_DRILL, 2, 1);
         onConstruct(this);
     }
 
@@ -40,7 +40,7 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
     @Override
     public void render(Gaze game, GameScreen screen, int x, int y) {
         renderDelta += Gdx.graphics.getDeltaTime() * (getMachineDisplayState() ? 1 : 0);
-        draw(game.batch, game.getAnimation("miningDrill").getKeyFrame(renderDelta), x, y, 1, 1);
+        draw(game.batch, game.getAnimation("steamEngine").getKeyFrame(renderDelta), x, y, 1, 1);
         super.render(game, screen, x, y);
     }
 
@@ -59,13 +59,14 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
 
     @Override
     public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
-        if(drillableTile == null) {
-            Tile tile = data.getTile((int) (worldCoordinates.x+1), (int) (worldCoordinates.y), 1);
+        if(drillableTile == null || !((Tile)drillableTile).placedInWorld()) {
+            Tile tile = data.getTile((int) (worldCoordinates.x+1), (int) (worldCoordinates.y), 0);
+            System.out.println("NEW TILE FOUND: " + tile);
             if(tile instanceof DrillableTile) {
                 drillableTile = (DrillableTile) tile;
             }
         }
-        if(data.isServer() && isConnectedToPowerGrid()) {
+        if(data.isServer() && isConnectedToPowerGrid() && drillableTile != null) {
             drillDelta += Tile.DELTA_TIME*getMachineEfficiency();
             if(drillDelta >= drillableTile.getDrillTime()) {
                 drillDelta = 0;

@@ -32,7 +32,7 @@ public abstract class Tile implements Cloneable {
 	
 	private TileType tileType;
 	private float breakAmount;
-	private boolean existsInWorld;
+	boolean existsInWorld;
 	
 	/**
 	 * NOTE: When using the constructor for an object, do NOT use random values here!
@@ -327,7 +327,8 @@ public abstract class Tile implements Cloneable {
 	}
 
 	/**
-	 * Whenever a tile is placed, this method is called.
+	 * Whenever a tile is placed INTO THE WORLD, this method is called.
+	 * When this is called, {@link #placedInWorld()} is set to true, and then {@link #overrideOnPlace(World, int, int, Player)} is called.
 	 * @param world The world it was placed in
 	 * @param x the x coordinate of the tile
 	 * @param y the y coordinate of the tile
@@ -338,6 +339,16 @@ public abstract class Tile implements Cloneable {
 		existsInWorld = true;
 		overrideOnPlace(world, x, y, player);
 	}
+
+	/**
+	 * This is a method that any tile can override, and it is called immediately after {@link #onPlace(World, int, int, Player)} is called.
+	 * <br><br>
+	 * PLEASE Check the documentation for {@link #onPlace(World, int, int, Player)} for more information.
+	 * @param world The world it was placed in
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @param player the player who placed the tile, null if it was not placed by a player
+	 */
 	public void overrideOnPlace(World world, int x, int y, @Null Player player) {
 		
 	}
@@ -346,6 +357,7 @@ public abstract class Tile implements Cloneable {
 	 * <p>Whenever a tile is removed from the world through breaking, interaction, or overriding, this method is called.</h1>
 	 * <br><p>NOTE: this should <strong>*NOT*</strong> be used to handle dropping items or creating break particles when the tile is broken. 
 	 * Use {@link #onBreak(World, Player, int, int)} instead!</p>
+	 * When this is called, {@link #placedInWorld()} is set to false, and then {@link #overrideOnRemove(World, int, int)} is called.
 	 * @param world The world it was removed from
 	 * @param x the x coordinate of the tile
 	 * @param y the y coordinate of the tile
@@ -355,12 +367,22 @@ public abstract class Tile implements Cloneable {
 		existsInWorld = false;
 		overrideOnRemove(world, x, y);
 	}
+	/**
+	 * This is a method that any tile can override, and it is called immediately after {@link #onRemove(World, int, int)} is called.
+	 * <br><br>
+	 * PLEASE Check the documentation for {@link #onRemove(World, int, int)} for more information.
+	 * @param world
+	 * @param x
+	 * @param y
+	 * @see #onRemove(World, int, int)
+	 */
 	public void overrideOnRemove(World world, int x, int y) {
 
 	}
 
 	/**
 	 * Whenever a tile is generated via world generation (in generateTile(chunk, tile, int, int)), this method is called.
+	 * When this is called, {@link #placedInWorld()} is set to true, and then {@link #overrideGenerateInitialize(int, int, double)} is called.
 	 * @param x the x coordinate of the tile
 	 * @param y the y coordinate of the tile
 	 * @param seed the seed of the world
@@ -371,7 +393,29 @@ public abstract class Tile implements Cloneable {
 		overrideGenerateInitialize(x, y, seed);
 	}
 
+	/**
+	 * This is a method that any tile can override, and it is called immediately after {@link #generateInitialize(int, int, double)} is called.
+	 * <br><br>
+	 * PLEASE Check the documentation for {@link #generateInitialize(int, int, double)} for more information.
+	 * @param x
+	 * @param y
+	 * @param seed
+	 */
 	public void overrideGenerateInitialize(int x, int y, double seed) {
 
+	}
+	
+	/**
+	 * If the tile is currently in the world (located anywhere in any world), this will return true.
+	 * <br><br>
+	 * When the tile are added into the world with {@link net.cmr.gaze.world.World#addTile(Tile, int, int, boolean, boolean, Player)}, this is set to true.
+	 * (Note: the method {@link #overrideOnPlace(World, int, int, Player)} is called immediately after this is set to true)
+	 * However, when the tile is removed from the world with {@link net.cmr.gaze.world.World#removeTile(int, int, int)}, this is set to false.
+	 * (Note: the method {@link #overrideOnRemove(World, int, int)} is called immediately before this is set to false)
+	 * 
+	 * @return whether or not the tile physically in the world
+	 */
+    public boolean placedInWorld() {
+		return existsInWorld;
 	}
 }
