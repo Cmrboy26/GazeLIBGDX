@@ -20,17 +20,17 @@ import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.abstractTiles.RotatableTile;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.interfaceTiles.ConveyorDepositer;
-import net.cmr.gaze.world.interfaceTiles.ConveyorReciever;
+import net.cmr.gaze.world.interfaceTiles.ExploitableTile;
+import net.cmr.gaze.world.interfaceTiles.ExploitableTile.ExploitType;
 import net.cmr.gaze.world.interfaceTiles.MachineTile;
 import net.cmr.gaze.world.interfaceTiles.Rotatable;
-import net.cmr.gaze.world.interfaceTiles.ExploitableTile.ExploitType;
 import net.cmr.gaze.world.powerGrid.EnergyConsumer;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 
 public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyConsumer, ConveyorDepositer {
 
 
-    public static final float PUMP_TIME = 3f;
+    public static final float PUMP_TIME = 5f;
     float pumpDelta;
 
     public BasicPumpTile() {
@@ -62,6 +62,17 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
         MachineTile.writeMachineData(this, buffer);
     }
 
+    private Item getExploitedItem(TileData data, Point worldCoordinates) {
+        Tile below = data.getTile(worldCoordinates.x, worldCoordinates.y, 1);
+        if(below instanceof ExploitableTile) {
+            ExploitableTile exploitable = (ExploitableTile) below;
+            if(exploitable.getExploitType() == ExploitType.PUMP) {
+                return exploitable.getExploitedItem();
+            }
+        }
+        return null;
+    }
+
     // BOILERPLATE CODE
 
     @Override
@@ -70,7 +81,8 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
             pumpDelta += Tile.DELTA_TIME*getMachineEfficiency();
             if(pumpDelta >= PUMP_TIME) {
                 pumpDelta = 0;
-                Tile tile = data.getTile((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
+                depositToTile(data, (int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), getExploitedItem(data, worldCoordinates));
+                /*Tile tile = data.getTile((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                 if(tile instanceof ConveyorReciever) {
                     ConveyorReciever reciever = (ConveyorReciever) tile;
                     Item itemToAccept = Items.getItem(ItemType.WATER_CANISTER, 1);
@@ -78,17 +90,17 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
                         reciever.acceptItem(itemToAccept);
                         data.getServerData().onTileChange((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                     }
-                }
+                }*/
             }
         }
         MachineTile.super.update(data, worldCoordinates);
     }
 
-    public void onPlace(World world, int tx, int ty, Player player) {
-        MachineTile.super.onPlace(world, tx, ty, player);
+    public void overrideOnPlace(World world, int tx, int ty, Player player) {
+        MachineTile.super.overrideOnPlace(world, tx, ty, player);
     }
 
-    public void generateInitialize(int x, int y, double seed) {
+    public void overrideGenerateInitialize(int x, int y, double seed) {
         MachineTile.super.generateInitialize(x, y, seed);
     }
 

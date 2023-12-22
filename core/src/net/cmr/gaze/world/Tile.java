@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.DataBuffer;
+import com.badlogic.gdx.utils.Null;
 
 import net.cmr.gaze.Gaze;
 import net.cmr.gaze.inventory.Tool.Material;
@@ -31,6 +32,7 @@ public abstract class Tile implements Cloneable {
 	
 	private TileType tileType;
 	private float breakAmount;
+	private boolean existsInWorld;
 	
 	/**
 	 * NOTE: When using the constructor for an object, do NOT use random values here!
@@ -43,12 +45,6 @@ public abstract class Tile implements Cloneable {
 			breakAmount = tileType.breakAmount;
 		}
 	}
-
-	/**
-	 * Whenever a tile is created from Tiles.getTile(), a constructor, or any other place, it will call this method
-	 * HERE is where you could do random values, fixing the problem mentioned in the constructor above
-	 */
-	public void generateInitialize(int x, int y, double seed) {}
 	
 	public abstract TileType[] belowWhitelist();
 	public abstract TileType[] belowBlacklist();
@@ -259,7 +255,17 @@ public abstract class Tile implements Cloneable {
 		return false;
 	}
 	
-	public void onBreak(World world, Player player, int x, int y) {
+	/**
+	 * This method is called whenever a tile is broken. This is where you should handle dropping items and creating break effects.
+	 * @param world The world it was broken in
+	 * @param player the player who broke the tile, null if it was not broken by a player (i.e. the tile was broken by a chute)
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @see net.cmr.gaze.world.TileUtils#dropItem(World, int, int, net.cmr.gaze.inventory.Item)
+	 * @see net.cmr.gaze.world.TileUtils#spawnBreakParticle(World, Tile, float, float, Object...)
+	 * @see net.cmr.gaze.world.TileUtils#addPlayerXP(Player, World, net.cmr.gaze.leveling.Skills.Skill, float)
+	 */
+	public void onBreak(World world, @Null Player player, int x, int y) {
 		
 	}
 	
@@ -275,7 +281,6 @@ public abstract class Tile implements Cloneable {
 	public float getAmbientNoiseVolume() {
 		return 1f;
 	}
-	
 	
 	public boolean onInteractHit(PlayerConnection player, World world, int x, int y, int clickType) {
 		return false;
@@ -321,7 +326,52 @@ public abstract class Tile implements Cloneable {
 		return getType().replaceable;
 	}
 
-	public void onPlace(World world, int x, int y, Player player) {
+	/**
+	 * Whenever a tile is placed, this method is called.
+	 * @param world The world it was placed in
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @param player the player who placed the tile, null if it was not placed by a player
+	 * @see net.cmr.gaze.world.World#addTile(Tile, int, int, boolean, boolean, Player)
+	 */
+	public final void onPlace(World world, int x, int y, @Null Player player) {
+		existsInWorld = true;
+		overrideOnPlace(world, x, y, player);
+	}
+	public void overrideOnPlace(World world, int x, int y, @Null Player player) {
 		
+	}
+
+	/**
+	 * <p>Whenever a tile is removed from the world through breaking, interaction, or overriding, this method is called.</h1>
+	 * <br><p>NOTE: this should <strong>*NOT*</strong> be used to handle dropping items or creating break particles when the tile is broken. 
+	 * Use {@link #onBreak(World, Player, int, int)} instead!</p>
+	 * @param world The world it was removed from
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @see net.cmr.gaze.world.World#removeTile(int, int, int)
+	 */
+	public final void onRemove(World world, int x, int y) {
+		existsInWorld = false;
+		overrideOnRemove(world, x, y);
+	}
+	public void overrideOnRemove(World world, int x, int y) {
+
+	}
+
+	/**
+	 * Whenever a tile is generated via world generation (in generateTile(chunk, tile, int, int)), this method is called.
+	 * @param x the x coordinate of the tile
+	 * @param y the y coordinate of the tile
+	 * @param seed the seed of the world
+	 * @see net.cmr.gaze.world.World#generateTile(Chunk, Tile, int, int)
+	 */
+	public final void generateInitialize(int x, int y, double seed) {
+		existsInWorld = true;
+		overrideGenerateInitialize(x, y, seed);
+	}
+
+	public void overrideGenerateInitialize(int x, int y, double seed) {
+
 	}
 }

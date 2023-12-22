@@ -91,7 +91,7 @@ public interface MachineTile extends EnergyUser {
         }
     }
 
-    public default void onPlace(World world, int tx, int ty, Player player) {
+    public default void overrideOnPlace(World world, int tx, int ty, Player player) {
         setWorldCoordinates(new Point(tx, ty));
         connectToWorld(world, tx, ty);
     }

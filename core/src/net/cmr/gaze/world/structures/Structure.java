@@ -6,7 +6,7 @@ import net.cmr.gaze.world.Chunk;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.Tiles;
-import net.cmr.gaze.world.tile.AirTile;
+import net.cmr.gaze.world.tile.Air;
 import net.cmr.gaze.world.tile.ChestTile;
 
 public abstract class Structure {
@@ -78,7 +78,7 @@ public abstract class Structure {
 								if(at instanceof ChestTile) {
 									generateChestLoot((ChestTile) at, endX, endY);
 								}
-								if(at instanceof AirTile) {
+								if(at instanceof Air) {
 									at = null;
 									c.getWorld().removeTile(p.x, p.y, z);
 								} else {

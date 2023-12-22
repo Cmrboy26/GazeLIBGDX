@@ -419,7 +419,7 @@ public class World {
 				for(int y = 0; y<height; y++) {
 					if((x==0&&y==0)) {
 						getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
-						if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
+						t.onPlace(this, tilex, tiley, placingPlayer);
 						if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 					} else {
 						addTile(new StructureTile(base.getType(), x, y), tilex+x, tiley+y, disableGenerate, countReplacables, null);
@@ -453,7 +453,7 @@ public class World {
 			
 			((FloorTile)t).setUnderTile(at);
 			getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
-			if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
+			t.onPlace(this, tilex, tiley, placingPlayer);
 			if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 		} else {
 			Tile at = getTile(tilex, tiley, t.getType().layer);
@@ -469,7 +469,7 @@ public class World {
 				}				
 				
 				getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
-				if(placingPlayer!=null) t.onPlace(this, tilex, tiley, placingPlayer);
+				t.onPlace(this, tilex, tiley, placingPlayer);
 				if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);
 				
 				if(t.getType().layer == 0) {
@@ -530,16 +530,18 @@ public class World {
 				for(int y = 0; y < base.getHeight(); y++) {
 					if(breakTile) {
 						if(x == 0 && y == 0) {
-							if(at != null) {
+							if(base != null) {
 								base.onBreak(this, null, x, y);
 							}
 						}
 					}
 					getChunk(Chunk.getChunk(baseX+x, baseY+y), true).setTile(null, Chunk.getInsideChunkCoordinates(baseX+x, baseY+y), layer);
+					if(base != null) {
+						base.onRemove(this, baseX+x, baseY+y);
+					}
 					onTileChange(baseX+x, baseY+y, layer);
 				}
 			}
-			//addEntity(new DroppedItem(Items.getItem(ItemType.Wood, 3), tilex, tiley));
 		} else {
 			if(breakTile) {
 				if(at != null) {
@@ -547,8 +549,12 @@ public class World {
 				}
 			}
 			getChunk(Chunk.getChunk(tilex, tiley), true).setTile(null, Chunk.getInsideChunkCoordinates(tilex, tiley), layer);
+			if(at!=null) {
+				at.onRemove(this, tilex, tiley);
+			}
 			onTileChange(tilex, tiley, layer);
 		}
+
 	}
 	
 	public boolean isValidPlacement(Tile t, int x, int y, boolean countReplacables) {

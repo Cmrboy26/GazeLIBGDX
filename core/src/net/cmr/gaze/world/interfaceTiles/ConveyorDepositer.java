@@ -1,6 +1,7 @@
 package net.cmr.gaze.world.interfaceTiles;
 
 import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.world.TileData;
 
 public interface ConveyorDepositer {
     
@@ -14,6 +15,20 @@ public interface ConveyorDepositer {
     }
     public default void onDepositItem(ConveyorReciever reciever, Item item) {
         
+    }
+
+    public default boolean depositToTile(TileData data, int x, int y, Item item) {
+        if(data.isClient()) {
+            return false;
+        }
+        if(data.getTile(x, y, 1) instanceof ConveyorReciever) {
+            boolean completed = depositItem((ConveyorReciever)data.getTile(x, y, 1), item);
+            if(completed) {
+                data.getServerData().onTileChange(x, y, 1);
+                return true;
+            }
+        }
+        return false;
     }
 
 }

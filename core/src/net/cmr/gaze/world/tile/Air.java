@@ -9,11 +9,11 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
 
 /** 
- * Should only be used in structure tiles
+ * Should only be used in structure tiles.
  */
-public class AirTile extends Tile {
+public class Air extends Tile {
 
-	public AirTile() {
+	public Air() {
 		super(TileType.AIR);
 	}
 

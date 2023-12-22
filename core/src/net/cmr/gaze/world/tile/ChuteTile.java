@@ -100,7 +100,7 @@ public class ChuteTile extends Tile {
 	}
 
 	@Override
-	public void onPlace(World world, int x, int y, Player player) {
+	public void overrideOnPlace(World world, int x, int y, Player player) {
 		World target = world.getServer().getWorldManager().getUndergroundWorld(world);
 		target.removeTile(x, y, 1);
 	}

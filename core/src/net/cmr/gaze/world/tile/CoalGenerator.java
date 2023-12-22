@@ -85,12 +85,12 @@ public class CoalGenerator extends MultiTile implements EnergyProducer, LightSou
     }
 
     @Override
-    public void generateInitialize(int x, int y, double seed) {
+    public void overrideGenerateInitialize(int x, int y, double seed) {
         setWorldCoordinates(new Point(x, y));
     }
 
     @Override
-    public void onPlace(World world, int tx, int ty, Player player) {
+    public void overrideOnPlace(World world, int tx, int ty, Player player) {
         setWorldCoordinates(new Point(tx, ty));
         connectToWorld(world, tx, ty);
     }

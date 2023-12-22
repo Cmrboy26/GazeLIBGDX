@@ -8,13 +8,17 @@ import java.util.HashMap;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Item;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.abstractTiles.DrillableTile;
 import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.interfaceTiles.SpeedChangeTile;
 
-public class StoneTile extends TransitionTile implements SpeedChangeTile {
+public class StoneTile extends TransitionTile implements SpeedChangeTile, DrillableTile {
 
 	public StoneTile() {
 		super(TileType.STONE);
@@ -62,6 +66,16 @@ public class StoneTile extends TransitionTile implements SpeedChangeTile {
 	@Override
 	public float getSpeedMultiplier() {
 		return 1;
+	}
+
+	@Override
+	public Item getExploitedItem() {
+		return Items.getItem(ItemType.STONE, 1);
+	}
+
+	@Override
+	public float getDrillTime() {
+		return DRILL_TIME_TIER_1;
 	}
 
 }

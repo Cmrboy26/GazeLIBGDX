@@ -1,6 +1,6 @@
 package net.cmr.gaze.world;
 
-import net.cmr.gaze.world.tile.AirTile;
+import net.cmr.gaze.world.tile.Air;
 import net.cmr.gaze.world.tile.Anvil;
 import net.cmr.gaze.world.tile.BasicConveyorTile;
 import net.cmr.gaze.world.tile.BasicPumpTile;
@@ -51,7 +51,7 @@ import net.cmr.gaze.world.tile.WoodWallTile;
 
 public enum TileType {
 	
-	AIR(AirTile.class, 1, TickType.NONE),
+	AIR(Air.class, 1, TickType.NONE),
 	GRASS(GrassTile.class, 0, TickType.NONE),
 	TREE(Tree.class, 1, TickType.NEARBY, 7, Replaceable.GENERATION),
 	SAND(SandTile.class, 0, TickType.NONE), 

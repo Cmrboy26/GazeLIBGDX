@@ -35,7 +35,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     }
 
     @Override
-    public void onPlace(World world, int x, int y, Player player) {
+    public void overrideOnPlace(World world, int x, int y, Player player) {
         this.worldCoordinates = new Point(x, y);
         this.neighbors = new ArrayList<EnergyDistributor>();
         this.subnet = new EnergySubnet(this);
@@ -91,7 +91,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     }
 
     @Override
-    public void generateInitialize(int x, int y, double seed) {
+    public void overrideGenerateInitialize(int x, int y, double seed) {
         this.worldCoordinates = new Point(x, y);
     }
 

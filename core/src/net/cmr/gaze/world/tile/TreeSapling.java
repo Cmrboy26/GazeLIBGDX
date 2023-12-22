@@ -40,7 +40,7 @@ public class TreeSapling extends MultiTile {
 	}
 
 	@Override
-	public void generateInitialize(int x, int y, double seed) {
+	public void overrideGenerateInitialize(int x, int y, double seed) {
 		stage = getRandomizedInt(2, x, y);
         //stage = (int) Math.floor(Math.random()*3);
 	}
