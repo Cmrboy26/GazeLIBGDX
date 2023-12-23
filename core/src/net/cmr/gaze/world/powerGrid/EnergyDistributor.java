@@ -36,6 +36,7 @@ public interface EnergyDistributor {
         if(node1.getNeighbors().contains(node2) || node2.getNeighbors().contains(node1)) {
             return;
         }
+
         node1.addNeighbor(node2);
         node2.addNeighbor(node1);
         //System.out.println("Connected nodes: "+node1+" and "+node2);

@@ -15,6 +15,7 @@ import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.abstractTiles.RotatableTile;
@@ -63,7 +64,7 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
     }
 
     private Item getExploitedItem(TileData data, Point worldCoordinates) {
-        Tile below = data.getTile(worldCoordinates.x, worldCoordinates.y, 1);
+        Tile below = data.getTile(worldCoordinates.x, worldCoordinates.y, 0);
         if(below instanceof ExploitableTile) {
             ExploitableTile exploitable = (ExploitableTile) below;
             if(exploitable.getExploitType() == ExploitType.PUMP) {
@@ -106,6 +107,7 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
 
     public void onBreak(World world, Player player, int x, int y) {
         MachineTile.super.onBreak(world, player, x, y);
+        TileUtils.dropItem(world, x, y, Items.getItem(ItemType.BASIC_PUMP, 1));
     }
 
     EnergyDistributor distributor;
@@ -136,5 +138,14 @@ public class BasicPumpTile extends RotatableTile implements MachineTile, EnergyC
     public double getEnergyConsumption() {
         return 1;
     }
+
+    @Override
+	public String getHitNoise() {
+		return "stoneHit";
+	}
+	@Override
+	public String getBreakNoise() {
+		return "stoneBreak";
+	}
 
 }

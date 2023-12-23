@@ -22,6 +22,7 @@ import net.cmr.gaze.inventory.custom.Apple;
 import net.cmr.gaze.inventory.custom.BasicCircuit;
 import net.cmr.gaze.inventory.custom.BasicConveyorItem;
 import net.cmr.gaze.inventory.custom.BasicGenerator;
+import net.cmr.gaze.inventory.custom.BasicMiningDrillItem;
 import net.cmr.gaze.inventory.custom.BasicMotor;
 import net.cmr.gaze.inventory.custom.BasicPumpItem;
 import net.cmr.gaze.inventory.custom.BedItem;
@@ -149,7 +150,7 @@ public class Items {
 		STEAM_ENGINE(SteamEngineItem.class, 4),
 		BASIC_PUMP(BasicPumpItem.class, 4), 
 		BOILER(BoilerItem.class),
-		BASIC_MINING_DRILL(null),
+		BASIC_MINING_DRILL(BasicMiningDrillItem.class, 4),
 		BASIC_STOVE(null),
 		BASIC_CROP_BREEDER(null),
 		MODERN_CROP_BREEDER(null),

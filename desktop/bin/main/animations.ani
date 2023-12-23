@@ -123,7 +123,16 @@
 				"time": 0.5
 			}
 		]
-	}
+	},
+	"basicMiningDrill": {
+		"tileX": 64,
+		"tileY": 48,
+		"animations": [
+			{
+				"time": 0.2
+			}
+		]
+	},
 	"player": {
 		"tileX": 64,
 		"tileY": 64,

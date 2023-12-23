@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Stack;
 
 import net.cmr.gaze.util.CustomMath;
+import net.cmr.gaze.world.abstractTiles.ElectricityPole;
 
 public class PowerGrid {
 
@@ -165,13 +166,13 @@ public class PowerGrid {
 		if(grid == null) {
 			grid = new PowerGrid();
 		}
+
 		for(EnergyDistributor neighbor : distributor.getNeighbors()) {
 			if(neighbor.getPowerGrid() != null && neighbor.getPowerGrid().getSize() > grid.getSize()) {
 				grid = neighbor.getPowerGrid();
 			}
 		}
 
-		//System.out.println("Setting grid to "+grid);
 		dfsSetGrid(grid, distributor);
 
 	}

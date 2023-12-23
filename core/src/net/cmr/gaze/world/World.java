@@ -452,6 +452,7 @@ public class World {
 			}
 			
 			((FloorTile)t).setUnderTile(at);
+			removeTile(tilex, tiley, t.getType().layer);
 			getChunk(Chunk.getChunk(tilex, tiley), disableGenerate).setTile(t, Chunk.getInsideChunkCoordinates(tilex, tiley), t.getType().layer);
 			t.onPlace(this, tilex, tiley, placingPlayer);
 			if(!disableGenerate) onTileChange(tilex, tiley, t.getType().layer);

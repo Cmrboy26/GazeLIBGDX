@@ -8,10 +8,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.DataBuffer;
 
 import net.cmr.gaze.Gaze;
+import net.cmr.gaze.inventory.Items;
+import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.stage.GameScreen;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
+import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.abstractTiles.DrillableTile;
@@ -28,7 +31,7 @@ import net.cmr.gaze.world.powerGrid.EnergyDistributor;
 public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyConsumer, ConveyorDepositer{
  
     float drillDelta;
-    transient DrillableTile drillableTile;
+    transient Tile belowTile;
 
     public BasicMiningDrill() {
         super(TileType.BASIC_MINING_DRILL, 2, 1);
@@ -40,7 +43,7 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
     @Override
     public void render(Gaze game, GameScreen screen, int x, int y) {
         renderDelta += Gdx.graphics.getDeltaTime() * (getMachineDisplayState() ? 1 : 0);
-        draw(game.batch, game.getAnimation("steamEngine").getKeyFrame(renderDelta), x, y, 1, 1);
+        draw(game.batch, game.getAnimation("basicMiningDrill").getKeyFrame(renderDelta* (getMachineDisplayState() ? 1 : 0)), x, y, 2, 1.5f);
         super.render(game, screen, x, y);
     }
 
@@ -59,18 +62,21 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
 
     @Override
     public void update(TileData data, Point worldCoordinates, boolean updatedByPlayer) {
-        if(drillableTile == null || !((Tile)drillableTile).placedInWorld()) {
-            Tile tile = data.getTile((int) (worldCoordinates.x+1), (int) (worldCoordinates.y), 0);
-            System.out.println("NEW TILE FOUND: " + tile);
-            if(tile instanceof DrillableTile) {
-                drillableTile = (DrillableTile) tile;
+        
+        if(data.isServer()) {
+            if(belowTile == null || !belowTile.placedInWorld()) {
+                Tile tile = data.getTile((int) (worldCoordinates.x+1), (int) (worldCoordinates.y), 0);
+                belowTile = tile;
             }
         }
-        if(data.isServer() && isConnectedToPowerGrid() && drillableTile != null) {
-            drillDelta += Tile.DELTA_TIME*getMachineEfficiency();
+        if(belowTile instanceof DrillableTile && data.isServer() && isConnectedToPowerGrid() && belowTile != null) {
+            DrillableTile drillableTile = (DrillableTile) this.belowTile;
+            if(drillDelta < drillableTile.getDrillTime()) {
+                drillDelta += Tile.DELTA_TIME*getMachineEfficiency();
+            }
             if(drillDelta >= drillableTile.getDrillTime()) {
                 drillDelta = 0;
-                depositToTile(data, (int) (worldCoordinates.x+1), (int) (worldCoordinates.y), drillableTile.getExploitedItem());
+                depositToTile(data, (int) (worldCoordinates.x-1), (int) (worldCoordinates.y), drillableTile.getExploitedItem());
                 /*Tile tile = data.getTile((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()), 1);
                 if(tile instanceof ConveyorReciever) {
                     ConveyorReciever reciever = (ConveyorReciever) tile;
@@ -95,6 +101,7 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
 
     public void onBreak(World world, Player player, int x, int y) {
         MachineTile.super.onBreak(world, player, x, y);
+        TileUtils.dropItem(world, x, y, Items.getItem(ItemType.BASIC_MINING_DRILL, 1));
     }
 
     EnergyDistributor distributor;
@@ -123,8 +130,16 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
 
     @Override
     public double getEnergyConsumption() {
-        return 0;
+        return 1;
     }
 
+    @Override
+	public String getHitNoise() {
+		return "stoneHit";
+	}
+	@Override
+	public String getBreakNoise() {
+		return "stoneBreak";
+	}
 
 }

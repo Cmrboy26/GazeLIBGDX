@@ -16,6 +16,7 @@ import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.powerGrid.EnergyDistributor;
+import net.cmr.gaze.world.powerGrid.EnergyProducer;
 import net.cmr.gaze.world.powerGrid.EnergySubnet;
 import net.cmr.gaze.world.powerGrid.EnergyUser;
 import net.cmr.gaze.world.powerGrid.PowerGrid;
@@ -24,7 +25,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
 
     EnergySubnet subnet;
     PowerGrid grid;
-    List<EnergyDistributor> neighbors; // NOTE: These should all be ElectricityPoles or other EnergyDistributor tiles
+    private List<EnergyDistributor> neighbors; // NOTE: These should all be ElectricityPoles or other EnergyDistributor tiles
     public Point worldCoordinates;
 
     public ElectricityPole(TileType type) {
@@ -59,6 +60,7 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
             for(int y = this.worldCoordinates.y - getRadius(); y <= this.worldCoordinates.y + getRadius(); y++) {
                 Tile tile = world.getTile(x, y, 1);
                 if(tile instanceof EnergyUser) {
+
                     EnergyUser user = (EnergyUser) tile;
 
                     if(user.getEnergyDistributor() != null) {
@@ -110,6 +112,9 @@ public abstract class ElectricityPole extends Tile implements EnergyDistributor 
     public static void readConnections(DataInputStream in, World world) throws IOException {
         Point worldCoordinates = new Point(in.readInt(), in.readInt());
         ElectricityPole pole = (ElectricityPole) world.getTile(worldCoordinates.x, worldCoordinates.y, 1);
+        pole.worldCoordinates = new Point(worldCoordinates.x, worldCoordinates.y);
+        pole.neighbors = new ArrayList<EnergyDistributor>();
+        pole.subnet = new EnergySubnet(pole);
         pole.connectToNetwork(world);
     }
 

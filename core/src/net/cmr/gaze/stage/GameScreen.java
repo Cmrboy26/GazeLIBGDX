@@ -161,6 +161,7 @@ public class GameScreen implements Screen {
 	ResearchMenu researchMenu;
 	CraftingMenu craftingMenu;
 	Table hotbarTable;
+	Image hotbar;
 	
 	ButtonGroup<InventorySlot> hotbarButtonGroup;
 	
@@ -301,7 +302,7 @@ public class GameScreen implements Screen {
 		}
 		hotbarTable.setBounds(320-totalWidth/2, 26.5f*(8/10f), totalWidth, width);
 		
-		Image hotbar = new Image(game.getSprite("hotbar"));
+		hotbar = new Image(game.getSprite("hotbar"));
 		hotbar.setBounds(320-320/2f, 4, 320, 320/5f);
 		stages.get(Align.bottom).addActor(hotbar);
 		stages.get(Align.bottom).addActor(hotbarTable);
@@ -978,11 +979,15 @@ public class GameScreen implements Screen {
 						int y = (int) Math.floor(output.y/Tile.TILE_SIZE);
 						
 						boolean keyContinue = true;
-						if(Controls.SELECT.getInputType()==InputType.KEYBOARD) {
-						//if(Gdx.input.isKeyPressed(Input.Keys.V)) {
 
-							int px = getLocalPlayer().getTileX();
-							int py = getLocalPlayer().getTileY();
+						int px = getLocalPlayer().getTileX();
+						int py = getLocalPlayer().getTileY();
+						int manhattanDistance = Math.abs(x-px)+Math.abs(y-py);
+						
+						boolean skipWall = false;
+						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
+
+						if(Controls.SELECT.getInputType()==InputType.KEYBOARD || manhattanDistance > getLocalPlayer().getInteractRadius()+1.5f) {
 
 							if(Math.abs(x-px)<=1 && Math.abs(y-py)<=1) {
 								keyContinue = false;
@@ -1002,6 +1007,8 @@ public class GameScreen implements Screen {
 								}
 								output.x = x*Tile.TILE_SIZE;
 								output.y = y*Tile.TILE_SIZE;
+								ignoreCeiling = 1;
+								skipWall = true;
 							}
 						}
 
@@ -1009,14 +1016,6 @@ public class GameScreen implements Screen {
 						
 						Tile at = tileDataObject.getTile(x, y, 1);
 						Tile below = tileDataObject.getTile(x, y-1, 1);
-						
-						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
-						boolean skipWall = false;
-
-						if(Controls.SELECT.isDown() && keyContinue) {
-							ignoreCeiling = 1;
-							skipWall = true;
-						}
 
 						int downwardShift = 0;
 
@@ -1690,6 +1689,7 @@ public class GameScreen implements Screen {
 		boolean end = false;
 		
 		end = end || hotbarTable.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
+		end = end || hotbar.hit(mouseLocalPosition.x, mouseLocalPosition.y, false) != null;
 
 		for(ArrayList<GameMenu> gameMenu : gameMenus.values()) {
 			for(GameMenu menu : gameMenu) {

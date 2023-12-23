@@ -20,10 +20,11 @@ import net.cmr.gaze.world.TileType;
 import net.cmr.gaze.world.TileUtils;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.World;
+import net.cmr.gaze.world.abstractTiles.DrillableTile;
 import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 
-public class SandTile extends TransitionTile {
+public class SandTile extends TransitionTile implements DrillableTile {
 
 	public SandTile() {
 		super(TileType.SAND);
@@ -111,6 +112,16 @@ public class SandTile extends TransitionTile {
 	@Override
 	public TileType[] getTransitionTiles() {
 		return transitionTiles;
+	}
+
+	@Override
+	public Item getExploitedItem() {
+		return Items.getItem(ItemType.SAND, 1);
+	}
+
+	@Override
+	public float getDrillTime() {
+		return DRILL_TIME_TIER_2;
 	}
 
 }
