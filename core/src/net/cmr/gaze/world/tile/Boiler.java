@@ -16,6 +16,7 @@ import net.cmr.gaze.inventory.custom.CoalItem;
 import net.cmr.gaze.inventory.custom.WaterCanister;
 import net.cmr.gaze.networking.PlayerConnection;
 import net.cmr.gaze.stage.GameScreen;
+import net.cmr.gaze.world.StructureTile;
 import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.TileType;
@@ -97,6 +98,9 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
             // attempt to export the steam to the side conveyors
             if(steamAmount > 0) {
                 Tile left = data.getTile(worldCoordinates.x-1, worldCoordinates.y, 1);
+                if(left instanceof StructureTile) {
+                    left = ((StructureTile) left).getMultiTileCore(data, worldCoordinates.x-1, worldCoordinates.y);
+                }
                 if(steamAmount > 0 && left instanceof ConveyorReciever) {
                     ConveyorReciever conveyor = (ConveyorReciever) left;
                     if(left instanceof ConveyorTile) {
@@ -111,6 +115,9 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
                     }
                 }
                 Tile right = data.getTile(worldCoordinates.x+2, worldCoordinates.y, 1);
+                if(right instanceof StructureTile) {
+                    right = ((StructureTile) right).getMultiTileCore(data, worldCoordinates.x+2, worldCoordinates.y);
+                }
                 if(steamAmount > 0 && right instanceof ConveyorReciever) {
                     ConveyorReciever conveyor = (ConveyorReciever) right;
                     if(right instanceof ConveyorTile) {
@@ -168,8 +175,9 @@ public class Boiler extends MultiTile implements ConveyorDepositer, ConveyorReci
 
     private void exportSteam(TileData data, int x, int y, ConveyorReciever conveyor) {
         Item steamCanister = Items.getItem(ItemType.STEAM_CANISTER, 1);
-        depositItem(conveyor, steamCanister);
-        data.getServerData().onTileChange(x, y, 1);
+        //depositItem(conveyor, steamCanister);
+        //data.getServerData().onTileChange(x, y, 1);
+        depositToTile(data, x, y, steamCanister);
     }
     @Override
     public void onDepositItem(ConveyorReciever reciever, Item item) {

@@ -11,18 +11,23 @@ public class StructureTile extends Tile {
 
 	int x, y;
 	
+	TileType[] belowWhitelist, belowBlacklist;
+
 	public StructureTile(TileType tileType, int x, int y) {
 		super(tileType);
 		this.x = x;
 		this.y = y;
+		Tile tile = Tiles.getTile(tileType);
+		belowBlacklist = tile.belowBlacklist();
+		belowWhitelist = tile.belowWhitelist();
 	}
 
 	public TileType[] belowWhitelist() {
-		return null;
+		return belowWhitelist;
 	}
 
 	public TileType[] belowBlacklist() {
-		return null;
+		return belowWhitelist;
 	}
 	
 	public Tile getMultiTileCore(World world, int tilex, int tiley) {

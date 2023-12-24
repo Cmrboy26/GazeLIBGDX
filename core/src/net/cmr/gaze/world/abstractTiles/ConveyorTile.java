@@ -68,7 +68,7 @@ public abstract class ConveyorTile extends RotatableTile implements ConveyorDepo
     public ConveyorReciever getReciever(TileData data, Point worldCoordinates) {
         Point nextTile = new Point((int) (worldCoordinates.x + getComponentX()), (int) (worldCoordinates.y + getComponentY()));
         Tile tile = data.getTile(nextTile.x, nextTile.y, 1);
-        if(tile instanceof StructureTile ) {
+        if(tile instanceof StructureTile) {
             tile = ((StructureTile) tile).getMultiTileCore(data, nextTile.x, nextTile.y);
         }
         if(tile instanceof ConveyorReciever) {
