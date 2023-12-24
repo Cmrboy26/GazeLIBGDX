@@ -42,6 +42,7 @@ import net.cmr.gaze.inventory.custom.CopperOreItem;
 import net.cmr.gaze.inventory.custom.CopperWire;
 import net.cmr.gaze.inventory.custom.Cotton;
 import net.cmr.gaze.inventory.custom.CottonSeeds;
+import net.cmr.gaze.inventory.custom.CrudeWindmillItem;
 import net.cmr.gaze.inventory.custom.FurnaceItem;
 import net.cmr.gaze.inventory.custom.Glass;
 import net.cmr.gaze.inventory.custom.GrassSeeds;
@@ -145,7 +146,8 @@ public class Items {
 		AGRICULTURE_TABLE(null),
 
 		BLAST_FURNACE(BlastFurnaceItem.class, 4), 
-		SOLAR_PANEL(SolarPanelItem.class, 4),
+		SOLAR_PANEL(SolarPanelItem.class, 4), 
+		CRUDE_WINDMILL(CrudeWindmillItem.class),
 		COAL_GENERATOR(CoalGeneratorItem.class, 4),
 		STEAM_ENGINE(SteamEngineItem.class, 4),
 		BASIC_PUMP(BasicPumpItem.class, 4), 

@@ -72,6 +72,14 @@ public class TileData {
 			serverData.addTile(tile, x, y);
 		}
 	}
+
+	public EnvironmentController getEnvironmentController() {
+		if(isServer()) {
+			return serverData.getEnvironmentController();
+		} else {
+			return screen.getEnvironmentController();
+		}
+	}
 	
 	public World getServerData() {
 		if(isServer()) {

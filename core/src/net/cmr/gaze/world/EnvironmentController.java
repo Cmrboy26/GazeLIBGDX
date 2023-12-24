@@ -61,6 +61,18 @@ public class EnvironmentController {
                     public float getAmbientBrightness() {
                         return 0;
                     }
+                    @Override
+                    public float getMaxAmbientBrightness() {
+                        return 0;
+                    }
+                    @Override
+                    public float getMinAmbientBrightness() {
+                        return 0;
+                    }
+                    @Override
+                    public float getWindSpeed() {
+                        return 0;
+                    }
                 };
             default:
                 return null;
@@ -83,7 +95,14 @@ public class EnvironmentController {
     }
 
     public float getAmbientBrightness() {
-        return (float) calculateAmbience(.1f, .8f, .025f, 60f);
+        return (float) calculateAmbience(getMinAmbientBrightness(), getMaxAmbientBrightness(), .025f, 60f);
+    }
+
+    public float getMinAmbientBrightness() {
+        return .1f;
+    }
+    public float getMaxAmbientBrightness() {
+        return .8f;
     }
 
     public boolean isNight() {
@@ -114,6 +133,14 @@ public class EnvironmentController {
     	return (rate*(x-2*duration-transitionTime)+min);
     }
 
+    /**
+     * Returns how long day and night last in seconds.
+     * @return the time in seconds
+     */
+    //public float getDayNighTime() {
+   //     return (getDayOrNightTime() + (max-min)/rate)*2;
+    //}
+
     public void write(DataBuffer buffer) throws IOException {
         buffer.writeInt(type.getID());
         buffer.writeDouble(seed);
@@ -141,6 +168,35 @@ public class EnvironmentController {
     }
     public double getRainThreshold() {
         return 0.7;
+    }
+
+    public float getAtmosphericDensity() {
+        return 1f;
+    }
+
+    public float getWindSpeed() {
+
+        if(getMaxAmbientBrightness() == 0) {
+            return 0;
+        }
+
+        float solarPower = (float) Math.pow(getAmbientBrightness() / getMaxAmbientBrightness(), .25d);
+
+        return solarPower;
+    }
+
+
+    public float getWindStrength() {
+        switch(Weather.getWeather(this)) {
+            case CLEAR:
+                return 1f;
+            case RAIN:
+                return 1.25f;
+            case THUNDER:
+                return 1.5f;
+            default:
+                return 0;
+        }
     }
 
     public Color getAmbientColor() {

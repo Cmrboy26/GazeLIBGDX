@@ -133,6 +133,15 @@
 			}
 		]
 	},
+	"crudeWindmill": {
+		"tileX": 48,
+		"tileY": 64,
+		"animations": [
+			{
+				"time": 0.25
+			}
+		]	
+	},
 	"player": {
 		"tileX": 64,
 		"tileY": 64,

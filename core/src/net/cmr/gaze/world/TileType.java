@@ -17,6 +17,7 @@ import net.cmr.gaze.world.tile.CoalGenerator;
 import net.cmr.gaze.world.tile.CoalOreWall;
 import net.cmr.gaze.world.tile.CopperOreWall;
 import net.cmr.gaze.world.tile.CottonTile;
+import net.cmr.gaze.world.tile.CrudeWindmill;
 import net.cmr.gaze.world.tile.DirtTile;
 import net.cmr.gaze.world.tile.FarmlandTile;
 import net.cmr.gaze.world.tile.FurnaceTile;
@@ -97,7 +98,8 @@ public enum TileType {
 	BASIC_CONVEYOR(BasicConveyorTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
 	BASIC_PUMP(BasicPumpTile.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER),
 	BOILER(Boiler.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
-	BASIC_MINING_DRILL(BasicMiningDrill.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
+	BASIC_MINING_DRILL(BasicMiningDrill.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER), 
+	CRUDE_WINDMILL(CrudeWindmill.class, 1, TickType.CONSTANT, 3, Replaceable.NEVER);
 	
 	public enum TickType {
 		CONSTANT,
