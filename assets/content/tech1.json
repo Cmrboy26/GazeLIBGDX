@@ -19,8 +19,8 @@
 			"position": [0,10],
 			"requirements":[
 				"SKILL/MINING/5",
-				"ITEM/IRON_INGOT/1",
-				"ITEM/COPPER_INGOT/2",
+				"ITEM/IRON_INGOT/3",
+				"ITEM/COPPER_INGOT/3",
 				"RESEARCH/gaze:resources.forging"
 			],
 			"rewards": [
@@ -35,7 +35,7 @@
 			"parent-id":"technology",
 			"position": [0,20],
 			"requirements":[
-				"ITEM/IRON_INGOT/5"
+				"ITEM/IRON_INGOT/4"
 			],
 			"rewards": [
 
@@ -49,7 +49,7 @@
 			"parent-id":"gears",
 			"position": [0,30],
 			"requirements":[
-				"ITEM/IRON_GEAR/5"
+				"ITEM/IRON_GEAR/4"
 			],
 			"rewards": [
 
@@ -64,7 +64,7 @@
 			"position": [0,40],
 			"requirements":[
 				"SKILL/MINING/5",
-				"ITEM/COPPER_WIRE/5",
+				"ITEM/COPPER_WIRE/4",
 				"ITEM/SILICON/4"
 			],
 			"rewards": [
@@ -73,15 +73,30 @@
 		},
 		{
 			"name":"Motors",
-			"description":"Motors are cool I suppose.\n-Unlocks Basic Motor",
+			"description":"Motors are cool, I suppose. Converting electricity into mechanical energy\nseems like it could be useful in item transportation.\n-Unlocks Basic Motor\n-Unlocks Basic Conveyors",
 			"icon":"basicMotor",
 			"id":"motors1",
 			"parent-id":"electricity",
 			"position": [-10,40],
 			"requirements":[
-				"ITEM/COPPER_WIRE/5",
-				"ITEM/IRON_GEAR/10",
-				"ITEM/MAGNET/10"
+				"ITEM/COPPER_WIRE/4",
+				"ITEM/IRON_GEAR/9",
+				"ITEM/MAGNET/8"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Pumps",
+			"description":"Pumps can be used to extract fluids!\n-Unlocks Basic Pump",
+			"icon":">basicPump1",
+			"id":"pumps1",
+			"parent-id":"motors1",
+			"position": [-10,50],
+			"requirements":[
+				"ITEM/IRON_GEAR/4",
+				"ITEM/BASIC_MOTOR/4"
 			],
 			"rewards": [
 
@@ -90,14 +105,14 @@
 		{
 			"name":"Mining Drills",
 			"description":"Mining Drills are cool I suppose.\n-Unlocks Basic Mining Drill",
-			"icon":"basicMiningDrill",
+			"icon":">basicMiningDrill",
 			"id":"miningDrills1",
-			"parent-id":"motors1",
-			"position": [-10,50],
+			"parent-id":"pumps1",
+			"position": [-10,60],
 			"requirements":[
-				"ITEM/BASIC_MOTOR/5",
-				"ITEM/IRON_GEAR/10",
-				"ITEM/MAGNET/10"
+				"ITEM/IRON_INGOT/6",
+				"ITEM/COPPER_WIRE/4",
+				"ITEM/BASIC_CIRCUIT/4"
 			],
 			"rewards": [
 
@@ -111,22 +126,40 @@
 			"parent-id":"electricity",
 			"position": [10,40],
 			"requirements":[
-				"ITEM/MAGNET/10",
-				"ITEM/COPPER_WIRE/10"
+				"ITEM/MAGNET/8",
+				"ITEM/COPPER_WIRE/8"
 			],
 			"rewards": [
 
 			]
 		},
 		{
-			"name":"Coal Power",
-			"description":"Coal is the future!\n-Unlocks Coal Generators",
-			"icon":"coal",
-			"id":"coal_generator",
+			"name":"Wind Power",
+			"description":"Wind is the future!\n-Unlocks Crude Windmill",
+			"icon":">crudeWindmill",
+			"id":"windmill1",
 			"parent-id":"generators1",
 			"position": [10,50],
 			"requirements":[
-				"ITEM/BASIC_GENERATOR/5"
+				"ITEM/BASIC_GENERATOR/3",
+				"ITEM/WOOD/8",
+				"ITEM/IRON_INGOT/4"
+			],
+			"rewards": [
+
+			]
+		},
+		{
+			"name":"Steam Power",
+			"description":"Steam is the future!\n-Unlocks Boiler\n-Unlocks Steam Engine",
+			"icon":">steamEngine",
+			"id":"steam_power",
+			"parent-id":"generators1",
+			"position": [10,60],
+			"requirements":[
+				"RESEARCH/gaze:machinery.pumps1",
+				"ITEM/BASIC_GENERATOR/5",
+				"ITEM/WATER_CANISTER/5"
 			],
 			"rewards": [
 
@@ -136,9 +169,9 @@
 			"name": "Solar Power",
 			"description":"The sun is the future!\n-Unlocks Solar Panels",
 			"icon":"solarPanel",
-			"id":"solar_panel",
-			"parent-id":"coal_generator",
-			"position": [10,60],
+			"id":"solar1",
+			"parent-id":"steam_power",
+			"position": [10,70],
 			"requirements":[
 				"ITEM/COPPER_WIRE/10",
 				"ITEM/BASIC_GENERATOR/5",

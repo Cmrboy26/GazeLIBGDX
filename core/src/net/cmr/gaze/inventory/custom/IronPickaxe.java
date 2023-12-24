@@ -23,12 +23,12 @@ public class IronPickaxe extends Tool {
 
 	@Override
 	public double breakStrength() {
-		return 1.35;
+		return 1.4;
 	}
 	
 	@Override
 	public double breakSpeed() {
-		return 1.35;
+		return 1.45;
 	}
 
 	@Override
