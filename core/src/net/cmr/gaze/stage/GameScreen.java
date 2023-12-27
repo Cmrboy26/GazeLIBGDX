@@ -96,6 +96,9 @@ import net.cmr.gaze.stage.menus.GameMenuIcon;
 import net.cmr.gaze.stage.menus.InventoryMenu;
 import net.cmr.gaze.stage.menus.PauseMenu;
 import net.cmr.gaze.stage.menus.ResearchMenu;
+import net.cmr.gaze.stage.screenEffects.Overridable;
+import net.cmr.gaze.stage.screenEffects.RainEffect;
+import net.cmr.gaze.stage.screenEffects.ScreenEffect;
 import net.cmr.gaze.stage.widgets.BarsWidget;
 import net.cmr.gaze.stage.widgets.ChatWidget;
 import net.cmr.gaze.stage.widgets.GameSettings.Controls;
@@ -121,9 +124,10 @@ import net.cmr.gaze.world.Tile;
 import net.cmr.gaze.world.TileData;
 import net.cmr.gaze.world.Tiles;
 import net.cmr.gaze.world.Weather;
+import net.cmr.gaze.world.Weather.WeatherType;
 import net.cmr.gaze.world.WorldGenerator.WorldGeneratorType;
-import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.CeilingTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.TransitionTile;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.HealthEntity;
@@ -177,6 +181,8 @@ public class GameScreen implements Screen {
 	FrameBuffer frameBuffer;
 	Lights lights;
 	EnvironmentController environmentController;
+
+	HashMap<Class<? extends ScreenEffect>, ScreenEffect> screenEffects;
 	
 	long latency = 0;
 	double worldTime = 0;
@@ -216,6 +222,7 @@ public class GameScreen implements Screen {
 		this.sender = new PacketSender();
 		this.builder.attatchCalculator(downloadSpeed);
 		this.sender.attatchCalculator(uploadSpeed);
+		this.screenEffects = new HashMap<>();
 		
 		this.socket = socket;
 		this.dataIn = dataIn;
@@ -500,7 +507,16 @@ public class GameScreen implements Screen {
 		if(weatherAmbianceDelta > 5) {
 			weatherAmbianceDelta = 0;
 			if(environmentController!=null) {
-				Ambience ambience = Weather.getWeather(environmentController).getAmbience();
+				WeatherType weather = Weather.getWeather(environmentController);
+				if(weather == WeatherType.RAIN || weather == WeatherType.THUNDER) {
+					addScreenEffect(new RainEffect());
+					game.playSoundContinuous("rain", 1f);
+				}  else {
+					removeScreenEffect(RainEffect.class);
+					game.stopContinuousSound("rain");
+				}
+
+				Ambience ambience = weather.getAmbience();
 				String noise = ambience.getAmbientSound(environmentController);
 				int x = getLocalPlayer().getTileX();
 				int y = getLocalPlayer().getTileY();
@@ -575,6 +591,10 @@ public class GameScreen implements Screen {
 			
 			renderWorld(centerChunk);
 			renderPlaceableHologram();
+
+			for(ScreenEffect effect : screenEffects.values()) {
+				effect.render(this, frameBuffer);
+			}
 
 			frameBuffer.end();
 			
@@ -1924,6 +1944,25 @@ public class GameScreen implements Screen {
 		
 		notificationQueue.add(notif);
     }
+
+	public void addScreenEffect(ScreenEffect effect) {
+		if(screenEffects.get(effect.getClass()) != null && !(effect instanceof Overridable)) {
+			return;
+		}
+		screenEffects.put(effect.getClass(), effect);
+	}
+
+	public <T extends ScreenEffect> T getScreenEffect(Class<T> effectClass) {
+		return effectClass.cast(screenEffects.get(effectClass));
+	}
+
+	public void removeScreenEffect(ScreenEffect effect) {
+		screenEffects.remove(effect.getClass());
+	}
+
+	public void removeScreenEffect(Class<? extends ScreenEffect> effectClass) {
+		screenEffects.remove(effectClass);
+	}
 
 	public void sendChatMessage(String message) {
 		sender.addPacket(new ChatPacket(new ChatMessage("", message)));

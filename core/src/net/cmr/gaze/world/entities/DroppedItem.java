@@ -26,7 +26,7 @@ public class DroppedItem extends Entity {
 		super(EntityType.DroppedItem);
 	}
 	
-	public DroppedItem(Item item, int x, int y) {
+	public DroppedItem(Item item, float x, float y) {
 		super(EntityType.DroppedItem, x*Tile.TILE_SIZE, y*Tile.TILE_SIZE);
 		this.item = item;
 	}

@@ -19,7 +19,7 @@ public class TileUtils {
 	 * @param itemToDrop the item to drop
 	 */
 	public static void dropItem(World world, int tileX, int tileY, Item itemToDrop) {
-		world.addEntity(new DroppedItem(itemToDrop, tileX, tileY));
+		world.addEntity(new DroppedItem(itemToDrop, (float) (tileX+Math.random()/1.3f), (float) (tileY+Math.random()/1.3f)));
 	}
 	
 	/**

@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "DesktopLauncher",
+            "request": "launch",
+            "mainClass": "net.cmr.gaze.DesktopLauncher",
+            "projectName": "desktop"
+        },
+        {
+            "type": "java",
             "name": "ConsoleTest",
             "request": "launch",
             "mainClass": "net.cmr.gaze.ConsoleTest",

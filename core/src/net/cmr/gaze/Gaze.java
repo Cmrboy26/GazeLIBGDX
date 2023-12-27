@@ -90,6 +90,7 @@ public class Gaze extends Game {
 	public HashMap<String, Animation<TextureRegion>> animations;
 	public HashMap<String, Sound> sounds;
 	public HashMap<String, Music> music;
+	public HashMap<String, Long> continousSounds;
 	
 	TextureAtlas spriteAtlas;
 	//TextureAtlas UIAtlas;
@@ -111,6 +112,7 @@ public class Gaze extends Game {
 		fontmap = new HashMap<>();
 		sprites = new HashMap<>();
 		sounds = new HashMap<>();
+		continousSounds = new HashMap<>();
 		music = new HashMap<>();
 		ninePatch = new HashMap<>();
 	}
@@ -181,6 +183,7 @@ public class Gaze extends Game {
 		initSound("crickets0");
 		initSound("crickets1");
 		initSound("machineworking");
+		initSound("rain");
 		
 		initMusic("peacefulOne");
 		
@@ -522,6 +525,33 @@ public class Gaze extends Game {
 		
 	}
 	
+	public void stopAllSounds() {
+		for(Sound sound : sounds.values()) {
+			sound.stop();
+		}  
+	}
+
+	public long playSoundContinuous(String sound, float volume) {
+		if(sounds.get(sound) == null) {
+			return -1;
+		}
+		if(continousSounds.get(sound) != null) {
+			return continousSounds.get(sound);
+		}
+		
+		long v = sounds.get(sound).loop(volume*settings.getFloat("sfxVolume")*settings.getFloat("masterVolume"));
+		continousSounds.put(sound, v);
+		return v;
+	}
+
+	public void stopContinuousSound(String sound) {
+		if(continousSounds.get(sound) == null) {
+			return;
+		}
+		sounds.get(sound).stop(continousSounds.get(sound));
+		continousSounds.put(sound, null);
+	}
+
 	public long playSound(String sound, float volume, float pitch) {
 		
 		if(sounds.get(sound) == null) {

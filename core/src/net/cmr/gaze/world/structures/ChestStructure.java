@@ -43,7 +43,7 @@ public class ChestStructure extends Structure {
 			tile.getInventory().put(i,Items.getItem(type, 1));
 		}*/
 		for(int i = 0; i < tile.getInventory().getSize(); i++) {
-			if(random.nextInt(5)==0) {
+			if(random.nextInt(3)==0) {
 				switch(random.nextInt(4)) {
 				case 3: {
 					tile.getInventory().put(i, Items.getItem(ItemType.STONE, random.nextInt(5)+1));

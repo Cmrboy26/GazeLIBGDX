@@ -14,7 +14,7 @@ import net.cmr.gaze.inventory.Items.ItemType;
 public class IlmeniteOre extends BasicItem {
 
 	public IlmeniteOre(int size) {
-		super(ItemType.ILEMITE_ORE, size, "ilmeniteOre");
+		super(ItemType.ILMENITE_ORE, size, "ilmeniteOre");
 	}
 
 	@Override

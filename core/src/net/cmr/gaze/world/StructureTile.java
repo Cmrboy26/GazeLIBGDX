@@ -5,29 +5,25 @@ import java.io.IOException;
 
 import com.badlogic.gdx.utils.DataBuffer;
 
+import net.cmr.gaze.util.ArrayUtil;
 import net.cmr.gaze.world.abstractTiles.MultiTile;
 
 public class StructureTile extends Tile {
 
 	int x, y;
-	
-	TileType[] belowWhitelist, belowBlacklist;
 
 	public StructureTile(TileType tileType, int x, int y) {
 		super(tileType);
 		this.x = x;
 		this.y = y;
-		Tile tile = Tiles.getTile(tileType);
-		belowBlacklist = tile.belowBlacklist();
-		belowWhitelist = tile.belowWhitelist();
 	}
 
 	public TileType[] belowWhitelist() {
-		return belowWhitelist;
+		return null;
 	}
 
 	public TileType[] belowBlacklist() {
-		return belowWhitelist;
+		return null;
 	}
 	
 	public Tile getMultiTileCore(World world, int tilex, int tiley) {

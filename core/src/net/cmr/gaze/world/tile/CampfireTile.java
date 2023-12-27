@@ -78,7 +78,7 @@ public class CampfireTile extends Tile implements CraftingStationTile, LightSour
 			campfireParticleDelta+=Tile.DELTA_TIME*Math.random()*2;
 			if(campfireParticleDelta > 2) {
 				campfireParticleDelta-=1;
-                TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.SMOKE, this, worldCoordinates.x, worldCoordinates.y, 0.5f, 4);
+                TileUtils.spawnParticleOffset(data.getServerData(), ParticleEffectType.SMOKE, this, worldCoordinates.x, worldCoordinates.y, 0.5f, 2);
 			}
 		}
 	}

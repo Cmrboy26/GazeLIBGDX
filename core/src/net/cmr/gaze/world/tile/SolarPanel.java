@@ -27,6 +27,7 @@ public class SolarPanel extends MultiTile implements EnergyProducer {
 
     EnergyDistributor distributor;
     Point distributorPoint, worldCoordinates;
+    float power = 0;
 
     public SolarPanel() {
         super(TileType.SOLAR_PANEL, 2, 2);
@@ -50,6 +51,7 @@ public class SolarPanel extends MultiTile implements EnergyProducer {
                 delta += Tile.DELTA_TIME;
                 //System.out.println("POWER GRID POWER: "+getPowerGrid().getMachineEfficiency()+" | "+getPowerGrid().getGenerationEfficiency());
             }
+            power = (data.getEnvironmentController().getAmbientBrightness() > .4f) ? 4 : 0;
         }
     }
 
@@ -131,7 +133,7 @@ public class SolarPanel extends MultiTile implements EnergyProducer {
 
     @Override
     public double getEnergyProduced() {
-        return 1;
+        return power;
     }
 
     public Rectangle getBoundingBox(int x, int y) {

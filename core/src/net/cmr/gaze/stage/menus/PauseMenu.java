@@ -45,6 +45,7 @@ public class PauseMenu extends GameMenu {
 			@Override
 			public void changed(ChangeEvent event, Actor actor) {
 				if(exit.isPressed()) {
+					game.stopAllSounds();
 					screen.closeNetworkFeatures();
 					game.setScreen(new MainMenuScreen(game));
 					game.playSound("falseSelect", 1f);

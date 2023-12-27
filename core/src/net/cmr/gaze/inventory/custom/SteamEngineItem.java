@@ -26,7 +26,7 @@ public class SteamEngineItem extends Placeable {
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		batch.draw(game.getAnimation("steamEngine").getKeyFrame(0), x, y+height/5f, width, height/(3f/2f));
+		batch.draw(game.getSprite("steamEngineItem"), x, y, width, height);
 	}
 
 	@Override

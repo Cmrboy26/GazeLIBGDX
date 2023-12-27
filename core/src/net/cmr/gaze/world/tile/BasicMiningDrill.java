@@ -130,7 +130,7 @@ public class BasicMiningDrill extends MultiTile implements MachineTile, EnergyCo
 
     @Override
     public double getEnergyConsumption() {
-        return 1;
+        return 6;
     }
 
     @Override

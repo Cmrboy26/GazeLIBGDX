@@ -72,7 +72,7 @@ public class StartupScreen implements Screen {
 
 		float time = 25f;
 		float height = 360;
-		game.batch.draw(background, (((elapsedTime/time)*height*3)%(height))-640, 0, height*6, height);
+		//game.batch.draw(background, (((elapsedTime/time)*height*3)%(height))-640, 0, height*6, height);
 		game.batch.end();
 		
 		game.batch.setProjectionMatrix(game.viewport.getCamera().combined);

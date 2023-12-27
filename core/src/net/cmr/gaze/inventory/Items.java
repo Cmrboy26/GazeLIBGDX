@@ -111,7 +111,7 @@ public class Items {
 		COAL(CoalItem.class),
 		IRON_ORE(IronOre.class),
 		COPPER_ORE(CopperOreItem.class),
-		ILEMITE_ORE(IlmeniteOre.class),
+		ILMENITE_ORE(IlmeniteOre.class),
 
 		SAND(SandItem.class),
 		GLASS(Glass.class),
@@ -159,6 +159,7 @@ public class Items {
 		
 		TORCH(TorchItem.class), 
 		
+		ACORN(AcornItem.class),
 		GRASS_SEEDS(GrassSeeds.class), 
 		WHEAT_SEEDS(WheatSeeds.class), 
 		COTTON_SEEDS(CottonSeeds.class),
@@ -166,7 +167,6 @@ public class Items {
 		COTTON(Cotton.class), 
 		BASIC_FERTILIZER(null),
 		BREAD(Bread.class), 
-		ACORN(AcornItem.class),
 		APPLE(Apple.class),
 		APPLE_PIE(null),
 		

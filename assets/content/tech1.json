@@ -105,7 +105,7 @@
 		{
 			"name":"Mining Drills",
 			"description":"Mining Drills are cool I suppose.\n-Unlocks Basic Mining Drill",
-			"icon":">basicMiningDrill",
+			"icon":"basicMiningDrillItem",
 			"id":"miningDrills1",
 			"parent-id":"pumps1",
 			"position": [-10,60],
@@ -136,7 +136,7 @@
 		{
 			"name":"Wind Power",
 			"description":"Wind is the future!\n-Unlocks Crude Windmill",
-			"icon":">crudeWindmill",
+			"icon":"crudeWindmillItem",
 			"id":"windmill1",
 			"parent-id":"generators1",
 			"position": [10,50],
@@ -152,7 +152,7 @@
 		{
 			"name":"Steam Power",
 			"description":"Steam is the future!\n-Unlocks Boiler\n-Unlocks Steam Engine",
-			"icon":">steamEngine",
+			"icon":"steamEngineItem",
 			"id":"steam_power",
 			"parent-id":"generators1",
 			"position": [10,60],

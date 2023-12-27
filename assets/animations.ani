@@ -142,6 +142,15 @@
 			}
 		]	
 	},
+	"waterParticle": {
+		"tileX": 40,
+		"tileY": 64,
+		"animations": [
+			{
+				"time": 0.1
+			}
+		]
+	},
 	"player": {
 		"tileX": 64,
 		"tileY": 64,

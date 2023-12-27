@@ -5,6 +5,7 @@ import net.cmr.gaze.inventory.Item;
 import net.cmr.gaze.inventory.Items;
 import net.cmr.gaze.inventory.Items.ItemType;
 import net.cmr.gaze.leveling.Skills.Skill;
+import net.cmr.gaze.networking.GameServer.ServerType;
 import net.cmr.gaze.networking.packets.ChatPacket;
 import net.cmr.gaze.world.Tile;
 
@@ -14,6 +15,12 @@ public abstract class ChatProcessor {
         @Override
         public boolean processMessage(PlayerConnection connection, ChatMessage message) {
             if (message.getMessage().startsWith("/")) {
+
+                if(connection.server.serverType == ServerType.MultiplayerPublic) {
+                    connection.getSender().addPacket(new ChatPacket(new ChatMessage("SERVER", "You cannot use commands in a public server.")));
+                    return true;
+                }
+
                 String[] args = message.getMessage().substring(1).split(" ");
                 String command = args[0];
                 String[] commandArgs = new String[args.length - 1];

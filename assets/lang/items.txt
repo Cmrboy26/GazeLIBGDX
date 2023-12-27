@@ -10,21 +10,57 @@ IRON_INGOT
 COPPER_INGOT
 	Copper Ingot
 	Conductive.
-IRON_ORE
-	Iron Ore
-	A chunk of stone with salvageable pieces of iron.
-COPPER_ORE
-	Copper Ore
-	A chunk of stone with salvageable pieces of copper.
-COAL
-	Coal
-	Burnable.
+STEEL_INGOT
+	Steel Ingot
+	A high-strength bar of steel.
+TITANIUM_INGOT
+	Titanium Ingot
+	Useful in sturdy space technology.
 IRON_GEAR
 	Iron Gear
 	Ratios.
 COPPER_WIRE
 	Copper Wire
 	Long conductive wire.
+MAGNET
+	Magnet
+	Polarized.
+BASIC_CIRCUIT
+	Basic Circuit
+	A low-power circuit with minimal functionality. 
+BASIC_MOTOR
+	Basic Motor
+	Converts electricity into mechanical energy.
+BASIC_GENERATOR
+	Basic Generator
+	Converts mechanical energy into electricity.
+COAL
+	Coal
+	Burnable.
+IRON_ORE
+	Iron Ore
+	A chunk of stone with salvageable pieces of iron.
+COPPER_ORE
+	Copper Ore
+	A chunk of stone with salvageable pieces of copper.
+ILMENITE_ORE
+	Ilmenite Ore
+	A chunk of ore with salvageable amounts of titanium.
+SAND
+	Sand
+	Sandy.
+GLASS
+	Glass
+	Clear material used in optics and building.
+CLAY
+	Clay
+	A maleable material that can be turned into bricks.
+BRICK
+	Brick
+	A solid brick of clay for building.
+SILICON
+	Silicon
+	A crystalline solid with computational uses.
 WOOD_AXE
 	Wood Axe
 	An axe made of wood.
@@ -58,6 +94,18 @@ IRON_PICKAXE
 IRON_AXE
 	Iron Axe
 	A strong axe capable of harvesting wood efficiently.
+IRON_HOE
+	Iron Hoe
+	A strong hoe capable of tilling dirt efficiently.
+IRON_SHOVEL
+	Iron Shovel
+	A strong shovel capable of excavating sand and dirt.
+STEEL_DRILL
+	Steel Drill
+	Better than a pickaxe.
+TITANIUM_DRILL
+	Titanium Drill
+	Better than a steel drill.
 TABLE
 	Table
 	Can be used to craft many items.
@@ -79,33 +127,75 @@ ANVIL
 TECHNOLOGY_TABLE
 	Technology Table
 	Capable of creating advanced electronic tech.
+AGRICULTURE_TABLE
+	Agriculture Table
+	For all your farming needs.
 BLAST_FURNACE
 	Blast Furnace
-	Power Requirements: 1E, Allows for steel to be forged
+	Power Consumption: 3E, Allows for steel to be forged.
 SOLAR_PANEL
 	Solar Panel
-	Power Production: 1E (during the day), Harness the power of the sun!
+	Power Production: 4E (during the day), Harness the power of the sun! 
+CRUDE_WINDMILL
+	Crude Windmill
+	Power Production: 1E (during noon on a sunny day), Harness the power of the wind!
+STEAM_ENGINE
+	Steam Engine
+	Power Production: 10E, Needs steam from boilers to function.
+BASIC_PUMP
+	Basic Pump
+	Power Consumption: 1E, Pumps liquid into canisters and deposits them onto conveyors!
+BOILER
+	Boiler
+	Needs coal to boil water into steam.
+BASIC_MINING_DRILL
+	Basic Mining Drill
+	Power Consumption: 6E, Drills the earth and outputs its resources. 
+BASIC_STOVE
+	Basic Stove
+	Power Consumption: 0.5E, Unlocks advanced cooking.
+BASIC_CROP_BREEDER
+	Basic Crop Breeder
+	Power Consumption: 1E, Combines two crops to produce a new crop.
+MODERN_CROP_BREEDER
+	Modern Crop Breeder
+	Power Consumption: 3E, Combines two crops faster and unlocks new crop types.
 COAL_GENERATOR
 	Coal Generator
 	Power Production: 2E, Coal fuels the world! Right click to add coal!
 TORCH
 	Torch
 	Can be used to light up the world.
+ACORN
+	Acorn
+	The beginnings of something woody.
+GRASS_SEEDS
+	Grass Seeds
+	Can be planted.
 WHEAT_SEEDS
 	Wheat Seeds
 	Can be planted.
-GRASS_SEEDS
-	Grass Seeds
+COTTON_SEEDS
+	Cotton Seeds
 	Can be planted.
 WHEAT
 	Wheat
 	It's just wheat.
+COTTON
+	Cotton
+	Fluffy and comfy cotton.
+BASIC_FERTILIZER
+	Basic Fertilizer
+	Speeds up crop growth and slightly increases yield.
+BREAD
+	Bread
+	Raw toast.
 APPLE
 	Apple
 	A crisp apple with that perfect snap.
-ACORN
-	Acorn
-	The beginnings of something woody.
+APPLE_PIE
+	Apple Pie
+	A homemade apple pie.
 WOOD_WALL
 	Wood Wall
 	Build a house!
@@ -133,9 +223,18 @@ STONE_BRICK_CEILING
 BRICK_CEILING
 	Brick Ceiling
 	Put a roof over your head!
-BREAD
-	Bread
-	Raw toast.
+BED
+	Bed
+	A basic, comfy bed.
 WOOD_ELECTRICITY_POLE
 	Wood Electricity Pole
 	You have to get that power somewhere!
+BASIC_CONVEYOR
+	Basic Conveyor
+	Get your items where they need to go! (Deposits into chests, too).
+STEAM_CANISTER
+	Steam Canister
+	A small container full of pressurized steam
+WATER_CANISTER
+	Water Canister
+	A small container full of fresh water.

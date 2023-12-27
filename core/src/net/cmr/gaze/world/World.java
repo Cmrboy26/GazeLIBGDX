@@ -39,9 +39,9 @@ import net.cmr.gaze.util.Normalize;
 import net.cmr.gaze.util.Vector2Double;
 import net.cmr.gaze.world.EnvironmentController.EnvironmentControllerType;
 import net.cmr.gaze.world.TileType.Replaceable;
-import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.abstractTiles.CeilingTile;
 import net.cmr.gaze.world.abstractTiles.FloorTile;
+import net.cmr.gaze.world.abstractTiles.MultiTile;
 import net.cmr.gaze.world.entities.Entity;
 import net.cmr.gaze.world.entities.ExcludePositionUpdates;
 import net.cmr.gaze.world.entities.HealthEntity;
@@ -49,11 +49,12 @@ import net.cmr.gaze.world.entities.Particle;
 import net.cmr.gaze.world.entities.Particle.ParticleEffectType;
 import net.cmr.gaze.world.entities.Player;
 import net.cmr.gaze.world.interfaceTiles.Rotatable;
+import net.cmr.gaze.world.tile.Tree;
 
 public class World {
 
 	//public static final int SIMULATION_DISTANCE = 2;
-	public static final int SIMULATION_DISTANCE = 500;
+	public static final int SIMULATION_DISTANCE = 2;
 	
 	public ConcurrentHashMap<Point, Chunk> chunkList;
 	public TileData tileData;
@@ -374,7 +375,8 @@ public class World {
 	
 	public boolean generateTile(Chunk c, Tile t, int x, int y) {
 		t.generateInitialize(x, y, seed);
-		return addTile(t, x, y, true, true, null);
+		boolean result = addTile(t, x, y, true, true, null);
+		return result;
 	}
 	
 	/**
@@ -587,10 +589,10 @@ public class World {
 	
 	public void onTileChange(int x, int y, int layer) {
 		TileUpdatePacket packet = new TileUpdatePacket(getTile(x, y, layer), x, y, layer);
-		for(PlayerConnection player : players) {
+		//for(PlayerConnection player : players) {
 			server.sendAllPacketIf(packet, ConnectionPredicate.PLAYER_IN_BOUNDS, Chunk.getChunk(x, y), this);
 			//player.getSender().addPacket(new TileUpdatePacket(getTile(new Point(x, y), layer), x, y, layer));
-		}
+		//}
 	}
 	
 	public double getSeed() {

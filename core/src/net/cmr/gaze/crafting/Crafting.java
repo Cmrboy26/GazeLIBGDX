@@ -106,6 +106,7 @@ public class Crafting {
 		
 		initializeRecipe("Materials", "brick", CraftingStation.FURNACE, new ItemType[] {ItemType.CLAY}, new int[] {1}, new ItemType[] {ItemType.BRICK}, new int[] {1}, research("gaze:resources.clayProcessing"));
 		initializeRecipe("Materials", "glass", CraftingStation.FURNACE, new ItemType[] {ItemType.SAND}, new int[] {2}, new ItemType[] {ItemType.GLASS}, new int[] {1}, research("gaze:resources.sandProcessing"));
+		initializeRecipe("Materials", "silicon", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.STONE, ItemType.SAND}, new int[] {2, 2}, new ItemType[] {ItemType.SILICON}, new int[] {1}, research("gaze:resources.siliconProcessing"));
 		initializeRecipe("Materials", "ironIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {1}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1});
 		initializeRecipe("Materials", "ironIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {2}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {3});
 		initializeRecipe("Materials", "copperIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {1}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1});

@@ -23,7 +23,7 @@ public class CrudeWindmillItem extends Placeable {
 
 	@Override
 	protected void draw(Gaze game, Batch batch, float x, float y, float width, float height) {
-		batch.draw(game.getAnimation("crudeWindmill").getKeyFrame(0), x-((width/1.5f)/2f-width/2f), y, width/1.5f, height);
+		batch.draw(game.getSprite("crudeWindmillItem"), x, y, width, height);
 	}
 
 	@Override
