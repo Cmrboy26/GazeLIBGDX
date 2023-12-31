@@ -504,27 +504,12 @@ public class GameScreen implements Screen {
 		logPositionDelta+=delta;
 		weatherAmbianceDelta+=delta;
 
-		if(weatherAmbianceDelta > 5) {
+		if(weatherAmbianceDelta > 5 && getLocalPlayer()!=null) {
 			weatherAmbianceDelta = 0;
-			if(environmentController!=null) {
-				WeatherType weather = Weather.getWeather(environmentController);
-				if(weather == WeatherType.RAIN || weather == WeatherType.THUNDER) {
-					addScreenEffect(new RainEffect());
-					game.playSoundContinuous("rain", 1f);
-				}  else {
-					removeScreenEffect(RainEffect.class);
-					game.stopContinuousSound("rain");
-				}
-
-				Ambience ambience = weather.getAmbience();
-				String noise = ambience.getAmbientSound(environmentController);
-				int x = getLocalPlayer().getTileX();
-				int y = getLocalPlayer().getTileY();
-				playWorldSound(new AudioData(noise, 1f, 1f), x, y);
-			}
+			updateWeatherAmbience();
 		}
 		
-		currentRenderRule = deriveRenderRule();
+		deriveRenderRule();
 
 		processEntitiesAndPlayerMovement(delta);
 
@@ -606,6 +591,29 @@ public class GameScreen implements Screen {
 		currentRenderRule = null;
 	}
 
+	private void updateWeatherAmbience() {
+		if(environmentController!=null&&getLocalPlayer()!=null) {
+			WeatherType weather = Weather.getWeather(environmentController);
+			if(Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)) {
+				weather = WeatherType.CLEAR;
+			}
+
+			if(weather == WeatherType.RAIN || weather == WeatherType.THUNDER) {
+				addScreenEffect(new RainEffect());
+				game.playSoundContinuous("rain", 1f);
+			}  else {
+				removeScreenEffect(RainEffect.class);
+				game.stopContinuousSound("rain");
+			}
+
+			Ambience ambience = weather.getAmbience();
+			String noise = ambience.getAmbientSound(environmentController);
+			int x = getLocalPlayer().getTileX();
+			int y = getLocalPlayer().getTileY();
+			playWorldSound(new AudioData(noise, 1f, 1f), x, y);
+		}
+	}
+
 	private void renderUI(float delta, Vector2 mouseLocalPosition) {
 		game.batch.setBlendFunction(GL20.GL_SRC_ALPHA,  GL20.GL_ONE_MINUS_SRC_ALPHA);
 		game.batch.setProjectionMatrix(stages.get(Align.topRight).getCamera().combined);
@@ -646,6 +654,7 @@ public class GameScreen implements Screen {
 		shapeRenderer.begin(ShapeType.Filled);
 		//float ambience = getAmbientLight();
 		Color ambienceColor = environmentController.getAmbientColor();
+		ambienceColor.mul(getAmbientBrightness());
 		//Color ambienceColor = new Color(ambience*, ambience, ambience, 1);
 		
 		if(gammaOverride) {
@@ -1007,12 +1016,12 @@ public class GameScreen implements Screen {
 						boolean skipWall = false;
 						int ignoreCeiling = Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)?1:0;
 
-						if(Controls.SELECT.getInputType()==InputType.KEYBOARD || manhattanDistance > getLocalPlayer().getInteractRadius()+1.5f) {
+						if(Controls.SELECT.getInputType()==InputType.KEYBOARD || Controls.DIRECTIONAL_CLICK.isDown()) {
 
 							if(Math.abs(x-px)<=1 && Math.abs(y-py)<=1) {
 								keyContinue = false;
 							}
-							if(keyContinue) {
+							if(keyContinue && Controls.DIRECTIONAL_CLICK.isDown()) {
 								x = px;
 								y = py;
 								String direction = getLocalPlayer().lastDirection;
@@ -1126,7 +1135,7 @@ public class GameScreen implements Screen {
 					
 					boolean keyContinue = true;
 					//if(Gdx.input.isKeyPressed(Input.Keys.X)) {
-					if(Controls.INTERACT.getInputType()==InputType.KEYBOARD) {
+					if(Controls.INTERACT.getInputType()==InputType.KEYBOARD || Controls.DIRECTIONAL_CLICK.isDown()) {
 
 						int px = getLocalPlayer().getTileX();
 						int py = getLocalPlayer().getTileY();
@@ -1134,7 +1143,7 @@ public class GameScreen implements Screen {
 						if(Math.abs(x-px)<=1 && Math.abs(y-py)<=1) {
 							keyContinue = false;
 						}
-						if(keyContinue) {
+						if(keyContinue && Controls.DIRECTIONAL_CLICK.isDown()) {
 							x = px;
 							y = py;
 							String direction = getLocalPlayer().lastDirection;
@@ -1559,6 +1568,7 @@ public class GameScreen implements Screen {
 			tileData.clear();
 			entities.clear();
 			this.environmentController = change.getController();
+			weatherAmbianceDelta = Integer.MAX_VALUE;
 			
 		} else if(packet instanceof CraftingStationPacket) {
 			CraftingStationPacket cspack = (CraftingStationPacket) packet;
@@ -1738,16 +1748,17 @@ public class GameScreen implements Screen {
     	hoveredItemLocalViewportCoordinates = localViewportCoordinates;
     }
     
-    public float getAmbientLight() {
+    public float getAmbientBrightness() {
     	
+		float multiple = 1;
     	if(gammaOverride) {
     		return 1;
     	}
 		if(Objects.equals(currentRenderRule, RenderRule.HOUSE_RULE)) {
-			return 0;
+			multiple = 0;
 		}
     	
-    	return environmentController.getAmbientBrightness();
+    	return multiple*environmentController.getAmbientBrightness();
     }
 
 	public void playWorldSound(AudioData data, int x, int y) {
@@ -1901,7 +1912,8 @@ public class GameScreen implements Screen {
 
 	public RenderRule currentRenderRule;
 
-	public RenderRule deriveRenderRule() {
+	public void deriveRenderRule() {
+		RenderRule previousRenderRule = currentRenderRule;
 		Player localPlayer = getLocalPlayer();
 		RenderRule.delta += Gdx.graphics.getDeltaTime();
 		RenderRule.delta = Math.min(RenderRule.delta, 1);
@@ -1910,15 +1922,23 @@ public class GameScreen implements Screen {
 			int ty = localPlayer.getTileY();
 			Tile[][][] data = tileData.get(Chunk.getChunk(tx, ty));
 			if(data == null) {
-				return RenderRule.DEFAULT_RULE;
+				currentRenderRule = RenderRule.HOUSE_RULE;
+				updateWeatherAmbience();
+				return;
 			}
 			int rx = Math.floorMod(tx, Chunk.CHUNK_SIZE);
 			int ry = Math.floorMod(ty, Chunk.CHUNK_SIZE);
 			if(data[rx][ry][2] instanceof CeilingTile) {
-				return RenderRule.HOUSE_RULE;
+				currentRenderRule = RenderRule.HOUSE_RULE;
+				updateWeatherAmbience();
+				return;
 			}
 		}
-		return RenderRule.DEFAULT_RULE;
+		currentRenderRule = RenderRule.DEFAULT_RULE;
+		if(!Objects.equals(previousRenderRule, currentRenderRule)) {
+			updateWeatherAmbience();
+			return;
+		}
 	}
     
     public void addLevelUpNotification() {

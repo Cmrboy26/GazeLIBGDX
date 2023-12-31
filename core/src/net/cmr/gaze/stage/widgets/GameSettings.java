@@ -76,7 +76,8 @@ public class GameSettings extends ScrollPane {
         CLOSE(7, Input.Keys.ESCAPE, InputType.KEYBOARD), // used for closing the menu
         INVENTORY(8, Input.Keys.E, InputType.KEYBOARD),
         RESEARCH(9, Input.Keys.R, InputType.KEYBOARD),
-        CRAFTING(10, Input.Keys.C, InputType.KEYBOARD);
+        CRAFTING(10, Input.Keys.C, InputType.KEYBOARD),
+        DIRECTIONAL_CLICK(11, Input.Keys.SHIFT_LEFT, InputType.KEYBOARD);
 
         // Keyboard Only Controls
 

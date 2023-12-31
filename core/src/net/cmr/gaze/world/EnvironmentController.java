@@ -202,7 +202,6 @@ public class EnvironmentController {
     public Color getAmbientColor() {
         WeatherType type = Weather.getWeather(this);
         Color color = new Color(type.getAmbientColor());
-        color.mul(getAmbientBrightness());
         color.a = 1f;
         return color;
     }

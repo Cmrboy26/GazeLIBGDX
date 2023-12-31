@@ -111,6 +111,7 @@ public class Crafting {
 		initializeRecipe("Materials", "ironIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.IRON_ORE}, new int[] {2}, new ItemType[] {ItemType.IRON_INGOT}, new int[] {3});
 		initializeRecipe("Materials", "copperIngot", CraftingStation.FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {1}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1});
 		initializeRecipe("Materials", "copperIngotBlast", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.COPPER_ORE}, new int[] {2}, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {3});
+		initializeRecipe("Materials", "steelIngot", CraftingStation.BLAST_FURNACE, new ItemType[] {ItemType.IRON_INGOT, ItemType.COAL}, new int[] {1, 1}, new ItemType[] {ItemType.STEEL_INGOT}, new int[] {1});
 		initializeRecipe("Materials", "ironGear", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1}, new ItemType[] {ItemType.IRON_GEAR}, new int[] {3}, research("gaze:machinery.gears"));
 		initializeRecipe("Materials", "copperWire", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.COPPER_INGOT}, new int[] {1}, new ItemType[] {ItemType.COPPER_WIRE}, new int[] {4}, research("gaze:machinery.electricity"));
 		initializeRecipe("Materials", "magnet", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {1}, new ItemType[] {ItemType.MAGNET}, new int[] {4}, research("gaze:machinery.electricity"));
@@ -139,7 +140,7 @@ public class Crafting {
 		initializeRecipe("Appliances", "chest", CraftingStation.TABLE, new ItemType[] {ItemType.WOOD}, new int[] {12}, new ItemType[] {ItemType.CHEST}, new int[] {1});
 		initializeRecipe("Appliances", "furnace", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {8}, new ItemType[] {ItemType.FURNACE}, new int[] {1}, research("gaze:resources.stoneAge"));
 		initializeRecipe("Appliances", "anvil", CraftingStation.FURNACE, new ItemType[] {ItemType.IRON_INGOT}, new int[] {6}, new ItemType[] {ItemType.ANVIL}, new int[] {1}, research("gaze:resources.forging"));
-		initializeRecipe("Appliances", "technologyTable", CraftingStation.ANVIL, new ItemType[] {ItemType.IRON_INGOT, ItemType.COPPER_INGOT}, new int[] {10, 5}, new ItemType[] {ItemType.TECHNOLOGY_TABLE}, new int[] {1}, research("gaze:machinery.technology"));
+		initializeRecipe("Appliances", "technologyTable", CraftingStation.ANVIL, new ItemType[] {ItemType.IRON_INGOT, ItemType.COPPER_INGOT}, new int[] {7, 5}, new ItemType[] {ItemType.TECHNOLOGY_TABLE}, new int[] {1}, research("gaze:machinery.technology"));
 		
 		initializeRecipe("Appliances", "woodElectricityPole", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.WOOD, ItemType.COPPER_WIRE}, new int[] {3, 2}, new ItemType[] {ItemType.WOOD_ELECTRICITY_POLE}, new int[] {2}, research("gaze:machinery.electricity"));
 		initializeRecipe("Appliances", "blastFurnace", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.IRON_GEAR, ItemType.COPPER_WIRE}, new int[] {4, 4, 6}, new ItemType[] {ItemType.BLAST_FURNACE}, new int[] {1}, research("gaze:resources.blast_furnace"));
@@ -149,8 +150,8 @@ public class Crafting {
 		initializeRecipe("Appliances", "crudeWindmill", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.WOOD, ItemType.IRON_INGOT, ItemType.BASIC_GENERATOR}, new int[] {8, 4, 2}, new ItemType[] {ItemType.CRUDE_WINDMILL}, new int[] {1}, research("gaze:machinery.windmill1"));
 		initializeRecipe("Appliances", "steamEngine", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.BASIC_GENERATOR}, new int[] {4, 4}, new ItemType[] {ItemType.STEAM_ENGINE}, new int[] {1}, research("gaze:machinery.steam_power"));
 		initializeRecipe("Appliances", "boiler", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.BASIC_GENERATOR, ItemType.COPPER_WIRE}, new int[] {4, 4, 8}, new ItemType[] {ItemType.BOILER}, new int[] {1}, research("gaze:machinery.steam_power"));
-		initializeRecipe("Appliances", "solarPanel", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.IRON_GEAR, ItemType.SILICON, ItemType.GLASS}, new int[] {4, 4, 4, 6}, new ItemType[] {ItemType.SOLAR_PANEL}, new int[] {1}, research("gaze:machinery.solar1"));
-		initializeRecipe("Appliances", "basicConveyor", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.IRON_GEAR}, new int[] {1, 2}, new ItemType[] {ItemType.BASIC_CONVEYOR}, new int[] {6}, research("gaze:machinery.motors1"));
+		initializeRecipe("Appliances", "solarPanel", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.STEEL_INGOT, ItemType.IRON_GEAR, ItemType.SILICON, ItemType.GLASS}, new int[] {4, 4, 4, 6}, new ItemType[] {ItemType.SOLAR_PANEL}, new int[] {1}, research("gaze:machinery.solar1"));
+		initializeRecipe("Appliances", "basicConveyor", CraftingStation.TECHNOLOGY_TABLE, new ItemType[] {ItemType.IRON_INGOT, ItemType.IRON_GEAR}, new int[] {1, 2}, new ItemType[] {ItemType.BASIC_CONVEYOR}, new int[] {4}, research("gaze:machinery.motors1"));
 
 		initializeRecipe("Farming", "woodWateringCan", CraftingStation.NONE, new ItemType[] {ItemType.WOOD}, new int[] {10}, new ItemType[] {ItemType.WOOD_WATERING_CAN}, new int[] {1}, research("gaze:farming.watering"));
 		initializeRecipe("Farming", "bread", CraftingStation.NONE, new ItemType[] {ItemType.WHEAT}, new int[] {4}, new ItemType[] {ItemType.BREAD}, new int[] {1}, research("gaze:farming.bread"));
@@ -162,7 +163,7 @@ public class Crafting {
 		initializeRecipe("Housing", "stoneBrickWall", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {2}, new ItemType[] {ItemType.STONE_BRICK_WALL}, new int[] {4});
 		initializeRecipe("Housing", "stoneBrickFloor", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {2}, new ItemType[] {ItemType.STONE_BRICK_FLOOR}, new int[] {4});
 		initializeRecipe("Housing", "stoneBrickCeiling", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {2}, new ItemType[] {ItemType.STONE_BRICK_CEILING}, new int[] {4});
-		initializeRecipe("Housing", "brickCeiling", CraftingStation.TABLE, new ItemType[] {ItemType.STONE, ItemType.WOOD}, new int[] {2, 1}, new ItemType[] {ItemType.BRICK_CEILING}, new int[] {6});
+		initializeRecipe("Housing", "brickCeiling", CraftingStation.TABLE, new ItemType[] {ItemType.BRICK, ItemType.WOOD}, new int[] {2, 1}, new ItemType[] {ItemType.BRICK_CEILING}, new int[] {10});
 		initializeRecipe("Housing", "stonePathFloor", CraftingStation.TABLE, new ItemType[] {ItemType.STONE}, new int[] {2}, new ItemType[] {ItemType.STONE_PATH_FLOOR}, new int[] {4});
 		
 		initialized = true;

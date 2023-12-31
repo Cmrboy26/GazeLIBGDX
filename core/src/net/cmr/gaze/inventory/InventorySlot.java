@@ -1,5 +1,6 @@
 package net.cmr.gaze.inventory;
 
+import java.awt.Color;
 import java.util.Objects;
 
 import com.badlogic.gdx.Gdx;
@@ -135,6 +136,7 @@ public class InventorySlot extends ImageButton {
 
 		@Override
 		public void draw(Batch batch, float parentAlpha) {
+			batch.setColor(com.badlogic.gdx.graphics.Color.WHITE);
 			Item.draw(game, this, getItem(), batch, getX(), getY(), getWidth(), getHeight());
 		}
 		

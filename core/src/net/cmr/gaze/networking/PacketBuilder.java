@@ -40,7 +40,7 @@ public abstract class PacketBuilder {
 	int nextPacketSize = -1;
 	int lastAvailable = -1;
 	int maxIterations = 60;
-	public static final int MAX_PACKET_SIZE = 8192;
+	public static final int MAX_PACKET_SIZE = 8192*2;
 	
 	public long millisTimeSinceDataRecieved;
 	boolean serverSide; // used for debug purposes

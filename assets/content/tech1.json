@@ -35,7 +35,7 @@
 			"parent-id":"technology",
 			"position": [0,20],
 			"requirements":[
-				"ITEM/IRON_INGOT/4"
+				"ITEM/IRON_INGOT/2"
 			],
 			"rewards": [
 
@@ -49,7 +49,7 @@
 			"parent-id":"gears",
 			"position": [0,30],
 			"requirements":[
-				"ITEM/IRON_GEAR/4"
+				"ITEM/IRON_GEAR/3"
 			],
 			"rewards": [
 
@@ -80,11 +80,11 @@
 			"position": [-10,40],
 			"requirements":[
 				"ITEM/COPPER_WIRE/4",
-				"ITEM/IRON_GEAR/9",
-				"ITEM/MAGNET/8"
+				"ITEM/IRON_INGOT/4",
+				"SKILL/MINING/6"
 			],
 			"rewards": [
-
+				"ITEM/BASIC_MOTOR/2"
 			]
 		},
 		{
@@ -95,11 +95,11 @@
 			"parent-id":"motors1",
 			"position": [-10,50],
 			"requirements":[
-				"ITEM/IRON_GEAR/4",
+				"ITEM/IRON_GEAR/3",
 				"ITEM/BASIC_MOTOR/4"
 			],
 			"rewards": [
-
+				"ITEM/BASIC_PUMP/2"
 			]
 		},
 		{
@@ -115,7 +115,7 @@
 				"ITEM/BASIC_CIRCUIT/4"
 			],
 			"rewards": [
-
+				"ITEM/BASIC_MINING_DRILL/1"
 			]
 		},
 		{
@@ -127,10 +127,11 @@
 			"position": [10,40],
 			"requirements":[
 				"ITEM/MAGNET/8",
-				"ITEM/COPPER_WIRE/8"
+				"ITEM/IRON_INGOT/4",
+				"SKILL/MINING/6"
 			],
 			"rewards": [
-
+				"ITEM/BASIC_GENERATOR/2"
 			]
 		},
 		{
@@ -146,7 +147,7 @@
 				"ITEM/IRON_INGOT/4"
 			],
 			"rewards": [
-
+				"ITEM/CRUDE_WINDMILL/1"
 			]
 		},
 		{
@@ -162,7 +163,8 @@
 				"ITEM/WATER_CANISTER/5"
 			],
 			"rewards": [
-
+				"ITEM/BOILER/1",
+				"ITEM/STEAM_ENGINE/1"
 			]
 		},
 		{
