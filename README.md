@@ -1,6 +1,12 @@
 ## GazeLIBGDX
 
-This project is for a 2D LIBGDX game about exploring the universe, exploiting the "infinite" galaxy's resources, building intricate and functional bases, and so much more.
+This project is for a 2D LIBGDX game about exploring the universe, exploiting the galaxy's resources, and building intricate and functional bases.
+
+## Setup
+
+1. Download the project.
+2. In the project directory, ensure that you have Gradle installed run `./gradlew wrapper` in the project directory.
+3. Run `./gradlew desktop:run` to run the desktop program.
 
 ## Programming
 
