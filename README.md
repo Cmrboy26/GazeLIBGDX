@@ -7,13 +7,13 @@ Gaze is a libGDX game about exploring the universe, exploiting the galaxy's reso
 
 ## About Gaze
 
-<img height="400" alt="gaze" src="https://github.com/user-attachments/assets/2336d671-3ebb-4ea1-9a06-ac49e731eafc" />
+<img height="350" alt="gaze-background" src="https://github.com/user-attachments/assets/0b7a758a-686f-4f20-8aa4-a15a95fff73d" />
 
 Gaze is a procedurally-generated 2D world where players and friends must exploit the resources around them to build a base, survive, and expand. Players must level up their skills, research technologies, and explore the underground to obtain the resources to design a functional base. Online multiplayer, powered by Java Sockets, allows you to connect to your friends anywhere and work and explore together.
 
 Personally, this idea for a game had been in my head for a long while. I wanted a game that suited all of my friends' interests, which meant combining space, factory building, and casual elements in one package. However, the nearly unlimited scope of this project resulted in its abandonment, as it was too ambitious for me. This lesson about scope creep inspired me to organize myself and finally complete a game, which is what my other project, Project Tetra TD, became.
 
-<img height="250" alt="lava" src="https://github.com/user-attachments/assets/09bc4bc4-8afa-4cee-bd09-00661e705698" />
+<img height="250" alt="gaze" src="https://github.com/user-attachments/assets/2336d671-3ebb-4ea1-9a06-ac49e731eafc" />
 
 ### Features
 
