@@ -1,18 +1,44 @@
 ## GazeLIBGDX
 
-This project is for a 2D LIBGDX game about exploring the universe, exploiting the galaxy's resources, and building intricate and functional bases.
+Gaze is a libGDX game about exploring the universe, exploiting the galaxy's resources, and building intricate and functional bases.
 
-## Setup
+## About Gaze
 
+Gaze is a procedurally-generated 2D world where players and friends must exploit the resources around them to build a base, survive, and expand. Players must level up their skills, research technologies, and explore the underground to obtain the resources to design a functional base. Online multiplayer, powered by Java Sockets, allows you to connect to your friends anywhere and work and explore together.
+
+Personally, this idea for a game had been in my head for a long while. I wanted a game that suited all of my friends' interests, which meant combining space, factory building, and casual elements in one package. However, the nearly unlimited scope of this project resulted in its abandonment, as it was too ambitious for me. This lesson about scope creep inspired me to organize myself and finally complete a game, which is what my other project, Project Tetra TD, became.
+
+### Features
+- Navigate an infinite, procedurally-generated world
+- Harvest, craft, and place objects and workstations
+- Level up skills to passively improve stats
+- Research new technologies, unlocking new recipes and functional structures
+- Grow and water crops
+- Create a simple factory powered by electricity
+- Save and load worlds
+- Host a server to play with friends
+- Custom music, audio, and graphics
+
+### Technologies Used
+- **Programming Language:** Java
+- **Frameworks:** libGDX, Java Sockets
+- **Tools:** Gradle, Git, Aseprite, FL Studio, Audacity
+- **Platforms:** Windows
+
+## Downloading, Playing, and Setup
+
+To play the game, look at the "Releases" tab on the right and follow the instructions in the release description.
+
+To run from source code:
 1. Download the project.
-2. In the project directory, ensure that you have Gradle installed run `./gradlew wrapper` in the project directory.
+2. In the project directory, ensure that you have Gradle installed run `./gradlew wrapper`.
 3. Run `./gradlew desktop:run` to run the desktop program.
 
 ## Programming
 
 ### Adding a New Item
 
-Short and sweet: create a new `ItemType` enum (located inside Items.java), pass your subclass object that extends Item into the enum, and implement the neccesary methods into the subclass object based on documentation.
+Short and sweet: create a new `ItemType` enum (located inside Items.java), pass your subclass object that extends Item into the enum, and implement the necessary methods into the subclass object based on documentation.
 
 NOTE: This system for adding items was created without modding support in mind. In the future, changes MAY be made to support mods (depending on how much attention the game draws).
 
@@ -39,7 +65,7 @@ public enum ItemType {
 }
 ```
 
-WARNING (UNLIKELY OCCURANCE, skip unless you're experiencing buggy behavior): The name of the enum will be hashed into an integer and used for hashmaps and saving/loading/transmitting/recieving items through the `int getID()` method, and collisions ARE (theoretically) possible! An error will be transmitted in console if the game is run and there is a name collision. There is a remedy for this error in place (the ID is incremented untill the conflict is resolved), but attempt to resolve this issue by altering the name of the item if possible.
+WARNING (UNLIKELY OCCURANCE, skip unless you're experiencing buggy behavior): The name of the enum will be hashed into an integer and used for hashmaps and saving/loading/transmitting/receiving items through the `int getID()` method, and collisions ARE (theoretically) possible! An error will be transmitted to the console if the game is run and there is a name collision. There is a remedy for this error in place (the ID is incremented until the conflict is resolved), but attempt to resolve this issue by altering the name of the item if possible.
 
 
 Now that the item type is created, you will need to create a new class for the item and have it extend one of the various `abstract Item` classes:
